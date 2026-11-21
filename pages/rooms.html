@@ -3,25 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quản lý phòng - Hotel Management System</title>
+  <title>Quản lý phòng - Aurora Luxury Hotel</title>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/icons/favicon/favicon-96x96.png">
   <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon/favicon.svg">
+  <link rel="shortcut icon" href="../assets/icons/favicon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/icons/favicon/apple-touch-icon.png">
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheets -->
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/layout.css">
   <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages/rooms.css">
 </head>
 <body>
   <div class="app-layout">
+    
+    <!-- Mobile Backdrop Overlay -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- Sidebar -->
+    <!-- ==========================================================================
+         SIDEBAR NAVIGATION
+         ========================================================================== -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-brand">
         <div class="brand-wrapper">
           <div class="brand-logo-icon">
-            <i data-lucide="hotel" style="width: 22px; height: 22px;"></i>
+            <img 
+              src="../assets/icons/logo.png" 
+              alt="Aurora Logo" 
+              class="brand-logo-img" 
+              onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex';"
+              style="width: 100%; height: 100%; object-fit: contain; border-radius: var(--border-radius-md);"
+            >
+            <span class="brand-logo-fallback" style="display: none; align-items: center; justify-content: center; width: 100%; height: 100%;">
+              <i data-lucide="hotel" style="width: 22px; height: 22px;"></i>
+            </span>
           </div>
           <div class="brand-text-group">
             <span class="brand-name">Aurora Hotel</span>
@@ -102,8 +125,12 @@
       </div>
     </aside>
 
-    <!-- Main Content -->
+    <!-- ==========================================================================
+         MAIN WRAPPER
+         ========================================================================== -->
     <div class="main-wrapper">
+      
+      <!-- Header -->
       <header class="header">
         <div class="header-left">
           <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Mở menu">
@@ -112,39 +139,281 @@
           <div class="header-title-block">
             <h1 class="header-page-title">Quản lý phòng nghỉ</h1>
             <div class="header-breadcrumb">
-              <a href="../index.html">Hệ thống</a> &bull; <span>Quản lý phòng</span>
+              <a href="../index.html">Hệ thống</a> &bull; <span>Danh mục phòng</span>
             </div>
           </div>
         </div>
+
         <div class="header-right">
           <div class="header-date-badge">
             <i data-lucide="calendar" style="width: 14px; height: 14px; color: var(--color-accent);"></i>
             <span id="currentDateBadge">Đang cập nhật...</span>
           </div>
+          <button class="header-action-btn" aria-label="Thông báo" title="Thông báo">
+            <i data-lucide="bell" style="width: 18px; height: 18px;"></i>
+          </button>
         </div>
       </header>
 
+      <!-- Main Content -->
       <main class="main-content">
-        <div class="card" style="padding: 3rem 2rem; text-align: center; max-width: 680px; margin: 3rem auto;">
-          <div style="width: 64px; height: 64px; border-radius: 50%; background-color: var(--color-accent-light); color: var(--color-accent); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto;">
-            <i data-lucide="bed-double" style="width: 32px; height: 32px;"></i>
-          </div>
-          <h2 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem;">Mô-đun Quản lý phòng</h2>
-          <p class="text-secondary" style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
-            Khung điều hướng đã được kết nối thành công. Giao diện chi tiết (danh mục phòng, lưới lọc trạng thái, thêm/sửa phòng và giá) sẽ được hoàn thiện theo đúng kế hoạch triển khai tại Giai đoạn 2.
-          </p>
+        
+        <!-- Page Title & Primary Actions -->
+        <div class="page-header-row">
           <div>
-            <a href="../index.html" class="btn btn-primary">
-              <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
-              Quay về Dashboard
-            </a>
+            <h2 class="greeting-title">Sơ đồ & Danh mục phòng</h2>
+            <p class="greeting-subtitle">Quản lý chi tiết giá phòng, loại phòng, sức chứa và trạng thái sẵn sàng đón khách.</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-primary" id="btnAddRoomModal">
+              <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i>
+              Thêm phòng mới
+            </button>
           </div>
         </div>
+
+        <!-- ======================================================================
+             TOOLBAR & FILTER CONTROLS
+             ====================================================================== -->
+        <section class="rooms-toolbar-card">
+          <div class="rooms-toolbar-top">
+            
+            <!-- Search Input -->
+            <div class="rooms-search-box search-input-wrapper">
+              <span class="search-icon">
+                <i data-lucide="search" style="width: 16px; height: 16px;"></i>
+              </span>
+              <input 
+                type="text" 
+                id="roomSearchInput" 
+                class="search-input" 
+                placeholder="Tìm theo số phòng hoặc loại phòng..."
+                autocomplete="off"
+              >
+            </div>
+
+            <!-- Filters Group -->
+            <div class="rooms-filter-group">
+              <!-- Filter by Room Type -->
+              <select id="filterRoomType" class="filter-select" aria-label="Lọc theo loại phòng">
+                <option value="all">Tất cả loại phòng</option>
+                <option value="Standard Room">Standard Room</option>
+                <option value="Superior Room">Superior Room</option>
+                <option value="Deluxe Suite">Deluxe Suite</option>
+                <option value="Executive Suite">Executive Suite</option>
+                <option value="Presidential Suite">Presidential Suite</option>
+              </select>
+
+              <!-- Filter by Status -->
+              <select id="filterRoomStatus" class="filter-select" aria-label="Lọc theo trạng thái">
+                <option value="all">Tất cả trạng thái</option>
+                <option value="available">🟢 Phòng trống</option>
+                <option value="occupied">🔵 Đang có khách</option>
+                <option value="cleaning">🟡 Đang dọn dẹp</option>
+                <option value="maintenance">🔴 Đang bảo trì</option>
+              </select>
+
+              <!-- View Mode Toggles (Grid / Table) -->
+              <div class="btn-group" role="group" aria-label="Chế độ hiển thị">
+                <button type="button" class="btn-view-toggle active" id="btnViewGrid" title="Dạng lưới thẻ">
+                  <i data-lucide="layout-grid" style="width: 15px; height: 15px;"></i>
+                  <span>Lưới</span>
+                </button>
+                <button type="button" class="btn-view-toggle" id="btnViewTable" title="Dạng bảng chi tiết">
+                  <i data-lucide="list" style="width: 15px; height: 15px;"></i>
+                  <span>Bảng</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Quick Status Pills & Counter -->
+          <div class="rooms-toolbar-bottom">
+            <div class="quick-status-filters">
+              <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-right: 0.25rem;">Nhanh:</span>
+              <button type="button" class="status-filter-pill active" data-status="all">Tất cả</button>
+              <button type="button" class="status-filter-pill" data-status="available">Phòng trống</button>
+              <button type="button" class="status-filter-pill" data-status="occupied">Đang sử dụng</button>
+              <button type="button" class="status-filter-pill" data-status="cleaning">Đang dọn dẹp</button>
+              <button type="button" class="status-filter-pill" data-status="maintenance">Bảo trì</button>
+            </div>
+
+            <div class="rooms-count-info" id="roomsCountDisplay">
+              Đang tải danh sách phòng...
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================================================================
+             ROOMS LIST DISPLAY
+             ====================================================================== -->
+        
+        <!-- View 1: Grid Cards -->
+        <div class="room-grid" id="roomsGridContainer">
+          <!-- Dynamically populated via rooms.js -->
+        </div>
+
+        <!-- View 2: Table View -->
+        <div class="room-table-container table-card" id="roomsTableContainer">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Số phòng</th>
+                  <th>Vị trí</th>
+                  <th>Loại phòng</th>
+                  <th>Giá / đêm</th>
+                  <th>Sức chứa</th>
+                  <th>Tiện nghi</th>
+                  <th>Trạng thái</th>
+                  <th class="text-right">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="roomsTableTbody">
+                <!-- Dynamically populated via rooms.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </main>
     </div>
   </div>
 
+  <!-- ==========================================================================
+       MODAL: ADD / EDIT ROOM
+       ========================================================================== -->
+  <div class="modal-backdrop" id="roomFormModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="roomModalTitle">Thêm phòng mới</h3>
+        <button type="button" class="modal-close-btn" id="roomModalClose" aria-label="Đóng">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
+
+      <form id="roomForm">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="inputRoomNumber">Số phòng <span class="required">*</span></label>
+              <input type="text" id="inputRoomNumber" class="form-control" placeholder="VD: 105, 206, 301" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="inputRoomFloor">Tầng <span class="required">*</span></label>
+              <select id="inputRoomFloor" class="form-select" required>
+                <option value="1">Tầng 1</option>
+                <option value="2">Tầng 2</option>
+                <option value="3">Tầng 3</option>
+                <option value="4">Tầng 4</option>
+                <option value="5">Tầng 5</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="inputRoomType">Loại phòng <span class="required">*</span></label>
+              <select id="inputRoomType" class="form-select" required>
+                <option value="Standard Room">Standard Room</option>
+                <option value="Superior Room">Superior Room</option>
+                <option value="Deluxe Suite">Deluxe Suite</option>
+                <option value="Executive Suite">Executive Suite</option>
+                <option value="Presidential Suite">Presidential Suite</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="inputRoomPrice">Giá mỗi đêm (VND) <span class="required">*</span></label>
+              <input type="number" id="inputRoomPrice" class="form-control" placeholder="850000" min="100000" step="50000" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="inputRoomCapacity">Sức chứa tối đa (người) <span class="required">*</span></label>
+              <input type="number" id="inputRoomCapacity" class="form-control" min="1" max="10" value="2" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="inputRoomStatus">Trạng thái phòng <span class="required">*</span></label>
+              <select id="inputRoomStatus" class="form-select" required>
+                <option value="available">🟢 Phòng trống (Sẵn sàng)</option>
+                <option value="occupied">🔵 Đang có khách</option>
+                <option value="cleaning">🟡 Đang dọn dẹp</option>
+                <option value="maintenance">🔴 Đang bảo trì</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Amenities Selection -->
+          <div class="form-group">
+            <label class="form-label">Tiện nghi nổi bật</label>
+            <div class="form-check-group">
+              <label class="form-check"><input type="checkbox" name="amenities" value="Wifi"> Wifi tốc độ cao</label>
+              <label class="form-check"><input type="checkbox" name="amenities" value="TV"> Smart TV</label>
+              <label class="form-check"><input type="checkbox" name="amenities" value="Điều hòa"> Điều hòa 2 chiều</label>
+              <label class="form-check"><input type="checkbox" name="amenities" value="Bồn tắm"> Bồn tắm nằm</label>
+              <label class="form-check"><input type="checkbox" name="amenities" value="Bồn sục"> Bồn sục Jacuzzi</label>
+              <label class="form-check"><input type="checkbox" name="amenities" value="Ban công"> Ban công view đẹp</label>
+              <label class="form-check"><input type="checkbox" name="amenities" value="Minibar"> Minibar & Trà</label>
+              <label class="form-check"><input type="checkbox" name="amenities" value="Két sắt"> Két an toàn</label>
+              <label class="form-check"><input type="checkbox" name="amenities" value="Máy sấy tóc"> Máy sấy tóc</label>
+            </div>
+          </div>
+
+          <!-- Image URL -->
+          <div class="form-group">
+            <label class="form-label" for="inputRoomImage">Đường dẫn hình ảnh (URL)</label>
+            <input type="text" id="inputRoomImage" class="form-control" placeholder="https://... hoặc để trống dùng ảnh mặc định">
+            <span class="form-hint">Nếu để trống, hệ thống sẽ tự động hiển thị khung minh họa chuẩn Aurora.</span>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="roomModalCancel">Hủy bỏ</button>
+          <button type="submit" class="btn btn-primary">
+            <i data-lucide="check" style="width: 16px; height: 16px;"></i>
+            Lưu thông tin phòng
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: DELETE CONFIRMATION
+       ========================================================================== -->
+  <div class="modal-backdrop" id="deleteConfirmModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title" style="color: var(--status-maintenance);">
+          <i data-lucide="alert-triangle" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 0.35rem;"></i>
+          Xác nhận xóa phòng
+        </h3>
+        <button type="button" class="modal-close-btn" id="deleteModalClose" aria-label="Đóng">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="deleteModalTargetText" style="font-size: 0.95rem; line-height: 1.5; color: var(--text-main);">
+          Bạn có chắc chắn muốn xóa phòng này không?
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" id="deleteModalCancel">Hủy</button>
+        <button type="button" class="btn btn-danger" id="deleteModalConfirm">
+          <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+          Xác nhận xóa
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- JavaScript ES6+ Application Modules -->
   <script type="module" src="../js/main.js"></script>
+  <script type="module" src="../js/pages/rooms.js"></script>
 </body>
 </html>
