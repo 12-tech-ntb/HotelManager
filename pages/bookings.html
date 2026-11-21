@@ -3,23 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quản lý đặt phòng - Hotel Management System</title>
+  <title>Quản lý đặt phòng - Aurora Luxury Hotel</title>
+
   <!-- Favicons -->
   <link rel="icon" type="image/png" sizes="96x96" href="../assets/icons/favicon/favicon-96x96.png">
   <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon/favicon.svg">
   <link rel="shortcut icon" href="../assets/icons/favicon/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/icons/favicon/apple-touch-icon.png">
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheets -->
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/layout.css">
   <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages/bookings.css">
 </head>
 <body>
   <div class="app-layout">
+    
+    <!-- Mobile Backdrop Overlay -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
+    <!-- ==========================================================================
+         SIDEBAR NAVIGATION
+         ========================================================================== -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-brand">
         <div class="brand-wrapper">
@@ -40,68 +51,585 @@
             <span class="brand-tagline">Management System</span>
           </div>
         </div>
-        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Đóng menu"><i data-lucide="x" style="width: 20px; height: 20px;"></i></button>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Đóng menu">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
       </div>
 
       <nav class="sidebar-nav">
         <span class="nav-section-title">Tổng quan & Vận hành</span>
         <ul class="nav-group">
-          <li class="nav-item"><a href="../index.html" class="nav-link"><span class="nav-icon"><i data-lucide="layout-dashboard"></i></span><span class="nav-text">Dashboard</span></a></li>
-          <li class="nav-item"><a href="rooms.html" class="nav-link"><span class="nav-icon"><i data-lucide="bed-double"></i></span><span class="nav-text">Quản lý phòng</span></a></li>
-          <li class="nav-item"><a href="bookings.html" class="nav-link active"><span class="nav-icon"><i data-lucide="calendar-check"></i></span><span class="nav-text">Đặt phòng</span></a></li>
-          <li class="nav-item"><a href="calendar.html" class="nav-link"><span class="nav-icon"><i data-lucide="calendar-days"></i></span><span class="nav-text">Lịch phòng</span></a></li>
-          <li class="nav-item"><a href="checkin-checkout.html" class="nav-link"><span class="nav-icon"><i data-lucide="concierge-bell"></i></span><span class="nav-text">Check-in / Out</span></a></li>
+          <li class="nav-item">
+            <a href="../index.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span>
+              <span class="nav-text">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="rooms.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="bed-double"></i></span>
+              <span class="nav-text">Quản lý phòng</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="bookings.html" class="nav-link active">
+              <span class="nav-icon"><i data-lucide="calendar-check"></i></span>
+              <span class="nav-text">Đặt phòng</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="calendar.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="calendar-days"></i></span>
+              <span class="nav-text">Lịch phòng</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="checkin-checkout.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="concierge-bell"></i></span>
+              <span class="nav-text">Check-in / Out</span>
+            </a>
+          </li>
         </ul>
+
         <span class="nav-section-title">Khách hàng & Doanh nghiệp</span>
         <ul class="nav-group">
-          <li class="nav-item"><a href="customers.html" class="nav-link"><span class="nav-icon"><i data-lucide="users"></i></span><span class="nav-text">Khách hàng</span></a></li>
-          <li class="nav-item"><a href="vouchers.html" class="nav-link"><span class="nav-icon"><i data-lucide="ticket"></i></span><span class="nav-text">Mã Voucher</span></a></li>
-          <li class="nav-item"><a href="reports.html" class="nav-link"><span class="nav-icon"><i data-lucide="bar-chart-3"></i></span><span class="nav-text">Báo cáo doanh thu</span></a></li>
+          <li class="nav-item">
+            <a href="customers.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="users"></i></span>
+              <span class="nav-text">Khách hàng</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="vouchers.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="ticket"></i></span>
+              <span class="nav-text">Mã Voucher</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="reports.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="bar-chart-3"></i></span>
+              <span class="nav-text">Báo cáo doanh thu</span>
+            </a>
+          </li>
         </ul>
       </nav>
 
       <div class="sidebar-footer">
         <div class="user-quick-profile">
           <div class="user-avatar">AD</div>
-          <div class="user-details"><div class="user-name">Admin Lễ Tân</div><div class="user-role">Quản lý ca trực</div></div>
+          <div class="user-details">
+            <div class="user-name">Admin Lễ Tân</div>
+            <div class="user-role">Quản lý ca trực</div>
+          </div>
         </div>
       </div>
     </aside>
 
+    <!-- ==========================================================================
+         MAIN WRAPPER
+         ========================================================================== -->
     <div class="main-wrapper">
+      
+      <!-- Top Header -->
       <header class="header">
         <div class="header-left">
-          <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Mở menu"><i data-lucide="menu" style="width: 22px; height: 22px;"></i></button>
+          <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Mở menu">
+            <i data-lucide="menu" style="width: 22px; height: 22px;"></i>
+          </button>
           <div class="header-title-block">
-            <h1 class="header-page-title">Quản lý đặt phòng</h1>
-            <div class="header-breadcrumb"><a href="../index.html">Hệ thống</a> &bull; <span>Đặt phòng</span></div>
+            <h1 class="header-page-title">Quản lý đơn đặt phòng</h1>
+            <div class="header-breadcrumb">
+              <a href="../index.html">Hệ thống</a> &bull; <span>Đặt phòng</span>
+            </div>
           </div>
         </div>
+
         <div class="header-right">
-          <div class="header-date-badge"><i data-lucide="calendar" style="width: 14px; height: 14px; color: var(--color-accent);"></i><span id="currentDateBadge">--</span></div>
+          <div class="header-date-badge">
+            <i data-lucide="calendar" style="width: 14px; height: 14px; color: var(--color-accent);"></i>
+            <span id="currentDateBadge">Đang cập nhật...</span>
+          </div>
+          <button class="header-action-btn" aria-label="Thông báo" title="Thông báo">
+            <i data-lucide="bell" style="width: 18px; height: 18px;"></i>
+          </button>
         </div>
       </header>
 
+      <!-- Main Canvas -->
       <main class="main-content">
-        <div class="card" style="padding: 3rem 2rem; text-align: center; max-width: 680px; margin: 3rem auto;">
-          <div style="width: 64px; height: 64px; border-radius: 50%; background-color: var(--color-accent-light); color: var(--color-accent); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto;">
-            <i data-lucide="calendar-check" style="width: 32px; height: 32px;"></i>
-          </div>
-          <h2 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem;">Mô-đun Quản lý Đặt phòng</h2>
-          <p class="text-secondary" style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
-            Khung điều hướng đã kết nối. Chức năng tạo đơn đặt phòng mới, kiểm tra phòng trống theo khoảng thời gian và quản lý trạng thái thanh toán sẽ được hoàn thiện trong Giai đoạn 3.
-          </p>
+        
+        <!-- Page Title & CTA -->
+        <div class="page-header-row">
           <div>
-            <a href="../index.html" class="btn btn-primary">
-              <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i> Quay về Dashboard
-            </a>
+            <h2 class="greeting-title">Danh sách Đặt phòng</h2>
+            <p class="greeting-subtitle">Theo dõi trạng thái các đơn đặt phòng, nhận/trả phòng và thanh toán của khách hàng.</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-primary" id="btnCreateBookingModal">
+              <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i>
+              Tạo đặt phòng mới
+            </button>
           </div>
         </div>
+
+        <!-- ======================================================================
+             1. MINI KPI STRIP
+             ====================================================================== -->
+        <section class="mini-kpi-grid">
+          
+          <div class="mini-kpi-card">
+            <div class="mini-kpi-info">
+              <span class="mini-kpi-label">Tổng đơn đặt</span>
+              <span class="mini-kpi-val" id="kpiTotalBookings">--</span>
+            </div>
+            <div class="kpi-icon-box kpi-icon-primary">
+              <i data-lucide="calendar-range" style="width: 20px; height: 20px;"></i>
+            </div>
+          </div>
+
+          <div class="mini-kpi-card">
+            <div class="mini-kpi-info">
+              <span class="mini-kpi-label">Chờ xác nhận</span>
+              <span class="mini-kpi-val" style="color: var(--status-cleaning);" id="kpiPendingBookings">--</span>
+            </div>
+            <div class="kpi-icon-box kpi-icon-amber">
+              <i data-lucide="clock" style="width: 20px; height: 20px;"></i>
+            </div>
+          </div>
+
+          <div class="mini-kpi-card">
+            <div class="mini-kpi-info">
+              <span class="mini-kpi-label">Đã xác nhận</span>
+              <span class="mini-kpi-val" style="color: var(--status-available);" id="kpiConfirmedBookings">--</span>
+            </div>
+            <div class="kpi-icon-box kpi-icon-success">
+              <i data-lucide="check-check" style="width: 20px; height: 20px;"></i>
+            </div>
+          </div>
+
+          <div class="mini-kpi-card">
+            <div class="mini-kpi-info">
+              <span class="mini-kpi-label">Đang lưu trú</span>
+              <span class="mini-kpi-val" style="color: var(--status-occupied);" id="kpiCheckedInBookings">--</span>
+            </div>
+            <div class="kpi-icon-box kpi-icon-blue">
+              <i data-lucide="user-check" style="width: 20px; height: 20px;"></i>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ======================================================================
+             2. TOOLBAR & FILTER CARD
+             ====================================================================== -->
+        <section class="bookings-toolbar-card">
+          <div class="bookings-toolbar-row">
+            
+            <!-- Search Input -->
+            <div class="booking-search-box search-input-wrapper">
+              <span class="search-icon">
+                <i data-lucide="search" style="width: 16px; height: 16px;"></i>
+              </span>
+              <input 
+                type="text" 
+                id="bookingSearchInput" 
+                class="search-input" 
+                placeholder="Tìm mã đơn (BK-...), tên khách, SĐT hoặc số phòng..."
+                autocomplete="off"
+              >
+            </div>
+
+            <!-- Filters Group -->
+            <div class="booking-filter-group">
+              
+              <!-- Filter by Status -->
+              <select id="filterBookingStatus" class="filter-select" aria-label="Lọc theo trạng thái">
+                <option value="all">Tất cả trạng thái</option>
+                <option value="pending">🟡 Chờ xác nhận</option>
+                <option value="confirmed">🟢 Đã xác nhận</option>
+                <option value="checked_in">🔵 Đang lưu trú</option>
+                <option value="checked_out">⚪ Đã trả phòng</option>
+                <option value="cancelled">🔴 Đã hủy</option>
+              </select>
+
+              <!-- Filter by Check-in Date -->
+              <div class="date-filter-wrapper" title="Lọc theo ngày nhận phòng">
+                <i data-lucide="calendar" style="width: 14px; height: 14px; color: var(--text-muted);"></i>
+                <input type="date" id="filterCheckInDate" class="date-filter-input">
+                <button type="button" class="btn-clear-date" id="btnClearCheckInDate" title="Xóa lọc ngày">
+                  <i data-lucide="x" style="width: 12px; height: 12px;"></i>
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Counter row -->
+          <div class="rooms-toolbar-bottom">
+            <div class="rooms-count-info" id="bookingsCountDisplay">
+              Đang tải danh sách đặt phòng...
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================================================================
+             3. BOOKINGS DATA TABLE
+             ====================================================================== -->
+        <section class="table-card">
+          <div class="table-responsive">
+            <table class="data-table" id="bookingsTable">
+              <thead>
+                <tr>
+                  <th>Mã đơn</th>
+                  <th>Khách hàng</th>
+                  <th>Phòng đặt</th>
+                  <th>Thời gian lưu trú</th>
+                  <th>Voucher</th>
+                  <th>Tổng tiền</th>
+                  <th>Thanh toán</th>
+                  <th>Trạng thái đơn</th>
+                  <th class="text-right">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="bookingsTableTbody">
+                <tr>
+                  <td colspan="9" class="text-center text-muted" style="padding: 2.5rem;">
+                    Đang nạp dữ liệu đặt phòng...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
       </main>
     </div>
   </div>
 
+  <!-- ==========================================================================
+       MODAL: CREATE BOOKING (MODAL TẠO ĐẶT PHÒNG MỚI)
+       ========================================================================== -->
+  <div class="modal-backdrop" id="createBookingModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 680px;">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <i data-lucide="calendar-plus" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 0.35rem; color: var(--color-accent);"></i>
+          Tạo đơn đặt phòng mới
+        </h3>
+        <button type="button" class="modal-close-btn" id="createModalClose" aria-label="Đóng">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
+
+      <form id="createBookingForm">
+        <div class="modal-body">
+          
+          <!-- 1. Customer Information Section -->
+          <div class="modal-section-card">
+            <div class="modal-section-header">
+              <i data-lucide="user" style="width: 16px; height: 16px;"></i>
+              <span>1. Thông tin Khách hàng</span>
+            </div>
+
+            <!-- Toggle Customer Type -->
+            <div class="customer-type-toggle">
+              <label class="customer-type-label">
+                <input type="radio" name="customerTypeRadio" value="existing" checked>
+                <span>Chọn khách hàng có sẵn</span>
+              </label>
+              <label class="customer-type-label">
+                <input type="radio" name="customerTypeRadio" value="new">
+                <span>Nhập khách hàng mới</span>
+              </label>
+            </div>
+
+            <!-- Existing Customer Select -->
+            <div class="form-group" id="existingCustomerWrapper">
+              <label class="form-label" for="selectExistingCustomer">Chọn hồ sơ khách <span class="required">*</span></label>
+              <select id="selectExistingCustomer" class="form-select">
+                <!-- Dynamically populated via JS -->
+              </select>
+            </div>
+
+            <!-- New Customer Input Group (Hidden by default) -->
+            <div id="newCustomerWrapper" style="display: none;">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="inputNewCustName">Họ và tên <span class="required">*</span></label>
+                  <input type="text" id="inputNewCustName" class="form-control" placeholder="VD: Hoàng Văn Nam">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="inputNewCustPhone">Số điện thoại <span class="required">*</span></label>
+                  <input type="tel" id="inputNewCustPhone" class="form-control" placeholder="VD: 0912 888 999">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="inputNewCustIdCard">Số CCCD / Hộ chiếu</label>
+                  <input type="text" id="inputNewCustIdCard" class="form-control" placeholder="VD: 001200009999">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="inputNewCustEmail">Email liên hệ</label>
+                  <input type="email" id="inputNewCustEmail" class="form-control" placeholder="VD: nam.hoang@gmail.com">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Stay Period Section -->
+          <div class="modal-section-card">
+            <div class="modal-section-header">
+              <i data-lucide="calendar" style="width: 16px; height: 16px;"></i>
+              <span>2. Thời gian lưu trú & Phòng trống</span>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="inputBookingCheckIn">Ngày nhận phòng (Check-in) <span class="required">*</span></label>
+                <input type="date" id="inputBookingCheckIn" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="inputBookingCheckOut">Ngày trả phòng (Check-out) <span class="required">*</span></label>
+                <input type="date" id="inputBookingCheckOut" class="form-control" required>
+              </div>
+            </div>
+
+            <!-- Live Nights Preview Banner -->
+            <div class="nights-summary-banner" id="nightsBanner">
+              <i data-lucide="moon" style="width: 14px; height: 14px;"></i>
+              <span id="nightsBannerText">Thời gian lưu trú: 1 đêm</span>
+            </div>
+
+            <!-- Select Available Room -->
+            <div class="form-group" style="margin-top: 1rem;">
+              <label class="form-label" for="selectAvailableRoom">Phòng khả dụng <span class="required">*</span></label>
+              <select id="selectAvailableRoom" class="form-select" required>
+                <!-- Populated dynamically based on dates -->
+              </select>
+              <span class="form-hint">Chỉ hiển thị các phòng còn trống và không trùng lịch đặt trong khoảng ngày đã chọn.</span>
+            </div>
+          </div>
+
+          <!-- 3. Voucher & Pricing Calculation Section -->
+          <div class="modal-section-card">
+            <div class="modal-section-header">
+              <i data-lucide="receipt" style="width: 16px; height: 16px;"></i>
+              <span>3. Khuyến mãi & Tính tiền</span>
+            </div>
+
+            <!-- Voucher Input Group -->
+            <div class="form-group">
+              <label class="form-label" for="inputBookingVoucher">Mã Voucher giảm giá</label>
+              <div class="voucher-input-group">
+                <input type="text" id="inputBookingVoucher" class="form-control" placeholder="Nhập mã (VD: WELCOME10, LUXURY500)" style="text-transform: uppercase;">
+                <button type="button" class="btn btn-outline" id="btnApplyVoucher">
+                  <i data-lucide="ticket" style="width: 14px; height: 14px;"></i>
+                  Áp dụng
+                </button>
+              </div>
+              <div class="voucher-message" id="voucherMessageText"></div>
+            </div>
+
+            <!-- Pricing Receipt Breakdown -->
+            <div class="pricing-receipt-box">
+              <div class="pricing-row">
+                <span>Đơn giá phòng:</span>
+                <span id="priceReceiptUnitPrice">0 ₫ / đêm</span>
+              </div>
+              <div class="pricing-row">
+                <span>Số đêm lưu trú:</span>
+                <span id="priceReceiptNights">1 đêm</span>
+              </div>
+              <div class="pricing-row">
+                <span>Tạm tính (Subtotal):</span>
+                <span id="priceReceiptSubtotal" class="font-semibold">0 ₫</span>
+              </div>
+              <div class="pricing-row discount" id="priceReceiptDiscountRow" style="display: none;">
+                <span>Giảm giá Voucher:</span>
+                <span id="priceReceiptDiscount">-0 ₫</span>
+              </div>
+              <div class="pricing-row total">
+                <span>Tổng thanh toán:</span>
+                <span class="total-amount" id="priceReceiptFinalTotal">0 ₫</span>
+              </div>
+            </div>
+
+            <!-- Payment & Booking Initial Status -->
+            <div class="form-row" style="margin-top: 1rem;">
+              <div class="form-group">
+                <label class="form-label" for="selectPaymentStatus">Trạng thái thanh toán <span class="required">*</span></label>
+                <select id="selectPaymentStatus" class="form-select" required>
+                  <option value="paid">Đã thanh toán đủ</option>
+                  <option value="partial">Đặt cọc một phần</option>
+                  <option value="unpaid">Chưa thanh toán</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="selectInitialStatus">Trạng thái đơn <span class="required">*</span></label>
+                <select id="selectInitialStatus" class="form-select" required>
+                  <option value="confirmed">Đã xác nhận (Confirmed)</option>
+                  <option value="pending">Chờ xác nhận (Pending)</option>
+                  <option value="checked_in">Đã nhận phòng (Checked-in)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="createModalCancel">Hủy bỏ</button>
+          <button type="submit" class="btn btn-primary" id="btnSubmitBooking">
+            <i data-lucide="check" style="width: 16px; height: 16px;"></i>
+            Xác nhận đặt phòng
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: BOOKING DETAIL (XEM CHI TIẾT ĐƠN)
+       ========================================================================== -->
+  <div class="modal-backdrop" id="bookingDetailModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 620px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="detailBookingCode">Chi tiết đơn BK-000</h3>
+          <span class="text-muted" style="font-size: 0.78rem;" id="detailCreatedAt">Khởi tạo ngày: --</span>
+        </div>
+        <button type="button" class="modal-close-btn" id="detailModalClose" aria-label="Đóng">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        
+        <!-- Status Row Banner -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; padding: 0.85rem 1rem; background-color: var(--bg-surface-subtle); border-radius: var(--border-radius-md); border: 1px solid var(--border-color);">
+          <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Trạng thái hiện tại:</span>
+          <div id="detailStatusBadgeContainer"></div>
+        </div>
+
+        <div class="booking-detail-grid">
+          
+          <!-- Block 1: Customer -->
+          <div class="detail-block">
+            <div class="detail-block-title">
+              <i data-lucide="user" style="width: 14px; height: 14px;"></i>
+              Khách hàng
+            </div>
+            <div class="detail-item">
+              <span class="detail-item-label">Họ tên:</span>
+              <span class="detail-item-val" id="detailCustName">--</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-item-label">Điện thoại:</span>
+              <span class="detail-item-val" id="detailCustPhone">--</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-item-label">CCCD:</span>
+              <span class="detail-item-val" id="detailCustIdCard">--</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-item-label">Email:</span>
+              <span class="detail-item-val" id="detailCustEmail">--</span>
+            </div>
+          </div>
+
+          <!-- Block 2: Room -->
+          <div class="detail-block">
+            <div class="detail-block-title">
+              <i data-lucide="door-closed" style="width: 14px; height: 14px;"></i>
+              Phòng đặt
+            </div>
+            <div class="detail-item">
+              <span class="detail-item-label">Số phòng:</span>
+              <span class="detail-item-val font-bold" style="color: var(--color-primary);" id="detailRoomNum">--</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-item-label">Loại phòng:</span>
+              <span class="detail-item-val" id="detailRoomType">--</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-item-label">Đơn giá:</span>
+              <span class="detail-item-val" id="detailRoomPrice">--</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Block 3: Stay & Finance -->
+        <div class="detail-block" style="margin-bottom: 1rem;">
+          <div class="detail-block-title">
+            <i data-lucide="receipt" style="width: 14px; height: 14px;"></i>
+            Thời gian & Thanh toán
+          </div>
+          <div class="detail-item">
+            <span class="detail-item-label">Thời gian lưu trú:</span>
+            <span class="detail-item-val" id="detailStayDates">--</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-item-label">Voucher áp dụng:</span>
+            <span class="detail-item-val" id="detailVoucherCode">Không</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-item-label">Trạng thái thanh toán:</span>
+            <span class="detail-item-val" id="detailPaymentStatus">--</span>
+          </div>
+          <div class="detail-item" style="border-top: 1px dashed var(--border-color); padding-top: 0.5rem; margin-top: 0.5rem;">
+            <span class="detail-item-label font-bold" style="font-size: 1rem;">Tổng thanh toán:</span>
+            <span class="detail-item-val font-bold" style="font-size: 1.25rem; color: var(--color-accent);" id="detailTotalAmount">-- ₫</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer" id="detailModalActions">
+        <button type="button" class="btn btn-outline" id="detailModalDismiss">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: CANCEL BOOKING CONFIRMATION
+       ========================================================================== -->
+  <div class="modal-backdrop" id="cancelBookingModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title" style="color: var(--status-maintenance);">
+          <i data-lucide="alert-triangle" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 0.35rem;"></i>
+          Xác nhận hủy đặt phòng
+        </h3>
+        <button type="button" class="modal-close-btn" id="cancelModalClose" aria-label="Đóng">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="cancelModalTargetText" style="font-size: 0.95rem; line-height: 1.5; color: var(--text-main); margin-bottom: 1rem;">
+          Bạn có chắc chắn muốn hủy đơn đặt phòng này?
+        </p>
+        <div class="form-group">
+          <label class="form-label" for="inputCancelReason">Lý do hủy (tùy chọn):</label>
+          <input type="text" id="inputCancelReason" class="form-control" placeholder="VD: Khách đổi lịch trình đột xuất...">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" id="cancelModalDismiss">Quay lại</button>
+        <button type="button" class="btn btn-danger" id="btnConfirmCancelBooking">
+          <i data-lucide="x-circle" style="width: 16px; height: 16px;"></i>
+          Xác nhận hủy đơn
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- JavaScript ES6+ Application Modules -->
   <script type="module" src="../js/main.js"></script>
+  <script type="module" src="../js/pages/bookings.js"></script>
 </body>
 </html>

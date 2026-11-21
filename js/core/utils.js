@@ -37,6 +37,21 @@ export function formatDate(dateString) {
 }
 
 /**
+ * Calculate number of nights between check-in and check-out
+ * @param {string} checkInDate 'YYYY-MM-DD'
+ * @param {string} checkOutDate 'YYYY-MM-DD'
+ * @returns {number}
+ */
+export function calculateNights(checkInDate, checkOutDate) {
+  if (!checkInDate || !checkOutDate) return 0;
+  const start = new Date(checkInDate);
+  const end = new Date(checkOutDate);
+  const diffTime = end.getTime() - start.getTime();
+  if (diffTime <= 0) return 0;
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+}
+
+/**
  * Return badge HTML for room status
  * @param {string} status 'available' | 'occupied' | 'cleaning' | 'maintenance'
  * @returns {string} HTML string
@@ -60,11 +75,27 @@ export function getRoomStatusBadge(status) {
  */
 export function getBookingStatusBadge(status) {
   const map = {
-    checked_in: { label: "Đã nhận phòng", class: "badge-occupied" },
+    checked_in: { label: "Đang lưu trú", class: "badge-occupied" },
     confirmed: { label: "Đã xác nhận", class: "badge-confirmed" },
-    pending: { label: "Chờ xử lý", class: "badge-pending" },
+    pending: { label: "Chờ xác nhận", class: "badge-pending" },
     cancelled: { label: "Đã hủy", class: "badge-cancelled" },
     checked_out: { label: "Đã trả phòng", class: "badge-available" }
+  };
+
+  const item = map[status] || { label: status, class: "badge-pending" };
+  return `<span class="badge ${item.class}"><span class="badge-dot"></span>${item.label}</span>`;
+}
+
+/**
+ * Return badge HTML for payment status
+ * @param {string} status 'paid' | 'unpaid' | 'partial'
+ * @returns {string} HTML string
+ */
+export function getPaymentStatusBadge(status) {
+  const map = {
+    paid: { label: "Đã thanh toán", class: "badge-available" },
+    unpaid: { label: "Chưa thanh toán", class: "badge-maintenance" },
+    partial: { label: "Đặt cọc một phần", class: "badge-cleaning" }
   };
 
   const item = map[status] || { label: status, class: "badge-pending" };

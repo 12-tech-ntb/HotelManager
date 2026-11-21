@@ -92,7 +92,8 @@ HotelManager/
 | **4** | **Kiến trúc dữ liệu & Service Layer** | ✅ Hoàn thành (`js/data/mock-data.js`, `js/services/`, `js/core/`) |
 | **5** | **Quản lý phòng (`rooms.html`)** | ✅ Hoàn thành (Lưới thẻ, Bảng dữ liệu, Lọc & Tìm kiếm, Modal Thêm/Sửa, Xóa & Đổi trạng thái nhanh) |
 | **6** | **Thương hiệu & Favicon** | ✅ Hoàn thành (Logo Sidebar có ảnh + fallback onerror, đầy đủ thẻ Favicon cho tab trình duyệt) |
-| **7** | **Quản lý khách hàng & Voucher** | ⏳ Khung điều hướng hoàn tất, giao diện chi tiết ở bước tiếp theo |
-| **8** | **Đặt phòng & Check-in / Out & Lịch phòng** | ⏳ Khung điều hướng hoàn tất, giao diện chi tiết ở Giai đoạn 3 |
-| **9** | **Báo cáo chi tiết (`reports.html`)** | ⏳ Khung điều hướng hoàn tất, giao diện chi tiết ở Giai đoạn 4 |
-| **10** | **Tích hợp Supabase & PostgreSQL** | ⏳ Sẵn sàng kiến trúc, sẽ tích hợp sau khi hoàn thiện frontend thuần |
+| **7** | **Quản lý đặt phòng (`bookings.html`)** | ✅ Hoàn thành (Mini KPI, Lọc & Tìm kiếm, Modal Tạo đặt phòng tính tiền tự động + Voucher, Xem chi tiết, Xác nhận & Hủy đơn) |
+| **8** | **Check-in / Out & Lịch phòng (`calendar.html`)** | ⏳ Khung điều hướng hoàn tất, giao diện chi tiết ở bước tiếp theo |
+| **9** | **Quản lý khách hàng & Voucher** | ⏳ Khung điều hướng hoàn tất, giao diện chi tiết ở bước tiếp theo |
+| **10** | **Báo cáo chi tiết (`reports.html`)** | ⏳ Khung điều hướng hoàn tất, giao diện chi tiết ở Giai đoạn 4 |
+| **11** | **Tích hợp Supabase & PostgreSQL** | ⏳ Sẵn sàng kiến trúc, sẽ tích hợp sau khi hoàn thiện frontend thuần |

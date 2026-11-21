@@ -1,0 +1,345 @@
+/* ==========================================================================
+   HOTEL MANAGEMENT SYSTEM - BOOKINGS PAGE STYLES
+   Mini KPI Strip, Booking Filters, Table Enhancements, Calculator Summary
+   ========================================================================== */
+
+/* ---------------- Mini KPI Strip ---------------- */
+.mini-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.mini-kpi-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-xs);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.mini-kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  border-color: #cbd5e1;
+}
+
+.mini-kpi-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.mini-kpi-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mini-kpi-val {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-top: 0.15rem;
+}
+
+/* ---------------- Bookings Toolbar & Filter Card ---------------- */
+.bookings-toolbar-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.bookings-toolbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.booking-search-box {
+  flex: 1;
+  min-width: 280px;
+}
+
+.booking-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.date-filter-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background-color: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+}
+
+.date-filter-input {
+  border: none;
+  background: transparent;
+  font-size: var(--font-size-xs);
+  color: var(--text-main);
+  outline: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.btn-clear-date {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.15rem;
+  display: flex;
+  align-items: center;
+}
+
+.btn-clear-date:hover {
+  color: var(--text-main);
+}
+
+/* ---------------- Table Custom Badges & Tags ---------------- */
+.stay-period {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.stay-dates {
+  font-size: 0.813rem;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+}
+
+.stay-nights-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  background-color: var(--color-accent-light);
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--border-radius-full);
+  display: inline-block;
+  width: fit-content;
+}
+
+.voucher-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #b45309;
+  background-color: #fef3c7;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #fde68a;
+  letter-spacing: 0.02em;
+}
+
+.voucher-none {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ---------------- Create Booking Modal Custom Styles ---------------- */
+.modal-section-card {
+  background-color: #fafbfc;
+  border: 1px solid var(--border-color-subtle);
+  border-radius: var(--border-radius-md);
+  padding: 1rem 1.15rem;
+  margin-bottom: 1rem;
+}
+
+.modal-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.844rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border-color-subtle);
+}
+
+.customer-type-toggle {
+  display: flex;
+  gap: 1.25rem;
+  margin-bottom: 0.85rem;
+}
+
+.customer-type-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+
+.customer-type-label input[type="radio"] {
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.nights-summary-banner {
+  background-color: var(--color-accent-light);
+  color: var(--color-accent-hover);
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--border-radius-sm);
+  font-size: 0.78rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+/* Voucher Input Box */
+.voucher-input-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.voucher-message {
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-top: 0.35rem;
+}
+
+.voucher-message.success { color: var(--status-available); }
+.voucher-message.error { color: var(--status-maintenance); }
+
+/* Pricing Calculation Box */
+.pricing-receipt-box {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 0.85rem 1rem;
+  margin-top: 0.5rem;
+}
+
+.pricing-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.813rem;
+  color: var(--text-secondary);
+  padding: 0.3rem 0;
+}
+
+.pricing-row.discount {
+  color: #b45309;
+  font-weight: 600;
+}
+
+.pricing-row.total {
+  border-top: 1px dashed var(--border-color);
+  margin-top: 0.4rem;
+  padding-top: 0.6rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.pricing-row.total .total-amount {
+  color: var(--color-accent);
+  font-size: 1.25rem;
+}
+
+/* ---------------- Detail Modal / Invoice Layout ---------------- */
+.booking-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.detail-block {
+  background-color: #fafbfc;
+  border: 1px solid var(--border-color-subtle);
+  border-radius: var(--border-radius-md);
+  padding: 1rem;
+}
+
+.detail-block-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.844rem;
+}
+
+.detail-item-label {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.detail-item-val {
+  color: var(--text-main);
+  font-weight: 600;
+  text-align: right;
+}
+
+/* ---------------- Responsive Bookings Page ---------------- */
+@media (max-width: 1024px) {
+  .mini-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .bookings-toolbar-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .booking-filter-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .booking-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .mini-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}
