@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Hotel Management System</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon/favicon.svg">
+  <link rel="shortcut icon" href="assets/icons/favicon/favicon.ico">
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <div class="app-layout">
+    
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ==========================================================================
+         SIDEBAR NAVIGATION (8 Main Functional Modules)
+         ========================================================================== -->
+    <aside class="sidebar" id="sidebar">
+      <!-- Sidebar Brand Header -->
+      <div class="sidebar-brand">
+        <div class="brand-wrapper">
+          <div class="brand-logo-icon">
+            <i data-lucide="hotel" style="width: 22px; height: 22px;"></i>
+          </div>
+          <div class="brand-text-group">
+            <span class="brand-name">Aurora Hotel</span>
+            <span class="brand-tagline">Management System</span>
+          </div>
+        </div>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Đóng menu">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
+
+      <!-- Sidebar Navigation Menu -->
+      <nav class="sidebar-nav">
+        <span class="nav-section-title">Tổng quan & Vận hành</span>
+        <ul class="nav-group">
+          <!-- 1. Dashboard -->
+          <li class="nav-item">
+            <a href="index.html" class="nav-link active">
+              <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span>
+              <span class="nav-text">Dashboard</span>
+            </a>
+          </li>
+          <!-- 2. Quản lý phòng -->
+          <li class="nav-item">
+            <a href="pages/rooms.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="bed-double"></i></span>
+              <span class="nav-text">Quản lý phòng</span>
+            </a>
+          </li>
+          <!-- 3. Quản lý đặt phòng -->
+          <li class="nav-item">
+            <a href="pages/bookings.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="calendar-check"></i></span>
+              <span class="nav-text">Đặt phòng</span>
+            </a>
+          </li>
+          <!-- 4. Lịch đặt phòng -->
+          <li class="nav-item">
+            <a href="pages/calendar.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="calendar-days"></i></span>
+              <span class="nav-text">Lịch phòng</span>
+            </a>
+          </li>
+          <!-- 5. Check-in / Check-out -->
+          <li class="nav-item">
+            <a href="pages/checkin-checkout.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="concierge-bell"></i></span>
+              <span class="nav-text">Check-in / Out</span>
+            </a>
+          </li>
+        </ul>
+
+        <span class="nav-section-title">Khách hàng & Doanh nghiệp</span>
+        <ul class="nav-group">
+          <!-- 6. Quản lý khách hàng -->
+          <li class="nav-item">
+            <a href="pages/customers.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="users"></i></span>
+              <span class="nav-text">Khách hàng</span>
+            </a>
+          </li>
+          <!-- 7. Quản lý Voucher -->
+          <li class="nav-item">
+            <a href="pages/vouchers.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="ticket"></i></span>
+              <span class="nav-text">Mã Voucher</span>
+            </a>
+          </li>
+          <!-- 8. Báo cáo & Thống kê -->
+          <li class="nav-item">
+            <a href="pages/reports.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="bar-chart-3"></i></span>
+              <span class="nav-text">Báo cáo doanh thu</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Sidebar Footer User Profile -->
+      <div class="sidebar-footer">
+        <div class="hotel-status-indicator">
+          <span class="status-dot"></span>
+          <span>Hệ thống hoạt động bình thường</span>
+        </div>
+        <div class="user-quick-profile">
+          <div class="user-avatar">AD</div>
+          <div class="user-details">
+            <div class="user-name">Admin Lễ Tân</div>
+            <div class="user-role">Quản lý ca trực</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ==========================================================================
+         MAIN CONTENT WRAPPER
+         ========================================================================== -->
+    <div class="main-wrapper">
+      
+      <!-- Top Sticky Header -->
+      <header class="header">
+        <div class="header-left">
+          <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Mở menu">
+            <i data-lucide="menu" style="width: 22px; height: 22px;"></i>
+          </button>
+          <div class="header-title-block">
+            <h1 class="header-page-title">Bàn làm việc Tổng quan</h1>
+            <div class="header-breadcrumb">
+              <span>Hệ thống</span> &bull; <span>Dashboard</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Global Search Box -->
+        <div class="header-search">
+          <div class="search-input-wrapper">
+            <span class="search-icon">
+              <i data-lucide="search" style="width: 16px; height: 16px;"></i>
+            </span>
+            <input 
+              type="text" 
+              id="globalSearchInput" 
+              class="search-input" 
+              placeholder="Tìm số phòng, tên khách, mã đơn..."
+              autocomplete="off"
+            >
+            <span class="search-shortcut">Ctrl K</span>
+          </div>
+        </div>
+
+        <!-- Header Right Actions -->
+        <div class="header-right">
+          <div class="header-date-badge">
+            <i data-lucide="calendar" style="width: 14px; height: 14px; color: var(--color-accent);"></i>
+            <span id="currentDateBadge">Đang cập nhật...</span>
+          </div>
+
+          <button class="header-action-btn" aria-label="Thông báo" title="Thông báo hệ thống">
+            <i data-lucide="bell" style="width: 18px; height: 18px;"></i>
+            <span class="notification-dot"></span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Page Canvas -->
+      <main class="main-content">
+        
+        <!-- Welcome Greeting Banner -->
+        <section class="page-header-row">
+          <div>
+            <h2 class="greeting-title">Chào buổi sáng, Quản lý! 👋</h2>
+            <p class="greeting-subtitle">Dưới đây là tóm tắt tình trạng hoạt động và các đơn đặt phòng hôm nay tại Aurora Luxury Hotel.</p>
+          </div>
+          <div class="page-header-actions">
+            <a href="pages/checkin-checkout.html" class="btn btn-primary">
+              <i data-lucide="concierge-bell" style="width: 16px; height: 16px;"></i>
+              Bàn Lễ Tân
+            </a>
+            <a href="pages/bookings.html" class="btn btn-outline">
+              <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i>
+              Tạo đặt phòng mới
+            </a>
+          </div>
+        </section>
+
+        <!-- ======================================================================
+             1. 6 KPI CARDS GRID
+             ====================================================================== -->
+        <section class="kpi-grid" aria-label="Thống kê tổng quan">
+          
+          <!-- Card 1: Tổng số phòng -->
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-label">Tổng số phòng</span>
+              <div class="kpi-icon-box kpi-icon-primary">
+                <i data-lucide="hotel" style="width: 20px; height: 20px;"></i>
+              </div>
+            </div>
+            <div class="kpi-value" id="kpiTotalRooms">--</div>
+            <div class="kpi-bottom">
+              <span class="kpi-trend neutral">4 tầng khách sạn</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Phòng đang trống -->
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-label">Phòng đang trống</span>
+              <div class="kpi-icon-box kpi-icon-success">
+                <i data-lucide="check-circle" style="width: 20px; height: 20px;"></i>
+              </div>
+            </div>
+            <div class="kpi-value" style="color: var(--status-available);" id="kpiAvailableRooms">--</div>
+            <div class="kpi-bottom">
+              <span class="kpi-trend positive">
+                <i data-lucide="sparkles" style="width: 12px; height: 12px;"></i>
+                Sẵn sàng đón khách
+              </span>
+            </div>
+          </div>
+
+          <!-- Card 3: Phòng đang sử dụng -->
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-label">Phòng có khách</span>
+              <div class="kpi-icon-box kpi-icon-blue">
+                <i data-lucide="user-check" style="width: 20px; height: 20px;"></i>
+              </div>
+            </div>
+            <div class="kpi-value" style="color: var(--status-occupied);" id="kpiOccupiedRooms">--</div>
+            <div class="kpi-bottom">
+              <span class="kpi-trend neutral">Đang lưu trú</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Phòng đang bảo trì -->
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-label">Phòng bảo trì</span>
+              <div class="kpi-icon-box kpi-icon-danger">
+                <i data-lucide="wrench" style="width: 20px; height: 20px;"></i>
+              </div>
+            </div>
+            <div class="kpi-value" style="color: var(--status-maintenance);" id="kpiMaintenanceRooms">--</div>
+            <div class="kpi-bottom">
+              <span class="kpi-trend negative">Đang sửa chữa</span>
+            </div>
+          </div>
+
+          <!-- Card 5: Đặt phòng hôm nay -->
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-label">Nhận phòng hôm nay</span>
+              <div class="kpi-icon-box kpi-icon-amber">
+                <i data-lucide="calendar-plus" style="width: 20px; height: 20px;"></i>
+              </div>
+            </div>
+            <div class="kpi-value" style="color: var(--status-cleaning);" id="kpiTodayBookings">--</div>
+            <div class="kpi-bottom">
+              <span class="kpi-trend positive">Khách check-in</span>
+            </div>
+          </div>
+
+          <!-- Card 6: Doanh thu tháng -->
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-label">Doanh thu tháng</span>
+              <div class="kpi-icon-box kpi-icon-accent">
+                <i data-lucide="badge-dollar-sign" style="width: 20px; height: 20px;"></i>
+              </div>
+            </div>
+            <div class="kpi-value" style="font-size: 1.35rem;" id="kpiMonthlyRevenue">-- ₫</div>
+            <div class="kpi-bottom">
+              <span class="kpi-trend positive" id="kpiRevenueGrowth">+12.5%</span>
+              <span>so với tháng trước</span>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ======================================================================
+             2. VISUAL CHARTS & ANALYTICS SECTION
+             ====================================================================== -->
+        <section class="analytics-grid">
+          
+          <!-- Weekly Revenue Chart Card (Pure SVG) -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <h3 class="card-title">Doanh thu 7 ngày gần nhất</h3>
+                <span class="card-subtitle">Biểu đồ đối soát doanh thu phát sinh theo từng ngày (VND)</span>
+              </div>
+              <a href="pages/reports.html" class="btn btn-outline btn-sm">
+                Chi tiết báo cáo
+              </a>
+            </div>
+            <div class="card-body">
+              <div class="bar-chart-container" id="revenueBarChartContainer">
+                <div class="text-center text-muted" style="padding-top: 80px;">Đang tải biểu đồ...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Room Occupancy Distribution Card (Pure SVG Donut) -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <h3 class="card-title">Tỉ lệ phòng hiện tại</h3>
+                <span class="card-subtitle">Phân bổ trạng thái 16 phòng</span>
+              </div>
+              <a href="pages/rooms.html" class="btn btn-outline btn-sm">
+                Xem sơ đồ
+              </a>
+            </div>
+            <div class="card-body">
+              <div class="donut-chart-wrapper">
+                <div id="roomDonutChartContainer"></div>
+                <div class="donut-legend-list" id="roomDonutLegend"></div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ======================================================================
+             3. RECENT BOOKINGS TABLE
+             ====================================================================== -->
+        <section class="table-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <h3 class="card-title">Đặt phòng mới nhất</h3>
+              <span class="card-subtitle">Danh sách các giao dịch đặt phòng vừa phát sinh tại quầy & trực tuyến</span>
+            </div>
+            <a href="pages/bookings.html" class="btn btn-outline btn-sm">
+              <i data-lucide="list" style="width: 14px; height: 14px;"></i>
+              Xem tất cả đặt phòng
+            </a>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Mã đặt phòng</th>
+                  <th>Khách hàng</th>
+                  <th>Phòng lưu trú</th>
+                  <th>Thời gian lưu trú</th>
+                  <th>Tổng thanh toán</th>
+                  <th>Trạng thái</th>
+                  <th class="text-right">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="recentBookingsTbody">
+                <tr>
+                  <td colspan="7" class="text-center text-muted" style="padding: 2rem;">
+                    Đang tải danh sách đặt phòng...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Lucide Icons Library (Official UMD) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- JavaScript ES6+ Application Modules -->
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/pages/dashboard.js"></script>
+</body>
+</html>

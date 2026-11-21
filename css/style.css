@@ -1,0 +1,166 @@
+/* ==========================================================================
+   HOTEL MANAGEMENT SYSTEM - DESIGN TOKENS & BASE STYLES
+   Style: Modern, Elegant, Professional Hospitality Dashboard
+   ========================================================================== */
+
+:root {
+  /* ---------------- Core Color Palette (Slate Navy & Hospitality Teal) ---------------- */
+  --color-primary: #0f172a;          /* Slate 900 - Deep brand navy */
+  --color-primary-light: #1e293b;    /* Slate 800 - Sidebar & surface contrast */
+  --color-primary-hover: #334155;    /* Slate 700 */
+  
+  --color-accent: #0d9488;           /* Teal 600 - Fresh, welcoming hospitality accent */
+  --color-accent-light: #ccfbf1;     /* Teal 100 - Accent backgrounds */
+  --color-accent-hover: #0f766e;     /* Teal 700 */
+
+  --color-gold: #d97706;             /* Amber 600 - Luxury / VIP accent */
+  --color-gold-light: #fef3c7;       /* Amber 100 */
+
+  /* ---------------- Neutral & Surface Colors ---------------- */
+  --bg-app: #f8fafc;                 /* Slate 50 - Soft daylight app canvas */
+  --bg-surface: #ffffff;             /* Pure white card & table surfaces */
+  --bg-surface-subtle: #f1f5f9;      /* Slate 100 - Secondary inputs & borders */
+  --bg-surface-hover: #f8fafc;       /* Slate 50 hover state */
+
+  /* ---------------- Text Colors ---------------- */
+  --text-main: #0f172a;              /* Slate 900 - High contrast text */
+  --text-secondary: #475569;         /* Slate 600 - Body & labels */
+  --text-muted: #94a3b8;             /* Slate 400 - Timestamps & placeholders */
+  --text-inverse: #ffffff;           /* Text on dark surfaces */
+
+  /* ---------------- Semantic Status Colors ---------------- */
+  /* Available (Trống) */
+  --status-available: #16a34a;
+  --status-available-bg: #dcfce7;
+  --status-available-border: #bbf7d0;
+
+  /* Occupied (Đang có khách) */
+  --status-occupied: #2563eb;
+  --status-occupied-bg: #dbeafe;
+  --status-occupied-border: #bfdbfe;
+
+  /* Cleaning (Đang dọn phòng) */
+  --status-cleaning: #d97706;
+  --status-cleaning-bg: #fef3c7;
+  --status-cleaning-border: #fde68a;
+
+  /* Maintenance (Đang bảo trì) */
+  --status-maintenance: #e11d48;
+  --status-maintenance-bg: #ffe4e6;
+  --status-maintenance-border: #fecdd3;
+
+  /* Booking Statuses */
+  --status-confirmed: #059669;
+  --status-confirmed-bg: #d1fae5;
+  --status-pending: #d97706;
+  --status-pending-bg: #fef3c7;
+  --status-cancelled: #64748b;
+  --status-cancelled-bg: #f1f5f9;
+
+  /* ---------------- Borders & Dividers ---------------- */
+  --border-color: #e2e8f0;           /* Slate 200 */
+  --border-color-subtle: #f1f5f9;    /* Slate 100 */
+  --border-radius-sm: 6px;
+  --border-radius-md: 10px;
+  --border-radius-lg: 14px;
+  --border-radius-xl: 20px;
+  --border-radius-full: 9999px;
+
+  /* ---------------- Shadows ---------------- */
+  --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.08), 0 1px 2px -1px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+
+  /* ---------------- Typography ---------------- */
+  --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-size-xs: 0.75rem;     /* 12px */
+  --font-size-sm: 0.844rem;    /* 13.5px */
+  --font-size-base: 0.938rem;  /* 15px */
+  --font-size-md: 1.063rem;    /* 17px */
+  --font-size-lg: 1.25rem;     /* 20px */
+  --font-size-xl: 1.5rem;      /* 24px */
+  --font-size-2xl: 1.875rem;   /* 30px */
+
+  /* ---------------- Layout Dimensions ---------------- */
+  --sidebar-width: 260px;
+  --header-height: 70px;
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+  --z-sidebar: 100;
+  --z-header: 90;
+  --z-modal: 1000;
+  --z-toast: 1100;
+}
+
+/* ---------------- CSS Reset & Base Rules ---------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--text-main);
+  background-color: var(--bg-app);
+  line-height: 1.5;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  outline: none;
+}
+
+input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* ---------------- Helper Classes ---------------- */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+.text-muted { color: var(--text-muted); }
+.text-secondary { color: var(--text-secondary); }
