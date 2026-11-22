@@ -13,7 +13,8 @@ const state = {
   filters: {
     search: '',
     type: 'all',
-    status: 'all'
+    status: 'all',
+    floor: 'all'
   },
   viewMode: 'grid', // 'grid' | 'table'
   editingRoomId: null,
@@ -51,6 +52,15 @@ function initElements() {
   if (typeFilter) {
     typeFilter.addEventListener('change', (e) => {
       state.filters.type = e.target.value;
+      loadRooms();
+    });
+  }
+
+  // Floor filter dropdown
+  const floorFilter = document.getElementById('filterRoomFloor');
+  if (floorFilter) {
+    floorFilter.addEventListener('change', (e) => {
+      state.filters.floor = e.target.value;
       loadRooms();
     });
   }
@@ -103,6 +113,48 @@ function initElements() {
     btnAddRoom.addEventListener('click', () => openRoomModal());
   }
 
+  // Bulk Setup Modal Open Button
+  const btnBulkRoom = document.getElementById('btnBulkRoomModal');
+  if (btnBulkRoom) {
+    btnBulkRoom.addEventListener('click', () => openBulkModal());
+  }
+
+  // Bulk Modal Close buttons
+  const bulkModalClose = document.getElementById('bulkModalClose');
+  const bulkModalCancel = document.getElementById('bulkModalCancel');
+  const bulkModalBackdrop = document.getElementById('bulkRoomModal');
+
+  [bulkModalClose, bulkModalCancel].forEach(btn => {
+    if (btn) btn.addEventListener('click', () => closeBulkModal());
+  });
+
+  if (bulkModalBackdrop) {
+    bulkModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === bulkModalBackdrop) closeBulkModal();
+    });
+  }
+
+  // Bulk Form Live Preview inputs
+  const bulkInputs = ['bulkStartFloor', 'bulkEndFloor', 'bulkRoomsPerFloor', 'bulkRoomPrefix'];
+  bulkInputs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', () => updateBulkPreview());
+    }
+  });
+
+  // Bulk Form Submit
+  const bulkRoomForm = document.getElementById('bulkRoomForm');
+  if (bulkRoomForm) {
+    bulkRoomForm.addEventListener('submit', handleBulkSubmit);
+  }
+
+  // Delete Floor Rooms Button
+  const btnDeleteFloor = document.getElementById('btnDeleteFloorRooms');
+  if (btnDeleteFloor) {
+    btnDeleteFloor.addEventListener('click', handleDeleteFloor);
+  }
+
   // Modal Close buttons
   const roomModalClose = document.getElementById('roomModalClose');
   const roomModalCancel = document.getElementById('roomModalCancel');
@@ -149,6 +201,7 @@ function initElements() {
     if (e.key === 'Escape') {
       closeRoomModal();
       closeDeleteModal();
+      closeBulkModal();
     }
   });
 }
@@ -187,6 +240,8 @@ function toggleViewContainers() {
  * Load and render rooms list
  */
 async function loadRooms() {
+  await populateFloorFilter();
+
   const filteredRooms = await roomService.filterRooms(state.filters);
   const allRooms = await roomService.getAllRooms();
 
@@ -577,6 +632,175 @@ async function handleConfirmDelete() {
     await roomService.deleteRoom(state.deletingRoomId);
     toast.show('Đã xóa phòng thành công!', 'success');
     closeDeleteModal();
+    await loadRooms();
+  } catch (err) {
+    toast.show(err.message, 'error');
+  }
+}
+
+/**
+ * Populate dynamic floor options for filter and cleanup selects
+ */
+async function populateFloorFilter() {
+  const floorFilter = document.getElementById('filterRoomFloor');
+  const cleanupSelect = document.getElementById('cleanupFloorSelect');
+  const floors = await roomService.getAllFloors();
+
+  if (floorFilter) {
+    const currentVal = state.filters.floor;
+    let html = `<option value="all">Tất cả các tầng</option>`;
+    floors.forEach(f => {
+      html += `<option value="${f}" ${String(currentVal) === String(f) ? 'selected' : ''}>Tầng ${f}</option>`;
+    });
+    floorFilter.innerHTML = html;
+  }
+
+  if (cleanupSelect) {
+    let cleanHtml = `<option value="">-- Chọn tầng --</option>`;
+    floors.forEach(f => {
+      cleanHtml += `<option value="${f}">Tầng ${f}</option>`;
+    });
+    cleanupSelect.innerHTML = cleanHtml;
+  }
+}
+
+/**
+ * Open Bulk Room Setup Modal
+ */
+async function openBulkModal() {
+  const modal = document.getElementById('bulkRoomModal');
+  if (!modal) return;
+
+  const floors = await roomService.getAllFloors();
+  const nextFloor = floors.length > 0 ? Math.max(...floors) + 1 : 1;
+
+  const startInput = document.getElementById('bulkStartFloor');
+  const endInput = document.getElementById('bulkEndFloor');
+  if (startInput) startInput.value = nextFloor;
+  if (endInput) endInput.value = nextFloor;
+
+  await updateBulkPreview();
+
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  initLucideIcons();
+}
+
+/**
+ * Close Bulk Room Setup Modal
+ */
+function closeBulkModal() {
+  const modal = document.getElementById('bulkRoomModal');
+  if (modal) modal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+/**
+ * Update Bulk Room Live Preview
+ */
+async function updateBulkPreview() {
+  const startFloor = Number(document.getElementById('bulkStartFloor')?.value) || 1;
+  const endFloor = Number(document.getElementById('bulkEndFloor')?.value) || startFloor;
+  const roomsPerFloor = Math.max(1, Math.min(Number(document.getElementById('bulkRoomsPerFloor')?.value) || 4, 30));
+  const prefix = document.getElementById('bulkRoomPrefix')?.value?.trim() || '';
+
+  const fromFloor = Math.min(startFloor, endFloor);
+  const toFloor = Math.max(startFloor, endFloor);
+
+  const rooms = await roomService.getAllRooms();
+  const existingSet = new Set(rooms.map(r => String(r.roomNumber).trim()));
+
+  const previewTagsContainer = document.getElementById('bulkPreviewTags');
+  const countNewEl = document.getElementById('bulkCountNew');
+  const countSkipEl = document.getElementById('bulkCountSkip');
+
+  let newCount = 0;
+  let skipCount = 0;
+  let tagsHtml = '';
+
+  for (let f = fromFloor; f <= toFloor; f++) {
+    for (let i = 1; i <= roomsPerFloor; i++) {
+      const roomNum = `${prefix}${f}${String(i).padStart(2, '0')}`;
+      if (existingSet.has(roomNum)) {
+        skipCount++;
+        tagsHtml += `<span class="preview-tag existing" title="Phòng ${roomNum} đã tồn tại (sẽ bỏ qua)">${escapeHTML(roomNum)}</span>`;
+      } else {
+        newCount++;
+        tagsHtml += `<span class="preview-tag new" title="Phòng ${roomNum} hợp lệ (sẽ tạo mới)">+${escapeHTML(roomNum)}</span>`;
+      }
+    }
+  }
+
+  if (previewTagsContainer) {
+    previewTagsContainer.innerHTML = tagsHtml || '<span style="color: var(--text-muted); font-size: 0.8rem; padding: 0.5rem;">Không có phòng nào được tạo</span>';
+  }
+
+  if (countNewEl) countNewEl.textContent = `Sẽ tạo mới: ${newCount}`;
+  if (countSkipEl) countSkipEl.textContent = `Bỏ qua (đã có): ${skipCount}`;
+}
+
+/**
+ * Handle Bulk Room Creation Submission
+ */
+async function handleBulkSubmit(e) {
+  e.preventDefault();
+
+  const startFloor = Number(document.getElementById('bulkStartFloor')?.value) || 1;
+  const endFloor = Number(document.getElementById('bulkEndFloor')?.value) || startFloor;
+  const roomsPerFloor = Number(document.getElementById('bulkRoomsPerFloor')?.value) || 4;
+  const prefix = document.getElementById('bulkRoomPrefix')?.value?.trim() || '';
+  const type = document.getElementById('bulkRoomType')?.value || 'Standard Room';
+  const price = Number(document.getElementById('bulkRoomPrice')?.value) || 850000;
+  const capacity = Number(document.getElementById('bulkRoomCapacity')?.value) || 2;
+
+  const amenities = Array.from(document.querySelectorAll('input[name="bulkAmenities"]:checked')).map(cb => cb.value);
+
+  try {
+    const result = await roomService.bulkCreateRooms({
+      startFloor,
+      endFloor,
+      roomsPerFloor,
+      prefix,
+      type,
+      price,
+      capacity,
+      amenities
+    });
+
+    if (result.createdCount > 0) {
+      toast.show(`Đã tạo thành công ${result.createdCount} phòng mới! ${result.skippedCount > 0 ? `(Bỏ qua ${result.skippedCount} phòng đã có)` : ''}`, 'success');
+    } else {
+      toast.show(`Tất cả ${result.skippedCount} phòng dự kiến đều đã tồn tại, không có phòng mới nào được tạo!`, 'info');
+    }
+
+    closeBulkModal();
+    await loadRooms();
+  } catch (err) {
+    toast.show(err.message, 'error');
+  }
+}
+
+/**
+ * Handle Floor Rooms Cleanup / Bulk Deletion
+ */
+async function handleDeleteFloor() {
+  const cleanupSelect = document.getElementById('cleanupFloorSelect');
+  const selectedFloor = cleanupSelect?.value;
+
+  if (!selectedFloor) {
+    toast.show('Vui lòng chọn tầng cần xóa các phòng!', 'warning');
+    return;
+  }
+
+  const confirmMsg = `Bạn có chắc chắn muốn xóa toàn bộ các phòng tại Tầng ${selectedFloor}?\n\nLưu ý: Chỉ các phòng trống và không có lịch đặt phòng mới được phép xóa!`;
+  if (!window.confirm(confirmMsg)) {
+    return;
+  }
+
+  try {
+    const result = await roomService.deleteFloorRooms(selectedFloor);
+    toast.show(`Đã xóa thành công ${result.deletedCount} phòng tại Tầng ${result.floor}!`, 'success');
+    closeBulkModal();
     await loadRooms();
   } catch (err) {
     toast.show(err.message, 'error');

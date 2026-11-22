@@ -15,11 +15,15 @@
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/layout.css">
   <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages/customers.css">
 </head>
 <body>
   <div class="app-layout">
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
+    <!-- ==========================================================================
+         SIDEBAR
+         ========================================================================== -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-brand">
         <div class="brand-wrapper">
@@ -40,68 +44,426 @@
             <span class="brand-tagline">Management System</span>
           </div>
         </div>
-        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Đóng menu"><i data-lucide="x" style="width: 20px; height: 20px;"></i></button>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Đóng menu">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
       </div>
 
       <nav class="sidebar-nav">
-        <span class="nav-section-title">Tổng quan & Vận hành</span>
+        <span class="nav-section-title">Tổng quan &amp; Vận hành</span>
         <ul class="nav-group">
-          <li class="nav-item"><a href="../index.html" class="nav-link"><span class="nav-icon"><i data-lucide="layout-dashboard"></i></span><span class="nav-text">Dashboard</span></a></li>
-          <li class="nav-item"><a href="rooms.html" class="nav-link"><span class="nav-icon"><i data-lucide="bed-double"></i></span><span class="nav-text">Quản lý phòng</span></a></li>
-          <li class="nav-item"><a href="bookings.html" class="nav-link"><span class="nav-icon"><i data-lucide="calendar-check"></i></span><span class="nav-text">Đặt phòng</span></a></li>
-          <li class="nav-item"><a href="calendar.html" class="nav-link"><span class="nav-icon"><i data-lucide="calendar-days"></i></span><span class="nav-text">Lịch phòng</span></a></li>
-          <li class="nav-item"><a href="checkin-checkout.html" class="nav-link"><span class="nav-icon"><i data-lucide="concierge-bell"></i></span><span class="nav-text">Check-in / Out</span></a></li>
+          <li class="nav-item">
+            <a href="../index.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span>
+              <span class="nav-text">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="rooms.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="bed-double"></i></span>
+              <span class="nav-text">Quản lý phòng</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="bookings.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="calendar-check"></i></span>
+              <span class="nav-text">Đặt phòng</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="calendar.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="calendar-days"></i></span>
+              <span class="nav-text">Lịch phòng</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="checkin-checkout.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="concierge-bell"></i></span>
+              <span class="nav-text">Check-in / Out</span>
+            </a>
+          </li>
         </ul>
-        <span class="nav-section-title">Khách hàng & Doanh nghiệp</span>
+        <span class="nav-section-title">Khách hàng &amp; Doanh nghiệp</span>
         <ul class="nav-group">
-          <li class="nav-item"><a href="customers.html" class="nav-link active"><span class="nav-icon"><i data-lucide="users"></i></span><span class="nav-text">Khách hàng</span></a></li>
-          <li class="nav-item"><a href="vouchers.html" class="nav-link"><span class="nav-icon"><i data-lucide="ticket"></i></span><span class="nav-text">Mã Voucher</span></a></li>
-          <li class="nav-item"><a href="reports.html" class="nav-link"><span class="nav-icon"><i data-lucide="bar-chart-3"></i></span><span class="nav-text">Báo cáo doanh thu</span></a></li>
+          <li class="nav-item">
+            <a href="customers.html" class="nav-link active">
+              <span class="nav-icon"><i data-lucide="users"></i></span>
+              <span class="nav-text">Khách hàng</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="vouchers.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="ticket"></i></span>
+              <span class="nav-text">Mã Voucher</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="reports.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="bar-chart-3"></i></span>
+              <span class="nav-text">Báo cáo doanh thu</span>
+            </a>
+          </li>
         </ul>
       </nav>
 
       <div class="sidebar-footer">
         <div class="user-quick-profile">
           <div class="user-avatar">AD</div>
-          <div class="user-details"><div class="user-name">Admin Lễ Tân</div><div class="user-role">Quản lý ca trực</div></div>
+          <div class="user-details">
+            <div class="user-name">Admin Lễ Tân</div>
+            <div class="user-role">Quản lý ca trực</div>
+          </div>
         </div>
       </div>
     </aside>
 
+    <!-- ==========================================================================
+         MAIN WRAPPER
+         ========================================================================== -->
     <div class="main-wrapper">
+
+      <!-- Header -->
       <header class="header">
         <div class="header-left">
-          <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Mở menu"><i data-lucide="menu" style="width: 22px; height: 22px;"></i></button>
+          <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Mở menu">
+            <i data-lucide="menu" style="width: 22px; height: 22px;"></i>
+          </button>
           <div class="header-title-block">
             <h1 class="header-page-title">Hồ sơ khách hàng</h1>
-            <div class="header-breadcrumb"><a href="../index.html">Hệ thống</a> &bull; <span>Khách hàng</span></div>
+            <div class="header-breadcrumb">
+              <a href="../index.html">Hệ thống</a> &bull; <span>Quản lý khách hàng</span>
+            </div>
           </div>
         </div>
         <div class="header-right">
-          <div class="header-date-badge"><i data-lucide="calendar" style="width: 14px; height: 14px; color: var(--color-accent);"></i><span id="currentDateBadge">--</span></div>
+          <div class="header-date-badge">
+            <i data-lucide="calendar" style="width: 14px; height: 14px; color: var(--color-accent);"></i>
+            <span id="currentDateBadge">--</span>
+          </div>
+          <button class="header-action-btn" aria-label="Thông báo" title="Thông báo">
+            <i data-lucide="bell" style="width: 18px; height: 18px;"></i>
+          </button>
         </div>
       </header>
 
+      <!-- Main Content -->
       <main class="main-content">
-        <div class="card" style="padding: 3rem 2rem; text-align: center; max-width: 680px; margin: 3rem auto;">
-          <div style="width: 64px; height: 64px; border-radius: 50%; background-color: var(--color-accent-light); color: var(--color-accent); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto;">
-            <i data-lucide="users" style="width: 32px; height: 32px;"></i>
-          </div>
-          <h2 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem;">Mô-đun Quản lý Khách hàng</h2>
-          <p class="text-secondary" style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
-            Khung điều hướng đã kết nối. Hồ sơ khách lưu trú, lịch sử chi tiêu, số lần đặt phòng và ghi chú phục vụ sẽ được triển khai tại Giai đoạn 2.
-          </p>
+
+        <!-- Page Header Row -->
+        <div class="page-header-row">
           <div>
-            <a href="../index.html" class="btn btn-primary">
-              <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i> Quay về Dashboard
-            </a>
+            <h2 class="greeting-title">Danh sách Khách hàng 👥</h2>
+            <p class="greeting-subtitle">Quản lý hồ sơ, lịch sử lưu trú và thông tin liên hệ của từng khách hàng.</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-primary" id="btnAddCustomerModal">
+              <i data-lucide="user-plus" style="width: 16px; height: 16px;"></i>
+              Thêm khách hàng mới
+            </button>
           </div>
         </div>
+
+        <!-- ======================================================================
+             KPI CARDS
+             ====================================================================== -->
+        <div class="customer-kpi-grid" id="customerKpiGrid">
+          <!-- KPI: Tổng khách hàng -->
+          <div class="customer-kpi-card">
+            <div class="customer-kpi-info">
+              <span class="customer-kpi-label">Tổng khách hàng</span>
+              <span class="customer-kpi-val" id="kpiTotalCustomers">--</span>
+            </div>
+            <div class="customer-kpi-icon blue">
+              <i data-lucide="users" style="width: 24px; height: 24px;"></i>
+            </div>
+          </div>
+          <!-- KPI: Khách trung thành -->
+          <div class="customer-kpi-card">
+            <div class="customer-kpi-info">
+              <span class="customer-kpi-label">Khách trung thành (≥2 lần)</span>
+              <span class="customer-kpi-val" id="kpiLoyalCustomers">--</span>
+            </div>
+            <div class="customer-kpi-icon gold">
+              <i data-lucide="star" style="width: 24px; height: 24px;"></i>
+            </div>
+          </div>
+          <!-- KPI: Đang lưu trú -->
+          <div class="customer-kpi-card">
+            <div class="customer-kpi-info">
+              <span class="customer-kpi-label">Đang lưu trú (Checked-in)</span>
+              <span class="customer-kpi-val" id="kpiInHouseCustomers">--</span>
+            </div>
+            <div class="customer-kpi-icon emerald">
+              <i data-lucide="bed" style="width: 24px; height: 24px;"></i>
+            </div>
+          </div>
+          <!-- KPI: Tổng doanh thu -->
+          <div class="customer-kpi-card">
+            <div class="customer-kpi-info">
+              <span class="customer-kpi-label">Tổng doanh thu tích lũy</span>
+              <span class="customer-kpi-val" id="kpiTotalRevenue" style="font-size: 1.1rem;">--</span>
+            </div>
+            <div class="customer-kpi-icon indigo">
+              <i data-lucide="wallet" style="width: 24px; height: 24px;"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- ======================================================================
+             TOOLBAR & FILTERS
+             ====================================================================== -->
+        <div class="customers-toolbar-card">
+          <div class="customers-toolbar-top">
+            <!-- Search Box -->
+            <div class="customers-search-box search-input-wrapper">
+              <span class="search-icon">
+                <i data-lucide="search" style="width: 16px; height: 16px;"></i>
+              </span>
+              <input
+                type="text"
+                id="customerSearchInput"
+                class="search-input"
+                placeholder="Tìm theo tên, SĐT, email, CCCD/Hộ chiếu..."
+                autocomplete="off"
+              >
+            </div>
+            <!-- Filter Group -->
+            <div class="customers-filter-group">
+              <select id="filterCustomerCategory" class="filter-select" aria-label="Lọc theo phân loại">
+                <option value="all">Tất cả khách hàng</option>
+                <option value="vip">⭐ VIP (≥2 lần lưu trú)</option>
+                <option value="new">🆕 Khách mới (1 lần)</option>
+              </select>
+            </div>
+          </div>
+          <div class="customers-toolbar-bottom">
+            <span class="rooms-count-info" id="customersCountDisplay">
+              Đang tải danh sách...
+            </span>
+          </div>
+        </div>
+
+        <!-- ======================================================================
+             CUSTOMER DATA TABLE
+             ====================================================================== -->
+        <div class="customer-table-card">
+          <div class="table-responsive-wrapper" style="overflow-x: auto;">
+            <table class="customer-table" id="customerTable" aria-label="Bảng danh sách khách hàng">
+              <thead>
+                <tr>
+                  <th>Khách hàng</th>
+                  <th>Điện thoại</th>
+                  <th>Email</th>
+                  <th>CCCD / Hộ chiếu</th>
+                  <th style="text-align: center;">Số lần đặt</th>
+                  <th style="text-align: right;">Tổng chi tiêu</th>
+                  <th style="text-align: center;">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="customerTableBody">
+                <tr>
+                  <td colspan="7" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                    <i data-lucide="loader-circle" style="width: 24px; height: 24px; display: block; margin: 0 auto 0.5rem;"></i>
+                    Đang tải dữ liệu...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </main>
+    </div><!-- .main-wrapper -->
+  </div><!-- .app-layout -->
+
+  <!-- ==========================================================================
+       MODAL: ADD / EDIT CUSTOMER
+       ========================================================================== -->
+  <div class="modal-backdrop" id="customerFormModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 540px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="customerModalTitle">
+          <i data-lucide="user-plus" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 0.35rem; color: var(--color-accent);"></i>
+          Thêm khách hàng mới
+        </h3>
+        <button type="button" class="modal-close-btn" id="customerModalClose" aria-label="Đóng">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
+
+      <form id="customerForm" novalidate>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="inputCustomerName">
+              Họ và tên <span style="color: var(--status-maintenance);">*</span>
+            </label>
+            <input type="text" id="inputCustomerName" class="form-control" placeholder="Nhập họ và tên đầy đủ" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="inputCustomerPhone">
+                Số điện thoại <span style="color: var(--status-maintenance);">*</span>
+              </label>
+              <input type="tel" id="inputCustomerPhone" class="form-control" placeholder="0912 345 678" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="inputCustomerEmail">Email</label>
+              <input type="email" id="inputCustomerEmail" class="form-control" placeholder="example@email.com">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="inputCustomerIdCard">CCCD / Hộ chiếu</label>
+            <input type="text" id="inputCustomerIdCard" class="form-control" placeholder="Số CCCD hoặc số hộ chiếu">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="inputCustomerNotes">Ghi chú / Sở thích phục vụ</label>
+            <textarea
+              id="inputCustomerNotes"
+              class="form-control"
+              rows="3"
+              placeholder="Ví dụ: Dị ứng gluten, thích phòng hướng Đông, cần hỗ trợ xe lăn..."
+              style="resize: vertical;"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="customerModalCancel">Hủy bỏ</button>
+          <button type="submit" class="btn btn-primary">
+            <i data-lucide="check" style="width: 16px; height: 16px;"></i>
+            <span id="customerFormSubmitLabel">Lưu hồ sơ</span>
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
+  <!-- ==========================================================================
+       MODAL: CUSTOMER PROFILE & BOOKING HISTORY
+       ========================================================================== -->
+  <div class="modal-backdrop" id="customerProfileModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 720px;">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <i data-lucide="user-circle" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 0.35rem; color: var(--color-accent);"></i>
+          Hồ sơ &amp; Lịch sử lưu trú
+        </h3>
+        <button type="button" class="modal-close-btn" id="profileModalClose" aria-label="Đóng">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <!-- Profile Banner -->
+        <div class="customer-profile-banner" id="profileBanner">
+          <div class="customer-banner-avatar" id="profileAvatarLetters">--</div>
+          <div class="customer-banner-info">
+            <div class="customer-banner-name" id="profileBannerName">--</div>
+            <div class="customer-banner-meta" id="profileBannerMeta">--</div>
+          </div>
+        </div>
+
+        <!-- Mini Stats Trio -->
+        <div class="customer-stats-trio">
+          <div class="customer-mini-stat">
+            <div class="customer-mini-stat-label">Tổng lần đặt phòng</div>
+            <div class="customer-mini-stat-val" id="profileStatBookings">--</div>
+          </div>
+          <div class="customer-mini-stat">
+            <div class="customer-mini-stat-label">Tổng đêm lưu trú</div>
+            <div class="customer-mini-stat-val" id="profileStatNights">--</div>
+          </div>
+          <div class="customer-mini-stat">
+            <div class="customer-mini-stat-label">Tổng chi tiêu</div>
+            <div class="customer-mini-stat-val" id="profileStatSpent" style="font-size: 0.95rem;">--</div>
+          </div>
+        </div>
+
+        <!-- Full Info Fields -->
+        <div class="form-row" id="profileInfoFields" style="margin-bottom: 1rem;">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Booking History Table -->
+        <div class="customer-history-section">
+          <div class="history-section-header">
+            <div class="history-section-title">
+              <i data-lucide="list-ordered" style="width: 16px; height: 16px;"></i>
+              Lịch sử đặt phòng
+            </div>
+            <span id="profileHistoryCount" style="font-size: var(--font-size-xs); color: var(--text-muted); font-weight: 600;"></span>
+          </div>
+          <div class="history-table-container">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>Mã đơn</th>
+                  <th>Phòng</th>
+                  <th>Nhận phòng</th>
+                  <th>Trả phòng</th>
+                  <th style="text-align: right;">Tổng tiền</th>
+                  <th style="text-align: center;">Trạng thái</th>
+                </tr>
+              </thead>
+              <tbody id="profileBookingHistoryBody">
+                <tr>
+                  <td colspan="6" style="text-align: center; padding: 1.5rem; color: var(--text-muted);">
+                    Chưa có lịch sử đặt phòng
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" id="profileModalClose2">Đóng</button>
+        <button type="button" class="btn btn-primary" id="btnEditFromProfile">
+          <i data-lucide="edit-3" style="width: 15px; height: 15px;"></i>
+          Chỉnh sửa hồ sơ
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: DELETE CUSTOMER CONFIRMATION
+       ========================================================================== -->
+  <div class="modal-backdrop" id="deleteCustomerModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title" style="color: var(--status-maintenance);">
+          <i data-lucide="alert-triangle" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 0.35rem;"></i>
+          Xác nhận xóa khách hàng
+        </h3>
+        <button type="button" class="modal-close-btn" id="deleteCustomerClose" aria-label="Đóng">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="deleteCustomerText" style="font-size: 0.95rem; line-height: 1.6; color: var(--text-main);">
+          Bạn có chắc chắn muốn xóa khách hàng này không?
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" id="deleteCustomerCancel">Hủy</button>
+        <button type="button" class="btn btn-danger" id="deleteCustomerConfirm">
+          <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+          Xác nhận xóa
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- JavaScript ES6+ Application Modules -->
   <script type="module" src="../js/main.js"></script>
+  <script type="module" src="../js/pages/customers.js"></script>
 </body>
 </html>

@@ -165,6 +165,10 @@
             <p class="greeting-subtitle">Quản lý chi tiết giá phòng, loại phòng, sức chứa và trạng thái sẵn sàng đón khách.</p>
           </div>
           <div class="page-header-actions">
+            <button class="btn btn-outline" id="btnBulkRoomModal">
+              <i data-lucide="layers" style="width: 16px; height: 16px;"></i>
+              Thiết lập Tầng & Tạo hàng loạt
+            </button>
             <button class="btn btn-primary" id="btnAddRoomModal">
               <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i>
               Thêm phòng mới
@@ -202,6 +206,11 @@
                 <option value="Deluxe Suite">Deluxe Suite</option>
                 <option value="Executive Suite">Executive Suite</option>
                 <option value="Presidential Suite">Presidential Suite</option>
+              </select>
+
+              <!-- Filter by Floor (Populated Dynamically) -->
+              <select id="filterRoomFloor" class="filter-select" aria-label="Lọc theo tầng">
+                <option value="all">Tất cả các tầng</option>
               </select>
 
               <!-- Filter by Status -->
@@ -406,6 +415,129 @@
           Xác nhận xóa
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: BULK ROOM & FLOOR SETUP
+       ========================================================================== -->
+  <div class="modal-backdrop" id="bulkRoomModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 620px;">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <i data-lucide="layers" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 0.35rem; color: var(--color-accent);"></i>
+          Thiết lập Tầng & Tạo phòng hàng loạt
+        </h3>
+        <button type="button" class="modal-close-btn" id="bulkModalClose" aria-label="Đóng">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
+
+      <form id="bulkRoomForm">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="bulkStartFloor">Từ Tầng <span style="color: var(--status-maintenance);">*</span></label>
+              <input type="number" id="bulkStartFloor" class="form-control" min="1" max="50" value="5" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="bulkEndFloor">Đến Tầng <span style="color: var(--status-maintenance);">*</span></label>
+              <input type="number" id="bulkEndFloor" class="form-control" min="1" max="50" value="5" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="bulkRoomsPerFloor">Số phòng / tầng <span style="color: var(--status-maintenance);">*</span></label>
+              <input type="number" id="bulkRoomsPerFloor" class="form-control" min="1" max="25" value="4" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="bulkRoomPrefix">Tiền tố phòng (tùy chọn)</label>
+              <input type="text" id="bulkRoomPrefix" class="form-control" placeholder="Để trống hoặc ví dụ: P" maxlength="4">
+              <span class="form-hint">Ví dụ: Tầng 5 phòng 1 &rarr; 501 (hoặc P501 nếu có tiền tố)</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="bulkRoomType">Loại phòng mặc định</label>
+              <select id="bulkRoomType" class="form-control">
+                <option value="Standard Room">Standard Room</option>
+                <option value="Superior Room">Superior Room</option>
+                <option value="Deluxe Suite">Deluxe Suite</option>
+                <option value="Executive Suite">Executive Suite</option>
+                <option value="Presidential Suite">Presidential Suite</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="bulkRoomPrice">Giá niêm yết (VNĐ/đêm)</label>
+              <input type="number" id="bulkRoomPrice" class="form-control" step="10000" min="100000" value="850000" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="bulkRoomCapacity">Sức chứa tối đa (người)</label>
+              <input type="number" id="bulkRoomCapacity" class="form-control" min="1" max="10" value="2" required>
+            </div>
+          </div>
+
+          <!-- Amenities Selection -->
+          <div class="form-group">
+            <label class="form-label">Tiện nghi cơ bản</label>
+            <div class="form-check-group">
+              <label class="form-check"><input type="checkbox" name="bulkAmenities" value="Wifi" checked> Wifi</label>
+              <label class="form-check"><input type="checkbox" name="bulkAmenities" value="TV" checked> Smart TV</label>
+              <label class="form-check"><input type="checkbox" name="bulkAmenities" value="Điều hòa" checked> Điều hòa</label>
+              <label class="form-check"><input type="checkbox" name="bulkAmenities" value="Bồn tắm"> Bồn tắm</label>
+              <label class="form-check"><input type="checkbox" name="bulkAmenities" value="Minibar"> Minibar</label>
+              <label class="form-check"><input type="checkbox" name="bulkAmenities" value="Ban công"> Ban công</label>
+            </div>
+          </div>
+
+          <!-- Live Preview Box -->
+          <div class="bulk-preview-container">
+            <div class="bulk-preview-header">
+              <span class="bulk-preview-title">
+                <i data-lucide="eye" style="width: 15px; height: 15px;"></i>
+                Xem trước danh sách phòng dự kiến
+              </span>
+              <div class="bulk-preview-badges">
+                <span class="bulk-badge-new" id="bulkCountNew">Sẽ tạo mới: 0</span> &bull;
+                <span class="bulk-badge-skip" id="bulkCountSkip">Bỏ qua (đã có): 0</span>
+              </div>
+            </div>
+            <div class="bulk-preview-tags" id="bulkPreviewTags">
+              <!-- Dynamically populated tags -->
+            </div>
+          </div>
+
+          <!-- Danger Zone: Quick Floor Cleanup -->
+          <div class="danger-zone-box">
+            <div class="danger-zone-title">
+              <i data-lucide="shield-alert" style="width: 16px; height: 16px;"></i>
+              Quản lý dọn dẹp tầng (Xóa phòng theo tầng)
+            </div>
+            <p class="danger-zone-desc">
+              Chỉ được phép xóa tầng khi <strong>không có phòng nào đang có khách lưu trú</strong> và <strong>không có đơn đặt phòng hoạt động</strong>.
+            </p>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <select id="cleanupFloorSelect" class="filter-select" style="max-width: 160px; background-color: #ffffff;">
+                <option value="">-- Chọn tầng --</option>
+              </select>
+              <button type="button" class="btn btn-outline" id="btnDeleteFloorRooms" style="color: var(--status-maintenance); border-color: #fca5a5;">
+                <i data-lucide="trash-2" style="width: 15px; height: 15px;"></i>
+                Xóa tất cả phòng tầng này
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="bulkModalCancel">Đóng</button>
+          <button type="submit" class="btn btn-primary" id="btnSubmitBulk">
+            <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i>
+            Xác nhận tạo phòng
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 

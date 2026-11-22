@@ -166,7 +166,23 @@ async function loadCalendarData() {
   state.allRooms = rooms;
   state.allBookings = bookings;
 
+  await populateFloorFilter();
   renderTimeline();
+}
+
+/**
+ * Dynamically populate floor options based on existing rooms
+ */
+async function populateFloorFilter() {
+  const floorSelect = document.getElementById('filterCalFloor');
+  if (!floorSelect) return;
+  const floors = await roomService.getAllFloors();
+  const currentVal = state.filterFloor;
+  let html = `<option value="all">Tất cả các tầng</option>`;
+  floors.forEach(f => {
+    html += `<option value="${f}" ${String(currentVal) === String(f) ? 'selected' : ''}>Tầng ${f}</option>`;
+  });
+  floorSelect.innerHTML = html;
 }
 
 /**

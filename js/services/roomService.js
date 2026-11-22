@@ -26,11 +26,11 @@ export const roomService = {
   },
 
   /**
-   * Filter rooms by search keyword, room type, and status
-   * @param {Object} filters { search, type, status }
+   * Filter rooms by search keyword, room type, status, and floor
+   * @param {Object} filters { search, type, status, floor }
    * @returns {Promise<Array>}
    */
-  async filterRooms({ search = '', type = 'all', status = 'all' } = {}) {
+  async filterRooms({ search = '', type = 'all', status = 'all', floor = 'all' } = {}) {
     let rooms = store.get('rooms') || [];
 
     // Filter by keyword (room number or room type name)
@@ -51,6 +51,11 @@ export const roomService = {
     // Filter by status
     if (status && status !== 'all') {
       rooms = rooms.filter(r => r.status === status);
+    }
+
+    // Filter by floor
+    if (floor && floor !== 'all') {
+      rooms = rooms.filter(r => Number(r.floor) === Number(floor));
     }
 
     return rooms;
@@ -177,5 +182,123 @@ export const roomService = {
     const updatedRooms = rooms.filter(r => r.id !== roomId);
     store.set('rooms', updatedRooms);
     return true;
+  },
+
+  /**
+   * Get all unique floor numbers existing in the rooms dataset
+   * @returns {Promise<Array<number>>} Sorted array of floor numbers
+   */
+  async getAllFloors() {
+    const rooms = store.get('rooms') || [];
+    const floors = [...new Set(rooms.map(r => Number(r.floor)))].filter(f => !isNaN(f) && f > 0);
+    return floors.sort((a, b) => a - b);
+  },
+
+  /**
+   * Bulk generate rooms for a range of floors
+   * @param {Object} config
+   * @returns {Promise<Object>} { createdCount, skippedCount, createdRooms, skippedRoomNumbers }
+   */
+  async bulkCreateRooms(config = {}) {
+    const rooms = store.get('rooms') || [];
+    const {
+      startFloor = 1,
+      endFloor = 1,
+      roomsPerFloor = 4,
+      type = "Standard Room",
+      price = 850000,
+      capacity = 2,
+      amenities = ["Wifi", "TV", "Điều hòa"],
+      prefix = ""
+    } = config;
+
+    const fromFloor = Math.min(Number(startFloor), Number(endFloor));
+    const toFloor = Math.max(Number(startFloor), Number(endFloor));
+    const countPerFloor = Math.max(1, Math.min(Number(roomsPerFloor), 30));
+
+    const existingRoomNumbers = new Set(rooms.map(r => String(r.roomNumber).trim()));
+    const newRooms = [];
+    const skippedRoomNumbers = [];
+
+    for (let f = fromFloor; f <= toFloor; f++) {
+      for (let i = 1; i <= countPerFloor; i++) {
+        const cleanPrefix = prefix ? prefix.trim() : '';
+        const roomNumberStr = `${cleanPrefix}${f}${String(i).padStart(2, '0')}`;
+
+        if (existingRoomNumbers.has(roomNumberStr)) {
+          skippedRoomNumbers.push(roomNumberStr);
+          continue;
+        }
+
+        const newRoom = {
+          id: `r_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+          roomNumber: roomNumberStr,
+          type: type || "Standard Room",
+          floor: f,
+          price: Number(price) || 850000,
+          capacity: Number(capacity) || 2,
+          status: "available",
+          amenities: Array.isArray(amenities) && amenities.length > 0 ? amenities : ["Wifi", "TV", "Điều hòa"],
+          image: ""
+        };
+
+        newRooms.push(newRoom);
+        existingRoomNumbers.add(roomNumberStr);
+      }
+    }
+
+    if (newRooms.length > 0) {
+      const updatedRooms = [...rooms, ...newRooms];
+      store.set('rooms', updatedRooms);
+    }
+
+    return {
+      createdCount: newRooms.length,
+      skippedCount: skippedRoomNumbers.length,
+      createdRooms: newRooms,
+      skippedRoomNumbers
+    };
+  },
+
+  /**
+   * Clean up / delete all rooms on a specific floor safely
+   * Fails if any room is occupied or has confirmed/checked_in bookings
+   * @param {number|string} floorNumber 
+   * @returns {Promise<Object>} { deletedCount, floor }
+   */
+  async deleteFloorRooms(floorNumber) {
+    const targetFloor = Number(floorNumber);
+    const rooms = store.get('rooms') || [];
+    const floorRooms = rooms.filter(r => Number(r.floor) === targetFloor);
+
+    if (floorRooms.length === 0) {
+      throw new Error(`Không có phòng nào tại Tầng ${targetFloor} để xóa!`);
+    }
+
+    // Check if any room on this floor is occupied
+    const occupiedRoom = floorRooms.find(r => r.status === 'occupied');
+    if (occupiedRoom) {
+      throw new Error(`Không thể xóa phòng tại Tầng ${targetFloor} vì phòng ${occupiedRoom.roomNumber} đang có khách lưu trú!`);
+    }
+
+    // Check if any room on this floor has active bookings
+    const bookings = store.get('bookings') || [];
+    const floorRoomIds = new Set(floorRooms.map(r => r.id));
+    const activeBooking = bookings.find(b => 
+      floorRoomIds.has(b.roomId) && 
+      (b.status === 'confirmed' || b.status === 'checked_in')
+    );
+
+    if (activeBooking) {
+      throw new Error(`Không thể xóa phòng tại Tầng ${targetFloor} vì phòng ${activeBooking.roomNumber} đang có đơn đặt phòng hoạt động (${activeBooking.id})!`);
+    }
+
+    // Safe to delete all rooms on this floor
+    const updatedRooms = rooms.filter(r => Number(r.floor) !== targetFloor);
+    store.set('rooms', updatedRooms);
+    return {
+      deletedCount: floorRooms.length,
+      floor: targetFloor
+    };
   }
 };
