@@ -1,0 +1,301 @@
+/* ==========================================================================
+   HOTEL MANAGEMENT SYSTEM - FRONT DESK CHECK-IN / CHECK-OUT STYLES
+   KPI Strip, Tab Switcher, Cleaning Alert Strip, Check-in/Out Modals
+   ========================================================================== */
+
+/* ---------------- Front Desk KPI Strip ---------------- */
+.fd-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.fd-kpi-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: 1.15rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-xs);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.fd-kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  border-color: #cbd5e1;
+}
+
+.fd-kpi-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.fd-kpi-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.fd-kpi-val {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  margin-top: 0.2rem;
+}
+
+/* ---------------- Housekeeping / Cleaning Alert Banner ---------------- */
+.cleaning-alert-banner {
+  background-color: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: var(--border-radius-lg);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.cleaning-alert-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cleaning-alert-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--border-radius-md);
+  background-color: #fef3c7;
+  color: #d97706;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cleaning-rooms-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.cleaning-room-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: #ffffff;
+  border: 1px solid #fde68a;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--border-radius-sm);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #b45309;
+}
+
+.btn-mark-cleaned {
+  background-color: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+  padding: 0.15rem 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-mark-cleaned:hover {
+  background-color: var(--status-available-bg);
+  color: var(--status-available);
+  border-color: var(--status-available-border);
+}
+
+/* ---------------- Tabs & Filter Toolbar ---------------- */
+.fd-toolbar-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-xs);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.fd-tabs-nav {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-surface-subtle);
+  overflow-x: auto;
+}
+
+.fd-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.95rem 1.5rem;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: all var(--transition-fast);
+}
+
+.fd-tab-btn:hover {
+  color: var(--text-main);
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.fd-tab-btn.active {
+  color: var(--color-accent);
+  background-color: var(--bg-surface);
+  border-bottom-color: var(--color-accent);
+}
+
+.fd-tab-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--border-radius-full);
+  background-color: #e2e8f0;
+  color: var(--text-secondary);
+}
+
+.fd-tab-btn.active .fd-tab-badge {
+  background-color: var(--color-accent-light);
+  color: var(--color-accent);
+}
+
+.fd-search-bar {
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ---------------- Action Buttons ---------------- */
+.btn-action-checkin {
+  background-color: var(--status-available);
+  color: #ffffff;
+  border: 1px solid transparent;
+  padding: 0.45rem 0.95rem;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  border-radius: var(--border-radius-md);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 4px rgba(22, 163, 74, 0.2);
+}
+
+.btn-action-checkin:hover {
+  background-color: #15803d;
+  box-shadow: 0 4px 8px rgba(22, 163, 74, 0.3);
+}
+
+.btn-action-checkout {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border: 1px solid transparent;
+  padding: 0.45rem 0.95rem;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  border-radius: var(--border-radius-md);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.2);
+}
+
+.btn-action-checkout:hover {
+  background-color: var(--color-primary-light);
+}
+
+/* ---------------- Front Desk Modal Styles ---------------- */
+.fd-modal-summary {
+  background-color: #fafbfc;
+  border: 1px solid var(--border-color-subtle);
+  border-radius: var(--border-radius-md);
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.fd-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.35rem 0;
+  font-size: 0.844rem;
+}
+
+.fd-summary-label {
+  color: var(--text-secondary);
+}
+
+.fd-summary-val {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.balance-due-box {
+  background-color: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-radius: var(--border-radius-md);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+}
+
+.balance-due-text {
+  font-size: 0.813rem;
+  font-weight: 600;
+  color: #be123c;
+}
+
+.balance-due-amount {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--status-maintenance);
+}
+
+/* ---------------- Responsive Rules ---------------- */
+@media (max-width: 1024px) {
+  .fd-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .fd-tabs-nav {
+    justify-content: flex-start;
+  }
+  .fd-search-bar {
+    padding: 0.85rem 1rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .fd-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}
