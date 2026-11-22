@@ -1,0 +1,449 @@
+/* ==========================================================================
+   HOTEL MANAGEMENT SYSTEM - ROOM CALENDAR / TIMELINE STYLES
+   Gantt Matrix, Sticky Room Column, Booking Bars, Legend, Controls
+   ========================================================================== */
+
+/* ---------------- Calendar Controls & Toolbar ---------------- */
+.calendar-controls-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.calendar-controls-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Time Navigation */
+.cal-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.cal-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.85rem;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--border-color);
+  background-color: #ffffff;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.cal-nav-btn:hover {
+  background-color: var(--bg-surface-subtle);
+  color: var(--text-main);
+  border-color: #cbd5e1;
+}
+
+.cal-period-display {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+  padding: 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+/* View Mode & Filter Controls */
+.cal-filters-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* ---------------- Legend Bar ---------------- */
+.calendar-legend-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border-color-subtle);
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.legend-items-list {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.legend-item-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.legend-box {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.legend-box.checked-in {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+.legend-box.confirmed {
+  background: linear-gradient(135deg, #059669, #047857);
+}
+
+.legend-box.pending {
+  background: linear-gradient(135deg, #d97706, #b45309);
+}
+
+.legend-box.maintenance {
+  background: repeating-linear-gradient(
+    45deg,
+    #e11d48,
+    #e11d48 4px,
+    #ffe4e6 4px,
+    #ffe4e6 8px
+  );
+}
+
+.legend-box.available {
+  background-color: #ffffff;
+  border: 1px dashed #cbd5e1;
+}
+
+/* ---------------- Gantt Timeline Matrix ---------------- */
+.timeline-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.timeline-scroll-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+}
+
+.timeline-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 900px;
+}
+
+/* Sticky Room Column (Cột đầu tiên) */
+.timeline-col-room {
+  width: 240px;
+  min-width: 240px;
+  max-width: 240px;
+  position: sticky;
+  left: 0;
+  z-index: 15;
+  background-color: #ffffff;
+  border-right: 2px solid var(--border-color);
+  box-shadow: 3px 0 6px -2px rgba(15, 23, 42, 0.05);
+}
+
+/* Header Row */
+.timeline-header-cell {
+  background-color: var(--bg-surface-subtle);
+  padding: 0.75rem 0.5rem;
+  border-bottom: 2px solid var(--border-color);
+  text-align: center;
+  vertical-align: middle;
+  min-width: 105px;
+}
+
+.timeline-header-cell.sticky-header {
+  position: sticky;
+  left: 0;
+  z-index: 25;
+  background-color: #f1f5f9;
+  text-align: left;
+  padding-left: 1.25rem;
+}
+
+.header-day-name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.header-day-number {
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-top: 0.15rem;
+}
+
+/* Highlight Today's Column */
+.timeline-header-cell.is-today {
+  background-color: #f0fdfa;
+  border-bottom-color: var(--color-accent);
+}
+
+.timeline-header-cell.is-today .header-day-number {
+  color: var(--color-accent);
+}
+
+.today-chip {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #ffffff;
+  background-color: var(--color-accent);
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--border-radius-full);
+  margin-top: 0.2rem;
+}
+
+/* Room Info Cell in Matrix */
+.room-matrix-cell {
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid var(--border-color-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.room-matrix-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.room-matrix-number {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.room-matrix-type {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.room-matrix-status {
+  display: flex;
+  align-items: center;
+}
+
+/* Matrix Track & Days Cells */
+.matrix-row {
+  transition: background-color var(--transition-fast);
+}
+
+.matrix-row:hover .timeline-col-room {
+  background-color: #f8fafc;
+}
+
+.timeline-days-wrapper {
+  position: relative;
+  padding: 0;
+  height: 64px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border-color-subtle);
+  background-color: #ffffff;
+}
+
+/* Background Day Slices Grid */
+.day-slots-grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  height: 100%;
+  pointer-events: none;
+}
+
+.day-slot {
+  border-right: 1px dashed #e2e8f0;
+  height: 100%;
+  pointer-events: auto;
+  transition: background-color var(--transition-fast);
+  cursor: pointer;
+  position: relative;
+}
+
+.day-slot:hover {
+  background-color: rgba(13, 148, 136, 0.08);
+}
+
+.day-slot:hover::after {
+  content: '+ Đặt';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  background-color: #ffffff;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  border: 1px solid var(--color-accent-light);
+  box-shadow: var(--shadow-xs);
+}
+
+.day-slot.is-today {
+  background-color: rgba(204, 251, 241, 0.25);
+}
+
+/* Maintenance Pattern for Rows */
+.timeline-days-wrapper.is-maintenance .day-slots-grid {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(225, 29, 72, 0.04),
+    rgba(225, 29, 72, 0.04) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+}
+
+.maintenance-overlay-banner {
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  transform: translateY(-50%);
+  background-color: #ffe4e6;
+  border: 1px solid #fecdd3;
+  color: var(--status-maintenance);
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--border-radius-sm);
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* ---------------- Booking Bars ---------------- */
+.booking-bars-layer {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  pointer-events: none;
+}
+
+.booking-bar {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  border-radius: 6px;
+  padding: 0 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.15);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  z-index: 8;
+  user-select: none;
+}
+
+.booking-bar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(15, 23, 42, 0.25);
+  filter: brightness(1.05);
+  z-index: 10;
+}
+
+.booking-bar.checked_in {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  border: 1px solid #1e40af;
+}
+
+.booking-bar.confirmed {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  border: 1px solid #065f46;
+}
+
+.booking-bar.pending {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  border: 1px solid #92400e;
+}
+
+.booking-bar-guest {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.booking-bar-nights {
+  font-size: 0.68rem;
+  background-color: rgba(255, 255, 255, 0.22);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ---------------- Responsive Rules ---------------- */
+@media (max-width: 1024px) {
+  .calendar-controls-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .cal-filters-group {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .timeline-col-room {
+    width: 170px;
+    min-width: 170px;
+  }
+  .room-matrix-cell {
+    padding: 0.65rem 0.85rem;
+  }
+  .room-matrix-number {
+    font-size: 0.85rem;
+  }
+  .header-day-number {
+    font-size: 0.78rem;
+  }
+}

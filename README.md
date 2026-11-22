@@ -94,7 +94,7 @@ HotelManager/
 | **6** | **Thương hiệu & Favicon** | ✅ Hoàn thành (Logo Sidebar có ảnh + fallback onerror, đầy đủ thẻ Favicon cho tab trình duyệt) |
 | **7** | **Quản lý đặt phòng (`bookings.html`)** | ✅ Hoàn thành (Mini KPI, Lọc & Tìm kiếm, Modal Tạo đặt phòng tính tiền tự động + Voucher, Xem chi tiết, Xác nhận & Hủy đơn) |
 | **8** | **Bàn Lễ tân Check-in / Out (`checkin-checkout.html`)** | ✅ Hoàn thành (4 Front Desk KPIs, 3 Tabs nghiệp vụ, 1-touch Check-in, Check-out quyết toán thanh toán & Đồng bộ buồng phòng) |
-| **9** | **Lịch phòng trực quan (`calendar.html`)** | ⏳ Khung điều hướng hoàn tất, giao diện chi tiết ở bước tiếp theo |
+| **9** | **Lịch phòng trực quan (`calendar.html`)** | ✅ Hoàn thành (Gantt Matrix Timeline, Sticky cột phòng, Thanh booking trực quan, Xem 7/14 ngày, Modal xem nhanh & Đặt phòng nhanh 1 chạm từ ô trống) |
 | **10** | **Quản lý khách hàng & Voucher** | ⏳ Khung điều hướng hoàn tất, giao diện chi tiết ở bước tiếp theo |
 | **11** | **Báo cáo chi tiết (`reports.html`)** | ⏳ Khung điều hướng hoàn tất, giao diện chi tiết ở Giai đoạn 4 |
 | **12** | **Tích hợp Supabase & PostgreSQL** | ⏳ Sẵn sàng kiến trúc, sẽ tích hợp sau khi hoàn thiện frontend thuần |

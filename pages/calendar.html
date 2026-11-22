@@ -3,23 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lịch đặt phòng - Hotel Management System</title>
+  <title>Lịch đặt phòng trực quan - Aurora Luxury Hotel</title>
+
   <!-- Favicons -->
   <link rel="icon" type="image/png" sizes="96x96" href="../assets/icons/favicon/favicon-96x96.png">
   <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon/favicon.svg">
   <link rel="shortcut icon" href="../assets/icons/favicon/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/icons/favicon/apple-touch-icon.png">
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheets -->
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/layout.css">
   <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages/calendar.css">
 </head>
 <body>
   <div class="app-layout">
+    
+    <!-- Mobile Backdrop Overlay -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
+    <!-- ==========================================================================
+         SIDEBAR NAVIGATION
+         ========================================================================== -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-brand">
         <div class="brand-wrapper">
@@ -40,68 +51,412 @@
             <span class="brand-tagline">Management System</span>
           </div>
         </div>
-        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Đóng menu"><i data-lucide="x" style="width: 20px; height: 20px;"></i></button>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Đóng menu">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
       </div>
 
       <nav class="sidebar-nav">
         <span class="nav-section-title">Tổng quan & Vận hành</span>
         <ul class="nav-group">
-          <li class="nav-item"><a href="../index.html" class="nav-link"><span class="nav-icon"><i data-lucide="layout-dashboard"></i></span><span class="nav-text">Dashboard</span></a></li>
-          <li class="nav-item"><a href="rooms.html" class="nav-link"><span class="nav-icon"><i data-lucide="bed-double"></i></span><span class="nav-text">Quản lý phòng</span></a></li>
-          <li class="nav-item"><a href="bookings.html" class="nav-link"><span class="nav-icon"><i data-lucide="calendar-check"></i></span><span class="nav-text">Đặt phòng</span></a></li>
-          <li class="nav-item"><a href="calendar.html" class="nav-link active"><span class="nav-icon"><i data-lucide="calendar-days"></i></span><span class="nav-text">Lịch phòng</span></a></li>
-          <li class="nav-item"><a href="checkin-checkout.html" class="nav-link"><span class="nav-icon"><i data-lucide="concierge-bell"></i></span><span class="nav-text">Check-in / Out</span></a></li>
+          <li class="nav-item">
+            <a href="../index.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span>
+              <span class="nav-text">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="rooms.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="bed-double"></i></span>
+              <span class="nav-text">Quản lý phòng</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="bookings.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="calendar-check"></i></span>
+              <span class="nav-text">Đặt phòng</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="calendar.html" class="nav-link active">
+              <span class="nav-icon"><i data-lucide="calendar-days"></i></span>
+              <span class="nav-text">Lịch phòng</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="checkin-checkout.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="concierge-bell"></i></span>
+              <span class="nav-text">Check-in / Out</span>
+            </a>
+          </li>
         </ul>
+
         <span class="nav-section-title">Khách hàng & Doanh nghiệp</span>
         <ul class="nav-group">
-          <li class="nav-item"><a href="customers.html" class="nav-link"><span class="nav-icon"><i data-lucide="users"></i></span><span class="nav-text">Khách hàng</span></a></li>
-          <li class="nav-item"><a href="vouchers.html" class="nav-link"><span class="nav-icon"><i data-lucide="ticket"></i></span><span class="nav-text">Mã Voucher</span></a></li>
-          <li class="nav-item"><a href="reports.html" class="nav-link"><span class="nav-icon"><i data-lucide="bar-chart-3"></i></span><span class="nav-text">Báo cáo doanh thu</span></a></li>
+          <li class="nav-item">
+            <a href="customers.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="users"></i></span>
+              <span class="nav-text">Khách hàng</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="vouchers.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="ticket"></i></span>
+              <span class="nav-text">Mã Voucher</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="reports.html" class="nav-link">
+              <span class="nav-icon"><i data-lucide="bar-chart-3"></i></span>
+              <span class="nav-text">Báo cáo doanh thu</span>
+            </a>
+          </li>
         </ul>
       </nav>
 
       <div class="sidebar-footer">
         <div class="user-quick-profile">
           <div class="user-avatar">AD</div>
-          <div class="user-details"><div class="user-name">Admin Lễ Tân</div><div class="user-role">Quản lý ca trực</div></div>
+          <div class="user-details">
+            <div class="user-name">Admin Lễ Tân</div>
+            <div class="user-role">Quản lý ca trực</div>
+          </div>
         </div>
       </div>
     </aside>
 
+    <!-- ==========================================================================
+         MAIN WRAPPER
+         ========================================================================== -->
     <div class="main-wrapper">
+      
+      <!-- Top Header -->
       <header class="header">
         <div class="header-left">
-          <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Mở menu"><i data-lucide="menu" style="width: 22px; height: 22px;"></i></button>
+          <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Mở menu">
+            <i data-lucide="menu" style="width: 22px; height: 22px;"></i>
+          </button>
           <div class="header-title-block">
             <h1 class="header-page-title">Lịch phòng trực quan</h1>
-            <div class="header-breadcrumb"><a href="../index.html">Hệ thống</a> &bull; <span>Lịch phòng</span></div>
+            <div class="header-breadcrumb">
+              <a href="../index.html">Hệ thống</a> &bull; <span>Lịch phòng (Timeline)</span>
+            </div>
           </div>
         </div>
+
         <div class="header-right">
-          <div class="header-date-badge"><i data-lucide="calendar" style="width: 14px; height: 14px; color: var(--color-accent);"></i><span id="currentDateBadge">--</span></div>
+          <div class="header-date-badge">
+            <i data-lucide="calendar" style="width: 14px; height: 14px; color: var(--color-accent);"></i>
+            <span id="currentDateBadge">Đang cập nhật...</span>
+          </div>
+          <button class="header-action-btn" aria-label="Thông báo" title="Thông báo">
+            <i data-lucide="bell" style="width: 18px; height: 18px;"></i>
+          </button>
         </div>
       </header>
 
+      <!-- Main Canvas -->
       <main class="main-content">
-        <div class="card" style="padding: 3rem 2rem; text-align: center; max-width: 680px; margin: 3rem auto;">
-          <div style="width: 64px; height: 64px; border-radius: 50%; background-color: var(--color-accent-light); color: var(--color-accent); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto;">
-            <i data-lucide="calendar-days" style="width: 32px; height: 32px;"></i>
-          </div>
-          <h2 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem;">Mô-đun Lịch phòng (Timeline View)</h2>
-          <p class="text-secondary" style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
-            Ma trận thời gian thể hiện tình trạng chiếm chỗ của từng phòng theo ngày sẽ được triển khai chi tiết tại Giai đoạn 3.
-          </p>
+        
+        <!-- Page Title & Greeting -->
+        <div class="page-header-row">
           <div>
-            <a href="../index.html" class="btn btn-primary">
-              <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i> Quay về Dashboard
+            <h2 class="greeting-title">Ma trận Lịch phòng (Room Timeline) 📆</h2>
+            <p class="greeting-subtitle">Theo dõi trực quan công suất, lịch đặt phòng theo ngày và đặt phòng nhanh chỉ bằng cách nhấp vào ô trống.</p>
+          </div>
+          <div class="page-header-actions">
+            <a href="bookings.html" class="btn btn-primary">
+              <i data-lucide="list" style="width: 16px; height: 16px;"></i>
+              Quản lý Đặt phòng
             </a>
           </div>
         </div>
+
+        <!-- ======================================================================
+             1. CALENDAR CONTROLS & FILTERS TOOLBAR
+             ====================================================================== -->
+        <section class="calendar-controls-card">
+          <div class="calendar-controls-top">
+            
+            <!-- Time Navigation -->
+            <div class="cal-nav-group">
+              <button type="button" class="cal-nav-btn" id="btnCalPrev" title="Lùi thời gian">
+                <i data-lucide="chevron-left" style="width: 16px; height: 16px;"></i>
+                <span>Trước</span>
+              </button>
+              <button type="button" class="cal-nav-btn font-bold" id="btnCalToday" title="Về hôm nay">
+                <i data-lucide="calendar" style="width: 14px; height: 14px; color: var(--color-accent);"></i>
+                <span>Hôm nay</span>
+              </button>
+              <button type="button" class="cal-nav-btn" id="btnCalNext" title="Tiến thời gian">
+                <span>Sau</span>
+                <i data-lucide="chevron-right" style="width: 16px; height: 16px;"></i>
+              </button>
+
+              <!-- Active Period Text -->
+              <div class="cal-period-display" id="calendarPeriodDisplay">
+                Đang nạp khoảng thời gian...
+              </div>
+            </div>
+
+            <!-- View Mode Switcher & Filters -->
+            <div class="cal-filters-group">
+              
+              <!-- 7 Days vs 14 Days Switcher -->
+              <div class="btn-group" role="group" aria-label="Chế độ xem ngày">
+                <button type="button" class="btn-view-toggle active" id="btnView7Days" title="Xem 7 ngày">
+                  <span>7 ngày</span>
+                </button>
+                <button type="button" class="btn-view-toggle" id="btnView14Days" title="Xem 14 ngày">
+                  <span>14 ngày</span>
+                </button>
+              </div>
+
+              <!-- Filter by Room Type -->
+              <select id="filterCalRoomType" class="filter-select" aria-label="Lọc theo loại phòng">
+                <option value="all">Tất cả loại phòng</option>
+                <option value="Standard Room">Standard Room</option>
+                <option value="Superior Room">Superior Room</option>
+                <option value="Deluxe Suite">Deluxe Suite</option>
+                <option value="Executive Suite">Executive Suite</option>
+                <option value="Presidential Suite">Presidential Suite</option>
+              </select>
+
+              <!-- Filter by Floor -->
+              <select id="filterCalFloor" class="filter-select" aria-label="Lọc theo tầng">
+                <option value="all">Tất cả các tầng</option>
+                <option value="1">Tầng 1</option>
+                <option value="2">Tầng 2</option>
+                <option value="3">Tầng 3</option>
+                <option value="4">Tầng 4</option>
+              </select>
+
+            </div>
+
+          </div>
+
+          <!-- Legend Bar -->
+          <div class="calendar-legend-bar">
+            <div class="legend-items-list">
+              <span class="legend-item-pill">
+                <span class="legend-box checked-in"></span>
+                <span>Đang lưu trú (Checked-in)</span>
+              </span>
+              <span class="legend-item-pill">
+                <span class="legend-box confirmed"></span>
+                <span>Đã xác nhận (Confirmed)</span>
+              </span>
+              <span class="legend-item-pill">
+                <span class="legend-box pending"></span>
+                <span>Chờ xác nhận (Pending)</span>
+              </span>
+              <span class="legend-item-pill">
+                <span class="legend-box maintenance"></span>
+                <span>Bảo trì (Out of Order)</span>
+              </span>
+              <span class="legend-item-pill">
+                <span class="legend-box available"></span>
+                <span>Ô trống (Click để đặt nhanh)</span>
+              </span>
+            </div>
+
+            <div class="rooms-count-info" id="calRoomsCountDisplay" style="font-size: 0.78rem;">
+              Đang tải sơ đồ...
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================================================================
+             2. GANTT TIMELINE MATRIX TABLE
+             ====================================================================== -->
+        <section class="timeline-card">
+          <div class="timeline-scroll-container" id="timelineScrollContainer">
+            <table class="timeline-table" id="timelineTable">
+              <thead>
+                <tr id="timelineHeaderRow">
+                  <!-- Injected dynamically via calendar.js -->
+                </tr>
+              </thead>
+              <tbody id="timelineTbody">
+                <!-- Injected dynamically via calendar.js -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
       </main>
     </div>
   </div>
 
+  <!-- ==========================================================================
+       MODAL 1: QUICK BOOKING DETAIL (XEM NHANH ĐƠN ĐẶT PHÒNG TỪ THANH LỊCH)
+       ========================================================================== -->
+  <div class="modal-backdrop" id="calendarBookingDetailModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 540px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="calDetailBookingId">Đơn đặt phòng BK-000</h3>
+          <span class="text-muted" style="font-size: 0.78rem;" id="calDetailCreatedAt">--</span>
+        </div>
+        <button type="button" class="modal-close-btn" id="calDetailCloseBtn" aria-label="Đóng">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; padding: 0.75rem 1rem; background-color: var(--bg-surface-subtle); border-radius: var(--border-radius-md); border: 1px solid var(--border-color);">
+          <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Trạng thái đơn:</span>
+          <div id="calDetailStatusBadge"></div>
+        </div>
+
+        <div class="detail-block" style="margin-bottom: 1rem;">
+          <div class="detail-item">
+            <span class="detail-item-label">Khách hàng:</span>
+            <span class="detail-item-val font-bold" id="calDetailCustName">--</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-item-label">Số điện thoại:</span>
+            <span class="detail-item-val" id="calDetailCustPhone">--</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-item-label">Phòng lưu trú:</span>
+            <span class="detail-item-val font-bold" style="color: var(--color-primary);" id="calDetailRoom">--</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-item-label">Thời gian lưu trú:</span>
+            <span class="detail-item-val" id="calDetailDates">--</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-item-label">Thanh toán:</span>
+            <span class="detail-item-val" id="calDetailPayment">--</span>
+          </div>
+          <div class="detail-item" style="border-top: 1px dashed var(--border-color); padding-top: 0.5rem; margin-top: 0.5rem;">
+            <span class="detail-item-label font-bold">Tổng thanh toán:</span>
+            <span class="detail-item-val font-bold" style="font-size: 1.15rem; color: var(--color-accent);" id="calDetailTotal">-- ₫</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <a href="bookings.html" class="btn btn-outline btn-sm">
+          <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+          Xem trong Quản lý Đặt phòng
+        </a>
+        <button type="button" class="btn btn-primary btn-sm" id="calDetailDismissBtn">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 2: QUICK BOOKING MODAL (ĐẶT PHÒNG NHANH TỪ Ô TRỐNG TRÊN LỊCH)
+       ========================================================================== -->
+  <div class="modal-backdrop" id="calendarQuickBookModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 580px;">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <i data-lucide="calendar-plus" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 0.35rem; color: var(--color-accent);"></i>
+          Đặt phòng nhanh từ sơ đồ lịch
+        </h3>
+        <button type="button" class="modal-close-btn" id="quickBookModalClose" aria-label="Đóng">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
+
+      <form id="quickBookForm">
+        <div class="modal-body">
+          
+          <!-- Room Summary Card -->
+          <div class="modal-section-card">
+            <div class="modal-section-header">
+              <i data-lucide="bed-double" style="width: 16px; height: 16px;"></i>
+              <span>Thông tin phòng được chọn</span>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div>
+                <span class="font-bold" style="font-size: 1.1rem; color: var(--color-primary);" id="quickBookRoomTitle">Phòng --</span>
+                <div class="text-muted" style="font-size: 0.78rem;" id="quickBookRoomSub">Standard Room - Tầng 1</div>
+              </div>
+              <div class="font-bold" style="font-size: 1.1rem; color: var(--color-accent);" id="quickBookRoomPrice">-- ₫/đêm</div>
+            </div>
+          </div>
+
+          <!-- Dates -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="quickBookCheckIn">Ngày nhận phòng (Check-in) <span class="required">*</span></label>
+              <input type="date" id="quickBookCheckIn" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="quickBookCheckOut">Ngày trả phòng (Check-out) <span class="required">*</span></label>
+              <input type="date" id="quickBookCheckOut" class="form-control" required>
+            </div>
+          </div>
+
+          <!-- Nights banner -->
+          <div class="nights-summary-banner" id="quickBookNightsBanner" style="margin-bottom: 1rem;">
+            <i data-lucide="moon" style="width: 14px; height: 14px;"></i>
+            <span id="quickBookNightsText">Thời gian lưu trú: 1 đêm</span>
+          </div>
+
+          <!-- Customer info -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="quickBookCustName">Họ và tên khách hàng <span class="required">*</span></label>
+              <input type="text" id="quickBookCustName" class="form-control" placeholder="VD: Lê Hồng Phong" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="quickBookCustPhone">Số điện thoại <span class="required">*</span></label>
+              <input type="tel" id="quickBookCustPhone" class="form-control" placeholder="VD: 0918 222 333" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="quickBookPaymentStatus">Trạng thái thanh toán</label>
+              <select id="quickBookPaymentStatus" class="form-select">
+                <option value="paid">Đã thanh toán đủ</option>
+                <option value="partial">Đặt cọc trước</option>
+                <option value="unpaid">Chưa thanh toán</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="quickBookInitialStatus">Trạng thái đơn</label>
+              <select id="quickBookInitialStatus" class="form-select">
+                <option value="confirmed">Đã xác nhận</option>
+                <option value="pending">Chờ xác nhận</option>
+                <option value="checked_in">Đã nhận phòng</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Calculation Summary -->
+          <div class="pricing-receipt-box">
+            <div class="pricing-row total">
+              <span>Tổng thanh toán:</span>
+              <span class="total-amount" id="quickBookCalculatedTotal">0 ₫</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="quickBookModalCancel">Hủy</button>
+          <button type="submit" class="btn btn-primary">
+            <i data-lucide="check" style="width: 16px; height: 16px;"></i>
+            Xác nhận đặt phòng
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- JavaScript ES6+ Application Modules -->
   <script type="module" src="../js/main.js"></script>
+  <script type="module" src="../js/pages/calendar.js"></script>
 </body>
 </html>
