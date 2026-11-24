@@ -4,7 +4,7 @@
  */
 
 import { checkinService } from '../services/checkinService.js';
-import { formatCurrency, formatDate, calculateNights, getBookingStatusBadge, getPaymentStatusBadge, getInitials, escapeHTML } from '../core/utils.js';
+import { formatCurrency, formatDate, calculateNights, getBookingStatusBadge, getPaymentStatusBadge, getInitials, escapeHTML, onReady } from '../core/utils.js';
 import { toast } from '../core/toast.js';
 import { initLucideIcons } from '../main.js';
 
@@ -15,7 +15,7 @@ const state = {
   activeBooking: null // for modals
 };
 
-document.addEventListener('DOMContentLoaded', async () => {
+onReady(async () => {
   try {
     initElements();
     await refreshFrontDesk();

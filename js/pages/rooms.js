@@ -4,7 +4,7 @@
  */
 
 import { roomService } from '../services/roomService.js';
-import { formatCurrency, getRoomStatusBadge, escapeHTML } from '../core/utils.js';
+import { formatCurrency, getRoomStatusBadge, escapeHTML, onReady } from '../core/utils.js';
 import { toast } from '../core/toast.js';
 import { initLucideIcons } from '../main.js';
 
@@ -21,7 +21,7 @@ const state = {
   deletingRoomId: null
 };
 
-document.addEventListener('DOMContentLoaded', async () => {
+onReady(async () => {
   try {
     initElements();
     await loadRooms();

@@ -5,7 +5,7 @@
 
 import { roomService } from '../services/roomService.js';
 import { bookingService } from '../services/bookingService.js';
-import { formatCurrency, formatDate, calculateNights, getBookingStatusBadge, getPaymentStatusBadge, escapeHTML } from '../core/utils.js';
+import { formatCurrency, formatDate, calculateNights, getBookingStatusBadge, getPaymentStatusBadge, escapeHTML, onReady } from '../core/utils.js';
 import { toast } from '../core/toast.js';
 import { initLucideIcons } from '../main.js';
 
@@ -21,7 +21,7 @@ const state = {
   quickBookTarget: null    // { room, checkInDate }
 };
 
-document.addEventListener('DOMContentLoaded', async () => {
+onReady(async () => {
   try {
     initControls();
     await loadCalendarData();

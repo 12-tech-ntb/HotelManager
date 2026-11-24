@@ -1,18 +1,77 @@
 /**
  * HOTEL MANAGEMENT SYSTEM - CUSTOMER SERVICE
  * Data access and operations for hotel guests & guest profiles
- * Sẵn sàng tích hợp Supabase Client (`supabase.from('customers').*`)
+ * Connected directly to Supabase
  */
 
 import { store } from '../core/state.js';
+import { supabase } from '../core/supabaseClient.js';
+import { toast } from '../core/toast.js';
+
+/**
+ * Map DB row (snake_case) to UI Model (camelCase)
+ * @param {Object} row 
+ * @returns {Object|null}
+ */
+export function mapCustomerFromDB(row) {
+  if (!row) return null;
+  return {
+    id: row.id,
+    fullName: row.full_name,
+    phone: row.phone,
+    email: row.email || '',
+    idCard: row.id_card || '',
+    visits: Number(row.visits || 0),
+    totalSpent: Number(row.total_spent || 0),
+    notes: row.notes || '',
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
+  };
+}
+
+/**
+ * Map UI Model (camelCase) to DB row (snake_case)
+ * @param {Object} c 
+ * @returns {Object}
+ */
+export function mapCustomerToDB(c) {
+  const row = {};
+  if (c.fullName !== undefined) row.full_name = String(c.fullName).trim();
+  if (c.phone !== undefined) row.phone = String(c.phone).trim();
+  if (c.email !== undefined) row.email = String(c.email).trim();
+  if (c.idCard !== undefined) row.id_card = String(c.idCard).trim();
+  if (c.visits !== undefined) row.visits = Number(c.visits || 0);
+  if (c.totalSpent !== undefined) row.total_spent = Number(c.totalSpent || 0);
+  if (c.notes !== undefined) row.notes = String(c.notes).trim();
+  return row;
+}
 
 export const customerService = {
   /**
-   * Retrieve all customers
+   * Retrieve all customers from Supabase
    * @returns {Promise<Array>}
    */
   async getAllCustomers() {
-    return store.get('customers') || [];
+    try {
+      const { data, error } = await supabase
+        .from('customers')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('[customerService.getAllCustomers] Lỗi Supabase:', error);
+        toast.show('Không thể tải danh sách khách hàng: ' + error.message, 'error');
+        return store.get('customers') || [];
+      }
+
+      const customers = (data || []).map(mapCustomerFromDB);
+      store.set('customers', customers);
+      return customers;
+    } catch (err) {
+      console.error('[customerService.getAllCustomers] Ngoại lệ kết nối:', err);
+      toast.show('Lỗi kết nối khi tải danh sách khách hàng: ' + err.message, 'error');
+      return store.get('customers') || [];
+    }
   },
 
   /**
@@ -21,8 +80,24 @@ export const customerService = {
    * @returns {Promise<Object|null>}
    */
   async getCustomerById(id) {
-    const customers = store.get('customers') || [];
-    return customers.find(c => c.id === id) || null;
+    if (!id) return null;
+    try {
+      const { data, error } = await supabase
+        .from('customers')
+        .select('*')
+        .eq('id', id)
+        .maybeSingle();
+
+      if (error) {
+        console.error(`[customerService.getCustomerById] Lỗi tìm khách hàng ${id}:`, error);
+        return null;
+      }
+
+      return mapCustomerFromDB(data);
+    } catch (err) {
+      console.error(`[customerService.getCustomerById] Ngoại lệ:`, err);
+      return null;
+    }
   },
 
   /**
@@ -30,14 +105,12 @@ export const customerService = {
    * @returns {Promise<Object>} { total, loyal, inHouse, totalRevenue }
    */
   async getCustomerStats() {
-    const customers = store.get('customers') || [];
+    const customers = await this.getAllCustomers();
     const bookings = store.get('bookings') || [];
 
     const total = customers.length;
-    // Loyal guests: visited 2 times or more
     const loyal = customers.filter(c => (Number(c.visits) || 0) >= 2).length;
 
-    // In-house guests: customers with active 'checked_in' bookings
     const inHouseCustomerIds = new Set(
       bookings
         .filter(b => b.status === 'checked_in')
@@ -46,7 +119,6 @@ export const customerService = {
     );
     const inHouse = inHouseCustomerIds.size;
 
-    // Total accumulated revenue from all customers
     const totalRevenue = customers.reduce((sum, c) => sum + (Number(c.totalSpent) || 0), 0);
 
     return {
@@ -63,9 +135,8 @@ export const customerService = {
    * @returns {Promise<Array>}
    */
   async filterCustomers({ search = '', category = 'all' } = {}) {
-    let customers = store.get('customers') || [];
+    let customers = await this.getAllCustomers();
 
-    // Filter by keyword (name, phone, email, idCard)
     if (search && search.trim() !== '') {
       const keyword = search.trim().toLowerCase();
       customers = customers.filter(c => {
@@ -77,7 +148,6 @@ export const customerService = {
       });
     }
 
-    // Filter by category
     if (category === 'vip') {
       customers = customers.filter(c => (Number(c.visits) || 0) >= 2);
     } else if (category === 'new') {
@@ -93,115 +163,156 @@ export const customerService = {
    * @returns {Promise<Object>}
    */
   async findOrCreateCustomer(customerData) {
-    const customers = store.get('customers') || [];
-    const cleanPhone = String(customerData.phone).trim();
+    const cleanPhone = String(customerData.phone || '').trim();
+    if (!cleanPhone) {
+      throw new Error("Số điện thoại khách hàng không được để trống!");
+    }
 
-    const existing = customers.find(c => c.phone.trim() === cleanPhone);
-    if (existing) {
-      return existing;
+    // Normalized search in Supabase
+    try {
+      const { data, error } = await supabase
+        .from('customers')
+        .select('*')
+        .eq('phone', cleanPhone)
+        .maybeSingle();
+
+      if (!error && data) {
+        return mapCustomerFromDB(data);
+      }
+    } catch (e) {
+      console.warn('[customerService.findOrCreateCustomer] Không thể kiểm tra phone:', e);
     }
 
     return this.createCustomer(customerData);
   },
 
   /**
-   * Create a new customer profile
+   * Create a new customer profile in Supabase
    * @param {Object} data 
    * @returns {Promise<Object>}
    */
   async createCustomer(data) {
-    const customers = store.get('customers') || [];
     const cleanPhone = String(data.phone || '').trim();
-
     if (!cleanPhone) {
       throw new Error("Số điện thoại khách hàng không được để trống!");
     }
 
-    // Check duplicate phone
-    const exists = customers.some(c => c.phone.trim() === cleanPhone);
-    if (exists) {
-      throw new Error(`Số điện thoại "${cleanPhone}" đã được đăng ký cho khách hàng khác!`);
-    }
-
-    const newCustomer = {
-      id: data.id || `c${String(Date.now()).slice(-4)}`,
+    const dbPayload = mapCustomerToDB({
       fullName: String(data.fullName || '').trim() || 'Khách vãng lai',
       phone: cleanPhone,
-      email: data.email ? String(data.email).trim() : '',
-      idCard: data.idCard ? String(data.idCard).trim() : '',
+      email: data.email || '',
+      idCard: data.idCard || '',
       visits: Number(data.visits) || 0,
       totalSpent: Number(data.totalSpent) || 0,
-      notes: data.notes ? String(data.notes).trim() : ''
-    };
+      notes: data.notes || ''
+    });
 
-    const updated = [newCustomer, ...customers];
-    store.set('customers', updated);
-    return newCustomer;
+    try {
+      const { data: createdRow, error } = await supabase
+        .from('customers')
+        .insert(dbPayload)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('[customerService.createCustomer] Lỗi Supabase:', error);
+        toast.show('Không thể tạo thông tin khách hàng: ' + error.message, 'error');
+        throw new Error(error.message);
+      }
+
+      const newCustomer = mapCustomerFromDB(createdRow);
+      const customers = store.get('customers') || [];
+      store.set('customers', [newCustomer, ...customers]);
+      return newCustomer;
+    } catch (err) {
+      console.error('[customerService.createCustomer] Ngoại lệ:', err);
+      throw err;
+    }
   },
 
   /**
-   * Update existing customer profile
+   * Update existing customer profile in Supabase
    * @param {string} id 
    * @param {Object} data 
    * @returns {Promise<Object>}
    */
   async updateCustomer(id, data) {
-    const customers = store.get('customers') || [];
-    const index = customers.findIndex(c => c.id === id);
-    if (index === -1) {
-      throw new Error("Không tìm thấy thông tin khách hàng cần cập nhật!");
-    }
+    try {
+      const dbPayload = mapCustomerToDB(data);
 
-    const cleanPhone = data.phone ? String(data.phone).trim() : null;
-    if (cleanPhone) {
-      const exists = customers.some(c => c.id !== id && c.phone.trim() === cleanPhone);
-      if (exists) {
-        throw new Error(`Số điện thoại "${cleanPhone}" đã thuộc về khách hàng khác!`);
+      const { data: updatedRow, error } = await supabase
+        .from('customers')
+        .update(dbPayload)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error(`[customerService.updateCustomer] Lỗi cập nhật khách hàng ${id}:`, error);
+        toast.show('Không thể cập nhật thông tin khách hàng: ' + error.message, 'error');
+        throw new Error(error.message);
       }
+
+      const updated = mapCustomerFromDB(updatedRow);
+      const customers = store.get('customers') || [];
+      const index = customers.findIndex(c => c.id === id);
+      if (index !== -1) {
+        customers[index] = updated;
+        store.set('customers', [...customers]);
+      }
+      return updated;
+    } catch (err) {
+      console.error(`[customerService.updateCustomer] Ngoại lệ:`, err);
+      throw err;
     }
-
-    const current = customers[index];
-    const updatedCustomer = {
-      ...current,
-      ...data,
-      fullName: data.fullName !== undefined ? String(data.fullName).trim() : current.fullName,
-      phone: cleanPhone || current.phone,
-      email: data.email !== undefined ? String(data.email).trim() : current.email,
-      idCard: data.idCard !== undefined ? String(data.idCard).trim() : current.idCard,
-      visits: data.visits !== undefined ? Number(data.visits) : current.visits,
-      totalSpent: data.totalSpent !== undefined ? Number(data.totalSpent) : current.totalSpent,
-      notes: data.notes !== undefined ? String(data.notes).trim() : (current.notes || '')
-    };
-
-    const updatedList = [...customers];
-    updatedList[index] = updatedCustomer;
-    store.set('customers', updatedList);
-    return updatedCustomer;
   },
 
   /**
-   * Delete customer profile
+   * Delete customer profile in Supabase
    * Blocked if customer has existing booking history
    * @param {string} id 
    * @returns {Promise<boolean>}
    */
   async deleteCustomer(id) {
-    const customers = store.get('customers') || [];
-    const customer = customers.find(c => c.id === id);
-    if (!customer) {
-      throw new Error("Không tìm thấy khách hàng cần xóa!");
-    }
+    try {
+      const customer = await this.getCustomerById(id);
+      if (!customer) {
+        throw new Error("Không tìm thấy khách hàng cần xóa!");
+      }
 
-    // Check if customer has bookings
-    const bookings = store.get('bookings') || [];
-    const customerBookings = bookings.filter(b => b.customerId === id);
-    if (customerBookings.length > 0) {
-      throw new Error(`Không thể xóa khách hàng "${customer.fullName}" vì đang có ${customerBookings.length} đơn đặt phòng trong lịch sử hệ thống!`);
-    }
+      // Check bookings in DB
+      const { data: bookings, error: bError } = await supabase
+        .from('bookings')
+        .select('id')
+        .eq('customer_id', id);
 
-    const updated = customers.filter(c => c.id !== id);
-    store.set('customers', updated);
-    return true;
+      if (bError) {
+        console.error('[customerService.deleteCustomer] Lỗi kiểm tra bookings:', bError);
+        throw new Error('Không thể kiểm tra lịch sử đặt phòng của khách hàng: ' + bError.message);
+      }
+
+      if (bookings && bookings.length > 0) {
+        throw new Error(`Không thể xóa khách hàng "${customer.fullName}" vì đang có ${bookings.length} đơn đặt phòng trong hệ thống!`);
+      }
+
+      const { error: delError } = await supabase
+        .from('customers')
+        .delete()
+        .eq('id', id);
+
+      if (delError) {
+        console.error(`[customerService.deleteCustomer] Lỗi xóa:`, delError);
+        toast.show('Không thể xóa khách hàng: ' + delError.message, 'error');
+        throw new Error(delError.message);
+      }
+
+      const customers = store.get('customers') || [];
+      store.set('customers', customers.filter(c => c.id !== id));
+      return true;
+    } catch (err) {
+      console.error(`[customerService.deleteCustomer] Ngoại lệ:`, err);
+      throw err;
+    }
   },
 
   /**
@@ -210,9 +321,34 @@ export const customerService = {
    * @returns {Promise<Array>}
    */
   async getCustomerBookings(customerId) {
-    const bookings = store.get('bookings') || [];
-    return bookings
-      .filter(b => b.customerId === customerId)
-      .sort((a, b) => new Date(b.checkInDate) - new Date(a.checkInDate));
+    if (!customerId) return [];
+    try {
+      const { data, error } = await supabase
+        .from('bookings')
+        .select('*')
+        .eq('customer_id', customerId)
+        .order('check_in_date', { ascending: false });
+
+      if (error) {
+        console.error('[customerService.getCustomerBookings] Lỗi:', error);
+        return [];
+      }
+
+      return (data || []).map(row => ({
+        id: row.id,
+        customerId: row.customer_id,
+        roomNumber: row.room_number,
+        roomType: row.room_type,
+        checkInDate: row.check_in_date,
+        checkOutDate: row.check_out_date,
+        nights: Number(row.nights),
+        totalAmount: Number(row.total_amount),
+        status: row.status,
+        paymentStatus: row.payment_status
+      }));
+    } catch (e) {
+      console.error('[customerService.getCustomerBookings] Ngoại lệ:', e);
+      return [];
+    }
   }
 };

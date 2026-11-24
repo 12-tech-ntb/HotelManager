@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập - Aurora Hotel Management</title>
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/icons/favicon/favicon-96x96.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon/favicon.svg">
+  <link rel="shortcut icon" href="../assets/icons/favicon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/icons/favicon/apple-touch-icon.png">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages/login.css">
+</head>
+<body class="login-page-body">
+
+  <div class="login-card">
+    
+    <!-- Brand & Logo -->
+    <div class="login-brand-header">
+      <div class="login-logo-badge">
+        <img 
+          src="../assets/icons/logo.png" 
+          alt="Aurora Logo" 
+          class="login-logo-img"
+          onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='inline-block';"
+        >
+        <i data-lucide="hotel" style="display: none; width: 28px; height: 28px;"></i>
+      </div>
+      <h1 class="login-hotel-name">Aurora Luxury Hotel</h1>
+      <p class="login-system-tag">Hệ thống Quản trị &amp; Vận hành Nội bộ</p>
+    </div>
+
+    <!-- Login Form -->
+    <form id="loginForm" class="login-form" novalidate>
+      
+      <!-- Email Field -->
+      <div class="login-input-group">
+        <label for="inputEmail" class="login-label">
+          <span>Email nhân viên</span>
+        </label>
+        <div class="login-input-wrapper">
+          <span class="login-input-icon">
+            <i data-lucide="mail" style="width: 18px; height: 18px;"></i>
+          </span>
+          <input 
+            type="email" 
+            id="inputEmail" 
+            class="login-input" 
+            placeholder="nhanvien@aurora.com" 
+            required 
+            autocomplete="email"
+            autofocus
+          >
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="login-input-group">
+        <label for="inputPassword" class="login-label">
+          <span>Mật khẩu</span>
+        </label>
+        <div class="login-input-wrapper">
+          <span class="login-input-icon">
+            <i data-lucide="lock" style="width: 18px; height: 18px;"></i>
+          </span>
+          <input 
+            type="password" 
+            id="inputPassword" 
+            class="login-input" 
+            placeholder="••••••••" 
+            required 
+            autocomplete="current-password"
+          >
+          <button 
+            type="button" 
+            class="login-password-toggle" 
+            id="btnTogglePassword" 
+            aria-label="Hiện/ẩn mật khẩu"
+            tabindex="-1"
+          >
+            <i data-lucide="eye" id="iconEye" style="width: 18px; height: 18px;"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary login-submit-btn" id="btnSubmitLogin">
+        <span class="btn-text" id="btnSubmitText">Đăng nhập hệ thống</span>
+        <span class="login-spinner" id="btnSpinner" style="display: none;"></span>
+        <i data-lucide="arrow-right" id="btnArrowIcon" style="width: 18px; height: 18px;"></i>
+      </button>
+
+    </form>
+
+    <!-- Footer Notice -->
+    <div class="login-footer-notice">
+      <i data-lucide="shield-check" style="width: 14px; height: 14px; display: inline-block;"></i>
+      Cổng quản lý nội bộ. Tài khoản do Quản trị viên cấp và quản lý.
+    </div>
+
+  </div>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Login Logic Module -->
+  <script type="module" src="../js/pages/login.js"></script>
+</body>
+</html>

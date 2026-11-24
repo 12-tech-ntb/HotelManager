@@ -1,12 +1,14 @@
 /**
  * HOTEL MANAGEMENT SYSTEM - FRONT DESK CHECK-IN / CHECK-OUT SERVICE
  * Handles guest arrival check-in, departure check-out & billing settlement,
- * and synchronizes state between Bookings and Rooms.
+ * and synchronizes state between Bookings and Rooms directly in Supabase.
  */
 
 import { store } from '../core/state.js';
+import { supabase } from '../core/supabaseClient.js';
+import { toast } from '../core/toast.js';
 import { roomService } from './roomService.js';
-import { bookingService } from './bookingService.js';
+import { bookingService, mapBookingFromDB } from './bookingService.js';
 
 export const checkinService = {
   /**
@@ -21,9 +23,10 @@ export const checkinService = {
    * @returns {Promise<Object>}
    */
   async getFrontDeskStats() {
-    const bookings = store.get('bookings') || [];
-    const rooms = store.get('rooms') || [];
-    const today = this.getOperationalDate();
+    const [bookings, rooms] = await Promise.all([
+      bookingService.getAllBookings(),
+      roomService.getAllRooms()
+    ]);
 
     // Arrivals pending: confirmed or pending bookings
     const arrivalsPending = bookings.filter(b => b.status === 'confirmed' || b.status === 'pending').length;
@@ -31,8 +34,8 @@ export const checkinService = {
     // Departures: in-house guests currently checked in
     const inHouseGuests = bookings.filter(b => b.status === 'checked_in').length;
 
-    // Due for checkout: in-house guests with checkout <= today + 2
-    const departuresPending = bookings.filter(b => b.status === 'checked_in').length;
+    // Due for checkout: in-house guests
+    const departuresPending = inHouseGuests;
 
     // Rooms cleaning: rooms currently marked cleaning
     const roomsCleaning = rooms.filter(r => r.status === 'cleaning').length;
@@ -51,7 +54,7 @@ export const checkinService = {
    * @returns {Promise<Array>}
    */
   async getArrivals({ search = '' } = {}) {
-    const bookings = store.get('bookings') || [];
+    const bookings = await bookingService.getAllBookings();
     let list = bookings.filter(b => b.status === 'confirmed' || b.status === 'pending');
 
     if (search && search.trim() !== '') {
@@ -75,7 +78,7 @@ export const checkinService = {
    * @returns {Promise<Array>}
    */
   async getDepartures({ search = '' } = {}) {
-    const bookings = store.get('bookings') || [];
+    const bookings = await bookingService.getAllBookings();
     let list = bookings.filter(b => b.status === 'checked_in');
 
     if (search && search.trim() !== '') {
@@ -119,33 +122,50 @@ export const checkinService = {
    * @returns {Promise<Object>}
    */
   async processCheckIn(bookingId, details = {}) {
-    const bookings = store.get('bookings') || [];
-    const index = bookings.findIndex(b => b.id === bookingId);
-    if (index === -1) throw new Error('Không tìm thấy đơn đặt phòng!');
+    const targetBooking = await bookingService.getBookingById(bookingId);
+    if (!targetBooking) throw new Error('Không tìm thấy đơn đặt phòng!');
 
-    const targetBooking = bookings[index];
-
-    // Verify room
     const room = await roomService.getRoomById(targetBooking.roomId);
     if (!room) throw new Error('Không tìm thấy phòng liên kết với đơn này!');
 
-    // Update booking
-    const updatedBooking = {
-      ...targetBooking,
-      status: 'checked_in',
-      customerIdCard: details.idCard || targetBooking.customerIdCard,
-      checkInNotes: details.notes || '',
-      actualCheckInTime: `${this.getOperationalDate()} 14:15`
-    };
+    try {
+      const nowIso = new Date().toISOString();
+      const { data, error } = await supabase
+        .from('bookings')
+        .update({
+          status: 'checked_in',
+          customer_id_card: details.idCard || targetBooking.customerIdCard,
+          check_in_notes: details.notes || '',
+          actual_check_in_time: nowIso
+        })
+        .eq('id', bookingId)
+        .select()
+        .single();
 
-    const updatedBookings = [...bookings];
-    updatedBookings[index] = updatedBooking;
-    store.set('bookings', updatedBookings);
+      if (error) {
+        console.error('[checkinService.processCheckIn] Lỗi:', error);
+        toast.show('Không thể hoàn tất Check-in: ' + error.message, 'error');
+        throw new Error(error.message);
+      }
 
-    // Synchronize Room Status -> 'occupied'
-    await roomService.updateRoomStatus(room.id, 'occupied');
+      const updatedBooking = mapBookingFromDB(data);
 
-    return updatedBooking;
+      // Đồng bộ trạng thái Phòng -> 'occupied'
+      await roomService.updateRoomStatus(room.id, 'occupied');
+
+      // Đồng bộ store
+      const bookings = store.get('bookings') || [];
+      const idx = bookings.findIndex(b => b.id === bookingId);
+      if (idx !== -1) {
+        bookings[idx] = updatedBooking;
+        store.set('bookings', [...bookings]);
+      }
+
+      return updatedBooking;
+    } catch (err) {
+      console.error('[checkinService.processCheckIn] Ngoại lệ:', err);
+      throw err;
+    }
   },
 
   /**
@@ -158,34 +178,53 @@ export const checkinService = {
    * @returns {Promise<Object>}
    */
   async processCheckOut(bookingId, details = {}) {
-    const bookings = store.get('bookings') || [];
-    const index = bookings.findIndex(b => b.id === bookingId);
-    if (index === -1) throw new Error('Không tìm thấy đơn đặt phòng!');
+    const targetBooking = await bookingService.getBookingById(bookingId);
+    if (!targetBooking) throw new Error('Không tìm thấy đơn đặt phòng!');
 
-    const targetBooking = bookings[index];
     const surcharge = Number(details.surcharge) || 0;
     const finalTotal = targetBooking.totalAmount + surcharge;
+    const nowIso = new Date().toISOString();
 
-    // Update booking
-    const updatedBooking = {
-      ...targetBooking,
-      status: 'checked_out',
-      paymentStatus: 'paid',
-      surcharge,
-      finalTotal,
-      paymentMethod: details.paymentMethod || 'Tiền mặt',
-      checkOutNotes: details.notes || '',
-      actualCheckOutTime: `${this.getOperationalDate()} 11:45`
-    };
+    try {
+      const { data, error } = await supabase
+        .from('bookings')
+        .update({
+          status: 'checked_out',
+          payment_status: 'paid',
+          surcharge: surcharge,
+          final_total: finalTotal,
+          payment_method: details.paymentMethod || 'Tiền mặt',
+          check_out_notes: details.notes || '',
+          actual_check_out_time: nowIso
+        })
+        .eq('id', bookingId)
+        .select()
+        .single();
 
-    const updatedBookings = [...bookings];
-    updatedBookings[index] = updatedBooking;
-    store.set('bookings', updatedBookings);
+      if (error) {
+        console.error('[checkinService.processCheckOut] Lỗi:', error);
+        toast.show('Không thể hoàn tất Check-out: ' + error.message, 'error');
+        throw new Error(error.message);
+      }
 
-    // Synchronize Room Status -> 'cleaning'
-    await roomService.updateRoomStatus(targetBooking.roomId, 'cleaning');
+      const updatedBooking = mapBookingFromDB(data);
 
-    return updatedBooking;
+      // Đồng bộ trạng thái phòng -> 'cleaning'
+      await roomService.updateRoomStatus(targetBooking.roomId, 'cleaning');
+
+      // Đồng bộ store
+      const bookings = store.get('bookings') || [];
+      const idx = bookings.findIndex(b => b.id === bookingId);
+      if (idx !== -1) {
+        bookings[idx] = updatedBooking;
+        store.set('bookings', [...bookings]);
+      }
+
+      return updatedBooking;
+    } catch (err) {
+      console.error('[checkinService.processCheckOut] Ngoại lệ:', err);
+      throw err;
+    }
   },
 
   /**
@@ -193,7 +232,7 @@ export const checkinService = {
    * @returns {Promise<Array>}
    */
   async getCleaningRooms() {
-    const rooms = store.get('rooms') || [];
+    const rooms = await roomService.getAllRooms();
     return rooms.filter(r => r.status === 'cleaning');
   },
 

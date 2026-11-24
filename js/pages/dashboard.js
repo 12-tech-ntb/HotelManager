@@ -6,10 +6,10 @@
 
 import { reportService } from '../services/reportService.js';
 import { bookingService } from '../services/bookingService.js';
-import { formatCurrency, formatDate, getBookingStatusBadge, getInitials, escapeHTML } from '../core/utils.js';
+import { formatCurrency, formatDate, getBookingStatusBadge, getInitials, escapeHTML, onReady } from '../core/utils.js';
 import { initLucideIcons } from '../main.js';
 
-document.addEventListener('DOMContentLoaded', async () => {
+onReady(async () => {
   try {
     await renderDashboard();
   } catch (error) {

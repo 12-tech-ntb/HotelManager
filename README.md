@@ -97,4 +97,25 @@ HotelManager/
 | **9** | **Lịch phòng trực quan (`calendar.html`)** | ✅ Hoàn thành (Gantt Matrix Timeline, Sticky cột phòng, Thanh booking trực quan, Xem 7/14 ngày, Modal xem nhanh & Đặt phòng nhanh 1 chạm từ ô trống) |
 | **10** | **Quản lý khách hàng & Voucher** | ⏳ Khung điều hướng hoàn tất, giao diện chi tiết ở bước tiếp theo |
 | **11** | **Báo cáo chi tiết (`reports.html`)** | ⏳ Khung điều hướng hoàn tất, giao diện chi tiết ở Giai đoạn 4 |
-| **12** | **Tích hợp Supabase & PostgreSQL** | ⏳ Sẵn sàng kiến trúc, sẽ tích hợp sau khi hoàn thiện frontend thuần |
+| **12** | **Tích hợp Supabase & PostgreSQL** | ⏳ Đang triển khai: schema + seed đã chuẩn bị, chờ kết nối |
+
+---
+
+## 5. Thiết lập Supabase
+
+Thực hiện các bước sau trên Supabase Dashboard để thiết lập cơ sở dữ liệu và cấu hình hệ thống:
+
+1. **SQL Editor -> Chạy `schema.sql`:** Mở file `supabase/schema.sql`, sao chép toàn bộ nội dung và bấm **Run** để khởi tạo cấu trúc bảng, index, constraints, functions, triggers và RLS policies.
+2. **Chạy `seed.sql`:** Mở file `supabase/seed.sql`, sao chép toàn bộ nội dung và bấm **Run** để nạp dữ liệu mẫu ban đầu (rooms, customers, vouchers, bookings).
+3. **Chạy `verify.sql` và đối chiếu kết quả mong đợi:** Mở file `supabase/verify.sql`, bấm **Run** và đối chiếu kết quả kiểm tra với các comment kỳ vọng (số lượng dòng mỗi bảng, RLS đã kích hoạt, quyền của authenticated/anon, giá trị sequence kế tiếp).
+4. **Tắt đăng ký công khai:** Vào **Authentication** -> **Sign In / Providers** -> tắt tùy chọn **"Allow new users to sign up"** để ngăn chặn người ngoài tự đăng ký tài khoản vào hệ thống quản lý nội bộ.
+5. **Tạo tài khoản nhân viên:** Vào **Authentication** -> **Users** -> **Add user** -> chọn **Create new user**, nhập Email và Mật khẩu cho nhân viên (tick chọn **Auto Confirm User**).
+6. **Lấy Project URL và Publishable Key:** Vào **Project Settings** -> **API Keys** (hoặc bấm nút **Connect** trên thanh điều hướng), sao chép:
+   - **Project URL** (`https://<project-ref>.supabase.co`)
+   - **PUBLISHABLE key** (`sb_publishable_...` hoặc anon key)
+
+> **LƯU Ý BẢO MẬT & VẬN HÀNH:**
+> - **Publishable key** được phép nằm trong mã nguồn frontend của ứng dụng.
+> - **Secret key (`sb_secret_...`) và mật khẩu Database tuyệt đối KHÔNG** đưa vào code hay đẩy lên GitHub.
+> - **Gói Free của Supabase** sẽ tự động tạm dừng (pause) project sau 7 ngày không có hoạt động.
+

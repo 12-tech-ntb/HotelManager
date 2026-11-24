@@ -1,18 +1,78 @@
 /**
  * HOTEL MANAGEMENT SYSTEM - ROOM SERVICE
- * Data access and operations for hotel rooms
- * Sẵn sàng tích hợp Supabase Client (`supabase.from('rooms').*`)
+ * Data access and operations for hotel rooms connected directly to Supabase
  */
 
 import { store } from '../core/state.js';
+import { supabase } from '../core/supabaseClient.js';
+import { toast } from '../core/toast.js';
+
+/**
+ * Map DB row (snake_case) to UI Model (camelCase)
+ * @param {Object} row 
+ * @returns {Object|null}
+ */
+export function mapRoomFromDB(row) {
+  if (!row) return null;
+  return {
+    id: row.id,
+    roomNumber: String(row.room_number),
+    type: row.type,
+    floor: Number(row.floor),
+    price: Number(row.price),
+    capacity: Number(row.capacity || 2),
+    status: row.status,
+    amenities: Array.isArray(row.amenities) ? row.amenities : [],
+    image: row.image || '',
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
+  };
+}
+
+/**
+ * Map UI Model (camelCase) to DB row (snake_case)
+ * @param {Object} data 
+ * @returns {Object}
+ */
+export function mapRoomToDB(data) {
+  const row = {};
+  if (data.roomNumber !== undefined) row.room_number = String(data.roomNumber).trim();
+  if (data.type !== undefined) row.type = String(data.type).trim();
+  if (data.floor !== undefined) row.floor = Number(data.floor);
+  if (data.price !== undefined) row.price = Number(data.price);
+  if (data.capacity !== undefined) row.capacity = Number(data.capacity);
+  if (data.status !== undefined) row.status = data.status;
+  if (data.amenities !== undefined) row.amenities = Array.isArray(data.amenities) ? data.amenities : [];
+  if (data.image !== undefined) row.image = data.image ? String(data.image).trim() : '';
+  return row;
+}
 
 export const roomService = {
   /**
-   * Retrieve all rooms
+   * Retrieve all rooms from Supabase
    * @returns {Promise<Array>}
    */
   async getAllRooms() {
-    return store.get('rooms') || [];
+    try {
+      const { data, error } = await supabase
+        .from('rooms')
+        .select('*')
+        .order('room_number', { ascending: true });
+
+      if (error) {
+        console.error('[roomService.getAllRooms] Lỗi truy vấn Supabase:', error);
+        toast.show('Không thể tải danh sách phòng: ' + error.message, 'error');
+        return store.get('rooms') || [];
+      }
+
+      const rooms = (data || []).map(mapRoomFromDB);
+      store.set('rooms', rooms);
+      return rooms;
+    } catch (err) {
+      console.error('[roomService.getAllRooms] Ngoại lệ kết nối:', err);
+      toast.show('Lỗi kết nối khi tải danh sách phòng: ' + err.message, 'error');
+      return store.get('rooms') || [];
+    }
   },
 
   /**
@@ -21,8 +81,24 @@ export const roomService = {
    * @returns {Promise<Object|null>}
    */
   async getRoomById(id) {
-    const rooms = store.get('rooms') || [];
-    return rooms.find(r => r.id === id) || null;
+    if (!id) return null;
+    try {
+      const { data, error } = await supabase
+        .from('rooms')
+        .select('*')
+        .eq('id', id)
+        .maybeSingle();
+
+      if (error) {
+        console.error(`[roomService.getRoomById] Lỗi lấy phòng ${id}:`, error);
+        return null;
+      }
+
+      return mapRoomFromDB(data);
+    } catch (err) {
+      console.error(`[roomService.getRoomById] Ngoại lệ lấy phòng ${id}:`, err);
+      return null;
+    }
   },
 
   /**
@@ -31,7 +107,7 @@ export const roomService = {
    * @returns {Promise<Array>}
    */
   async filterRooms({ search = '', type = 'all', status = 'all', floor = 'all' } = {}) {
-    let rooms = store.get('rooms') || [];
+    let rooms = await this.getAllRooms();
 
     // Filter by keyword (room number or room type name)
     if (search && search.trim() !== '') {
@@ -66,7 +142,7 @@ export const roomService = {
    * @returns {Promise<Object>} { total, available, occupied, maintenance, cleaning, occupancyRate }
    */
   async getRoomStats() {
-    const rooms = store.get('rooms') || [];
+    const rooms = await this.getAllRooms();
     const total = rooms.length;
     const available = rooms.filter(r => r.status === 'available').length;
     const occupied = rooms.filter(r => r.status === 'occupied').length;
@@ -86,70 +162,71 @@ export const roomService = {
   },
 
   /**
-   * Create a new room
+   * Create a new room in Supabase
    * @param {Object} roomData 
    * @returns {Promise<Object>} Created room
    */
   async createRoom(roomData) {
-    const rooms = store.get('rooms') || [];
+    try {
+      const dbPayload = mapRoomToDB(roomData);
+      
+      const { data, error } = await supabase
+        .from('rooms')
+        .insert(dbPayload)
+        .select()
+        .single();
 
-    // Check duplicate room number
-    const exists = rooms.some(r => r.roomNumber.trim() === String(roomData.roomNumber).trim());
-    if (exists) {
-      throw new Error(`Số phòng ${roomData.roomNumber} đã tồn tại trong hệ thống!`);
+      if (error) {
+        console.error('[roomService.createRoom] Lỗi Supabase:', error);
+        toast.show('Không thể tạo phòng: ' + error.message, 'error');
+        throw new Error(error.message);
+      }
+
+      const created = mapRoomFromDB(data);
+      const rooms = store.get('rooms') || [];
+      store.set('rooms', [created, ...rooms]);
+      return created;
+    } catch (err) {
+      console.error('[roomService.createRoom] Ngoại lệ tạo phòng:', err);
+      throw err;
     }
-
-    const newRoom = {
-      id: roomData.id || `r_${Date.now()}`,
-      roomNumber: String(roomData.roomNumber).trim(),
-      type: roomData.type || "Standard Room",
-      floor: Number(roomData.floor) || 1,
-      price: Number(roomData.price) || 850000,
-      capacity: Number(roomData.capacity) || 2,
-      status: roomData.status || "available",
-      amenities: Array.isArray(roomData.amenities) ? roomData.amenities : ["Wifi", "TV", "Điều hòa"],
-      image: roomData.image || ""
-    };
-
-    const updatedRooms = [newRoom, ...rooms];
-    store.set('rooms', updatedRooms);
-    return newRoom;
   },
 
   /**
-   * Update existing room information
+   * Update existing room information in Supabase
    * @param {string} roomId 
    * @param {Object} updateData 
    * @returns {Promise<Object>} Updated room
    */
   async updateRoom(roomId, updateData) {
-    const rooms = store.get('rooms') || [];
-    const index = rooms.findIndex(r => r.id === roomId);
-    if (index === -1) {
-      throw new Error("Không tìm thấy thông tin phòng cần cập nhật!");
-    }
+    try {
+      const dbPayload = mapRoomToDB(updateData);
 
-    // Check duplicate room number if changed
-    if (updateData.roomNumber) {
-      const exists = rooms.some(r => r.id !== roomId && r.roomNumber.trim() === String(updateData.roomNumber).trim());
-      if (exists) {
-        throw new Error(`Số phòng ${updateData.roomNumber} đã tồn tại ở phòng khác!`);
+      const { data, error } = await supabase
+        .from('rooms')
+        .update(dbPayload)
+        .eq('id', roomId)
+        .select()
+        .single();
+
+      if (error) {
+        console.error(`[roomService.updateRoom] Lỗi cập nhật phòng ${roomId}:`, error);
+        toast.show('Không thể cập nhật phòng: ' + error.message, 'error');
+        throw new Error(error.message);
       }
+
+      const updated = mapRoomFromDB(data);
+      const rooms = store.get('rooms') || [];
+      const index = rooms.findIndex(r => r.id === roomId);
+      if (index !== -1) {
+        rooms[index] = updated;
+        store.set('rooms', [...rooms]);
+      }
+      return updated;
+    } catch (err) {
+      console.error(`[roomService.updateRoom] Ngoại lệ cập nhật phòng ${roomId}:`, err);
+      throw err;
     }
-
-    const updatedRoom = {
-      ...rooms[index],
-      ...updateData,
-      roomNumber: updateData.roomNumber ? String(updateData.roomNumber).trim() : rooms[index].roomNumber,
-      floor: updateData.floor !== undefined ? Number(updateData.floor) : rooms[index].floor,
-      price: updateData.price !== undefined ? Number(updateData.price) : rooms[index].price,
-      capacity: updateData.capacity !== undefined ? Number(updateData.capacity) : rooms[index].capacity
-    };
-
-    const updatedRooms = [...rooms];
-    updatedRooms[index] = updatedRoom;
-    store.set('rooms', updatedRooms);
-    return updatedRoom;
   },
 
   /**
@@ -163,25 +240,39 @@ export const roomService = {
   },
 
   /**
-   * Delete room by ID
+   * Delete room by ID in Supabase
    * @param {string} roomId 
    * @returns {Promise<boolean>}
    */
   async deleteRoom(roomId) {
-    const rooms = store.get('rooms') || [];
-    const room = rooms.find(r => r.id === roomId);
-    if (!room) {
-      throw new Error("Không tìm thấy phòng để xóa!");
-    }
+    try {
+      const room = await this.getRoomById(roomId);
+      if (!room) {
+        throw new Error("Không tìm thấy phòng để xóa!");
+      }
 
-    // Cannot delete occupied room
-    if (room.status === 'occupied') {
-      throw new Error(`Không thể xóa phòng ${room.roomNumber} vì đang có khách lưu trú!`);
-    }
+      if (room.status === 'occupied') {
+        throw new Error(`Không thể xóa phòng ${room.roomNumber} vì đang có khách lưu trú!`);
+      }
 
-    const updatedRooms = rooms.filter(r => r.id !== roomId);
-    store.set('rooms', updatedRooms);
-    return true;
+      const { error } = await supabase
+        .from('rooms')
+        .delete()
+        .eq('id', roomId);
+
+      if (error) {
+        console.error(`[roomService.deleteRoom] Lỗi xóa phòng ${roomId}:`, error);
+        toast.show('Không thể xóa phòng: ' + error.message, 'error');
+        throw new Error(error.message);
+      }
+
+      const rooms = store.get('rooms') || [];
+      store.set('rooms', rooms.filter(r => r.id !== roomId));
+      return true;
+    } catch (err) {
+      console.error(`[roomService.deleteRoom] Ngoại lệ xóa phòng ${roomId}:`, err);
+      throw err;
+    }
   },
 
   /**
@@ -189,18 +280,18 @@ export const roomService = {
    * @returns {Promise<Array<number>>} Sorted array of floor numbers
    */
   async getAllFloors() {
-    const rooms = store.get('rooms') || [];
+    const rooms = await this.getAllRooms();
     const floors = [...new Set(rooms.map(r => Number(r.floor)))].filter(f => !isNaN(f) && f > 0);
     return floors.sort((a, b) => a - b);
   },
 
   /**
-   * Bulk generate rooms for a range of floors
+   * Bulk generate rooms for a range of floors into Supabase
    * @param {Object} config
    * @returns {Promise<Object>} { createdCount, skippedCount, createdRooms, skippedRoomNumbers }
    */
   async bulkCreateRooms(config = {}) {
-    const rooms = store.get('rooms') || [];
+    const existingRooms = await this.getAllRooms();
     const {
       startFloor = 1,
       endFloor = 1,
@@ -216,8 +307,8 @@ export const roomService = {
     const toFloor = Math.max(Number(startFloor), Number(endFloor));
     const countPerFloor = Math.max(1, Math.min(Number(roomsPerFloor), 30));
 
-    const existingRoomNumbers = new Set(rooms.map(r => String(r.roomNumber).trim()));
-    const newRooms = [];
+    const existingRoomNumbers = new Set(existingRooms.map(r => String(r.roomNumber).trim()));
+    const rowsToInsert = [];
     const skippedRoomNumbers = [];
 
     for (let f = fromFloor; f <= toFloor; f++) {
@@ -230,9 +321,8 @@ export const roomService = {
           continue;
         }
 
-        const newRoom = {
-          id: `r_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
-          roomNumber: roomNumberStr,
+        rowsToInsert.push({
+          room_number: roomNumberStr,
           type: type || "Standard Room",
           floor: f,
           price: Number(price) || 850000,
@@ -240,65 +330,109 @@ export const roomService = {
           status: "available",
           amenities: Array.isArray(amenities) && amenities.length > 0 ? amenities : ["Wifi", "TV", "Điều hòa"],
           image: ""
-        };
+        });
 
-        newRooms.push(newRoom);
         existingRoomNumbers.add(roomNumberStr);
       }
     }
 
-    if (newRooms.length > 0) {
-      const updatedRooms = [...rooms, ...newRooms];
-      store.set('rooms', updatedRooms);
+    if (rowsToInsert.length === 0) {
+      return {
+        createdCount: 0,
+        skippedCount: skippedRoomNumbers.length,
+        createdRooms: [],
+        skippedRoomNumbers
+      };
     }
 
-    return {
-      createdCount: newRooms.length,
-      skippedCount: skippedRoomNumbers.length,
-      createdRooms: newRooms,
-      skippedRoomNumbers
-    };
+    try {
+      const { data, error } = await supabase
+        .from('rooms')
+        .insert(rowsToInsert)
+        .select();
+
+      if (error) {
+        console.error('[roomService.bulkCreateRooms] Lỗi tạo hàng loạt:', error);
+        toast.show('Lỗi tạo phòng hàng loạt: ' + error.message, 'error');
+        throw new Error(error.message);
+      }
+
+      const createdRooms = (data || []).map(mapRoomFromDB);
+      const updatedRooms = [...createdRooms, ...existingRooms];
+      store.set('rooms', updatedRooms);
+
+      return {
+        createdCount: createdRooms.length,
+        skippedCount: skippedRoomNumbers.length,
+        createdRooms,
+        skippedRoomNumbers
+      };
+    } catch (err) {
+      console.error('[roomService.bulkCreateRooms] Ngoại lệ:', err);
+      throw err;
+    }
   },
 
   /**
-   * Clean up / delete all rooms on a specific floor safely
-   * Fails if any room is occupied or has confirmed/checked_in bookings
+   * Clean up / delete all rooms on a specific floor safely in Supabase
+   * Fails if any room is occupied or has active bookings
    * @param {number|string} floorNumber 
    * @returns {Promise<Object>} { deletedCount, floor }
    */
   async deleteFloorRooms(floorNumber) {
     const targetFloor = Number(floorNumber);
-    const rooms = store.get('rooms') || [];
+    const rooms = await this.getAllRooms();
     const floorRooms = rooms.filter(r => Number(r.floor) === targetFloor);
 
     if (floorRooms.length === 0) {
       throw new Error(`Không có phòng nào tại Tầng ${targetFloor} để xóa!`);
     }
 
-    // Check if any room on this floor is occupied
     const occupiedRoom = floorRooms.find(r => r.status === 'occupied');
     if (occupiedRoom) {
       throw new Error(`Không thể xóa phòng tại Tầng ${targetFloor} vì phòng ${occupiedRoom.roomNumber} đang có khách lưu trú!`);
     }
 
-    // Check if any room on this floor has active bookings
-    const bookings = store.get('bookings') || [];
-    const floorRoomIds = new Set(floorRooms.map(r => r.id));
-    const activeBooking = bookings.find(b => 
-      floorRoomIds.has(b.roomId) && 
-      (b.status === 'confirmed' || b.status === 'checked_in')
-    );
+    // Check active bookings in DB
+    const floorRoomIds = floorRooms.map(r => r.id);
+    const { data: activeBookings, error: bError } = await supabase
+      .from('bookings')
+      .select('id, room_number, status')
+      .in('room_id', floorRoomIds)
+      .in('status', ['confirmed', 'checked_in']);
 
-    if (activeBooking) {
-      throw new Error(`Không thể xóa phòng tại Tầng ${targetFloor} vì phòng ${activeBooking.roomNumber} đang có đơn đặt phòng hoạt động (${activeBooking.id})!`);
+    if (bError) {
+      console.error('[roomService.deleteFloorRooms] Lỗi kiểm tra bookings:', bError);
+      throw new Error('Không thể kiểm tra lịch đặt phòng của tầng này: ' + bError.message);
     }
 
-    // Safe to delete all rooms on this floor
-    const updatedRooms = rooms.filter(r => Number(r.floor) !== targetFloor);
-    store.set('rooms', updatedRooms);
-    return {
-      deletedCount: floorRooms.length,
-      floor: targetFloor
-    };
+    if (activeBookings && activeBookings.length > 0) {
+      const firstB = activeBookings[0];
+      throw new Error(`Không thể xóa phòng tại Tầng ${targetFloor} vì phòng ${firstB.room_number} đang có đơn đặt phòng hoạt động (${firstB.id})!`);
+    }
+
+    try {
+      const { error: delError } = await supabase
+        .from('rooms')
+        .delete()
+        .eq('floor', targetFloor);
+
+      if (delError) {
+        console.error(`[roomService.deleteFloorRooms] Lỗi xóa phòng tầng ${targetFloor}:`, delError);
+        toast.show('Không thể xóa phòng tầng ' + targetFloor + ': ' + delError.message, 'error');
+        throw new Error(delError.message);
+      }
+
+      const updatedRooms = rooms.filter(r => Number(r.floor) !== targetFloor);
+      store.set('rooms', updatedRooms);
+
+      return {
+        deletedCount: floorRooms.length,
+        floor: targetFloor
+      };
+    } catch (err) {
+      console.error(`[roomService.deleteFloorRooms] Ngoại lệ:`, err);
+      throw err;
+    }
   }
 };

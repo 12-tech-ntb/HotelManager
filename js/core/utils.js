@@ -128,3 +128,19 @@ export function escapeHTML(str) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
+
+/**
+ * Safe DOM Ready callback execution.
+ * Handles both cases: DOM still loading or already parsed (interactive/complete)
+ * Vital for scripts that use top-level await where DOMContentLoaded may have already fired.
+ * @param {Function} fn 
+ */
+export function onReady(fn) {
+  if (typeof fn !== 'function') return;
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => fn());
+  } else {
+    fn();
+  }
+}
+

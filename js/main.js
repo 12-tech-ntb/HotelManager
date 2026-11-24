@@ -1,14 +1,114 @@
 /**
  * HOTEL MANAGEMENT SYSTEM - MAIN ENTRY POINT
- * Handles navigation, mobile drawer, search shortcuts, and Lucide icons
+ * Handles auth guard, navigation, mobile drawer, search shortcuts, and Lucide icons
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+import { requireAuth, signOut } from './core/auth.js';
+import { onReady } from './core/utils.js';
+
+// ============================================================================
+// 1. AUTH GUARD CHO TOÀN BỘ TRANG QUẢN LÝ
+// ============================================================================
+// Chạy top-level await ngay khi module nạp để kiểm tra phiên đăng nhập:
+// - Nếu chưa đăng nhập: lập tức chuyển hướng về trang login, không hiển thị dữ liệu
+// - Nếu đã đăng nhập: tiếp tục khởi tạo giao diện và nạp thông tin nhân viên
+const session = await requireAuth();
+
+// ============================================================================
+// 2. KHỞI TẠO CÁC TÍNH NĂNG GIAO DIỆN CHUNG
+// ============================================================================
+function initApp() {
   initMobileNavigation();
   initLucideIcons();
   initSearchShortcut();
   initCurrentDate();
-});
+
+  if (session && session.user) {
+    initUserSessionUI(session.user);
+  }
+}
+
+// Chạy an toàn bất kể DOM đã load trước hay sau khi hoàn thành requireAuth
+onReady(initApp);
+
+/**
+ * Hiển thị thông tin người dùng đang đăng nhập và gắn các nút Đăng xuất
+ * @param {Object} user 
+ */
+function initUserSessionUI(user) {
+  const email = user.email || 'Nhân viên';
+  const shortName = email.split('@')[0];
+
+  // 1. Cập nhật Sidebar Profile
+  const nameEl = document.querySelector('.user-name');
+  if (nameEl) {
+    nameEl.textContent = shortName;
+    nameEl.title = email;
+  }
+
+  const roleEl = document.querySelector('.user-role');
+  if (roleEl) {
+    roleEl.textContent = email;
+    roleEl.title = email;
+  }
+
+  const avatarEl = document.querySelector('.user-avatar');
+  if (avatarEl) {
+    const initials = shortName.slice(0, 2).toUpperCase();
+    avatarEl.textContent = initials;
+  }
+
+  // Thêm nút Đăng xuất nhỏ trong Sidebar Footer
+  const userProfile = document.querySelector('.user-quick-profile');
+  if (userProfile && !document.getElementById('sidebarLogoutBtn')) {
+    const sidebarLogout = document.createElement('button');
+    sidebarLogout.id = 'sidebarLogoutBtn';
+    sidebarLogout.className = 'sidebar-logout-btn';
+    sidebarLogout.title = `Đăng xuất (${email})`;
+    sidebarLogout.setAttribute('aria-label', 'Đăng xuất');
+    sidebarLogout.style.cssText = 'background:none; border:none; color:#94a3b8; cursor:pointer; padding:6px; border-radius:4px; display:flex; align-items:center; justify-content:center; margin-left:auto; transition: all 0.15s ease;';
+    sidebarLogout.innerHTML = '<i data-lucide="log-out" style="width: 16px; height: 16px;"></i>';
+    
+    sidebarLogout.addEventListener('mouseenter', () => {
+      sidebarLogout.style.color = '#ef4444';
+      sidebarLogout.style.backgroundColor = 'rgba(255,255,255,0.08)';
+    });
+    sidebarLogout.addEventListener('mouseleave', () => {
+      sidebarLogout.style.color = '#94a3b8';
+      sidebarLogout.style.backgroundColor = 'transparent';
+    });
+    sidebarLogout.addEventListener('click', handleLogoutClick);
+
+    userProfile.appendChild(sidebarLogout);
+  }
+
+  // 2. Thêm nút Đăng xuất trên Header Right
+  const headerRight = document.querySelector('.header-right');
+  if (headerRight && !document.getElementById('headerLogoutBtn')) {
+    const headerLogout = document.createElement('button');
+    headerLogout.id = 'headerLogoutBtn';
+    headerLogout.className = 'header-action-btn';
+    headerLogout.setAttribute('aria-label', 'Đăng xuất');
+    headerLogout.title = `Đăng xuất khỏi hệ thống (${email})`;
+    headerLogout.innerHTML = '<i data-lucide="log-out" style="width: 17px; height: 17px; color: #ef4444;"></i>';
+    headerLogout.addEventListener('click', handleLogoutClick);
+
+    headerRight.appendChild(headerLogout);
+  }
+
+  // Cập nhật lại các icon vừa được chèn
+  initLucideIcons();
+}
+
+/**
+ * Xử lý xác nhận đăng xuất
+ */
+async function handleLogoutClick() {
+  const confirmed = window.confirm('Bạn có chắc chắn muốn đăng xuất khỏi hệ thống quản lý?');
+  if (confirmed) {
+    await signOut();
+  }
+}
 
 /**
  * Mobile Sidebar Drawer and Overlay Toggle

@@ -4,7 +4,7 @@
  */
 
 import { customerService } from '../services/customerService.js';
-import { formatCurrency, escapeHTML } from '../core/utils.js';
+import { formatCurrency, escapeHTML, onReady } from '../core/utils.js';
 import { toast } from '../core/toast.js';
 import { initLucideIcons } from '../main.js';
 
@@ -20,7 +20,7 @@ const state = {
 };
 
 // ─── Bootstrap ───────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', async () => {
+onReady(async () => {
   try {
     setCurrentDate();
     initElements();

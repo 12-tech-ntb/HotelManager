@@ -6,7 +6,7 @@
 import { bookingService } from '../services/bookingService.js';
 import { roomService } from '../services/roomService.js';
 import { customerService } from '../services/customerService.js';
-import { formatCurrency, formatDate, calculateNights, getBookingStatusBadge, getPaymentStatusBadge, getInitials, escapeHTML } from '../core/utils.js';
+import { formatCurrency, formatDate, calculateNights, getBookingStatusBadge, getPaymentStatusBadge, getInitials, escapeHTML, onReady } from '../core/utils.js';
 import { toast } from '../core/toast.js';
 import { initLucideIcons } from '../main.js';
 
@@ -24,7 +24,7 @@ const state = {
   cancellingBookingId: null
 };
 
-document.addEventListener('DOMContentLoaded', async () => {
+onReady(async () => {
   try {
     initElements();
     await loadBookings();
