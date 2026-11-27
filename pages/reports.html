@@ -125,8 +125,18 @@
                 <i data-lucide="percent" style="width: 18px; height: 18px;"></i>
               </div>
             </div>
-            <div class="report-kpi-value" id="repAvgOccupancy">--</div>
-            <div class="report-kpi-sub" id="repNightsSoldSub">-- đêm đã bán</div>
+            <div class="report-occupancy-row">
+              <div class="report-ring-box" aria-hidden="true">
+                <svg width="54" height="54" viewBox="0 0 54 54" style="transform: rotate(-90deg);">
+                  <circle cx="27" cy="27" r="22" fill="transparent" stroke="rgba(28, 25, 23, 0.1)" stroke-width="5" />
+                  <circle id="repOccupancyRingProgress" cx="27" cy="27" r="22" fill="transparent" stroke="var(--color-accent)" stroke-width="5" stroke-linecap="round" stroke-dasharray="138.23" stroke-dashoffset="138.23" style="transition: stroke-dashoffset 0.7s cubic-bezier(0.22, 1, 0.36, 1);" />
+                </svg>
+              </div>
+              <div>
+                <div class="report-kpi-value" id="repAvgOccupancy">--</div>
+                <div class="report-kpi-sub" id="repNightsSoldSub">-- đêm đã bán</div>
+              </div>
+            </div>
           </div>
 
           <div class="report-kpi-card">

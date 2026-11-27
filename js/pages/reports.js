@@ -79,6 +79,15 @@ function renderKPIs(kpis) {
   document.getElementById('repAdr').textContent = formatCurrency(kpis.adr);
   document.getElementById('repCompletedBookings').textContent = kpis.completedBookings;
   document.getElementById('repCustomersSub').textContent = `Hệ thống có ${kpis.totalCustomers} khách hàng`;
+
+  // Update Circular SVG Progress Ring
+  const ringEl = document.getElementById('repOccupancyRingProgress');
+  if (ringEl) {
+    const circumference = 2 * Math.PI * 22; // r = 22 -> ~138.23
+    const pct = Math.max(0, Math.min(100, Number(kpis.avgOccupancyRate) || 0));
+    ringEl.style.strokeDasharray = `${circumference}`;
+    ringEl.style.strokeDashoffset = `${circumference - (pct / 100) * circumference}`;
+  }
 }
 
 function renderRoomTypeRevenue(items) {

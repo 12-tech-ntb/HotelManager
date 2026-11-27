@@ -1,76 +1,90 @@
 /* ==========================================================================
-   HOTEL MANAGEMENT SYSTEM - DESIGN TOKENS & BASE STYLES
-   Style: Modern, Elegant, Professional Hospitality Dashboard
+   HOTEL MANAGEMENT SYSTEM - GLASSY DASHBOARD V2 DESIGN TOKENS & MOTION
+   Style: Modern Glassmorphism with Warm Taupe / Champagne / Soft Espresso & Smooth Motion
    ========================================================================== */
 
 :root {
-  /* ---------------- Core Color Palette (Slate Navy & Hospitality Teal) ---------------- */
-  --color-primary: #0f172a;          /* Slate 900 - Deep brand navy */
-  --color-primary-light: #1e293b;    /* Slate 800 - Sidebar & surface contrast */
-  --color-primary-hover: #334155;    /* Slate 700 */
-  
-  --color-accent: #0d9488;           /* Teal 600 - Fresh, welcoming hospitality accent */
-  --color-accent-light: #ccfbf1;     /* Teal 100 - Accent backgrounds */
-  --color-accent-hover: #0f766e;     /* Teal 700 */
+  /* ---------------- Core Color Palette (Soft Espresso & Deep Emerald) ---------------- */
+  --color-primary: #1c1917;          /* Stone 900 / Soft Espresso - High contrast pill & headings */
+  --color-primary-light: #292524;    /* Stone 800 */
+  --color-primary-hover: #44403c;    /* Stone 700 */
 
-  --color-gold: #d97706;             /* Amber 600 - Luxury / VIP accent */
-  --color-gold-light: #fef3c7;       /* Amber 100 */
+  --color-accent: #0f766e;           /* Deep Emerald / Teal 700 - Luxury Hospitality accent */
+  --color-accent-light: rgba(15, 118, 110, 0.12);
+  --color-accent-hover: #115e59;     /* Teal 800 */
 
-  /* ---------------- Neutral & Surface Colors ---------------- */
-  --bg-app: #f8fafc;                 /* Slate 50 - Soft daylight app canvas */
-  --bg-surface: #ffffff;             /* Pure white card & table surfaces */
-  --bg-surface-subtle: #f1f5f9;      /* Slate 100 - Secondary inputs & borders */
-  --bg-surface-hover: #f8fafc;       /* Slate 50 hover state */
+  --color-gold: #b45309;             /* Warm Amber 700 - Luxury / VIP accent */
+  --color-gold-light: rgba(245, 158, 11, 0.16);
 
-  /* ---------------- Text Colors ---------------- */
-  --text-main: #0f172a;              /* Slate 900 - High contrast text */
-  --text-secondary: #475569;         /* Slate 600 - Body & labels */
-  --text-muted: #94a3b8;             /* Slate 400 - Timestamps & placeholders */
-  --text-inverse: #ffffff;           /* Text on dark surfaces */
+  /* ---------------- Glassmorphism Tokens (Glassy Dashboard V2) ---------------- */
+  --glass-bg: rgba(255, 255, 255, 0.56);
+  --glass-bg-hover: rgba(255, 255, 255, 0.72);
+  --glass-bg-elevated: rgba(255, 255, 255, 0.88);
+  --glass-bg-subtle: rgba(255, 255, 255, 0.42);
+  --glass-blur: blur(20px) saturate(150%);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.65);
+  --glass-border-subtle: 1px solid rgba(28, 25, 23, 0.08);
+  --glass-shadow: 0 16px 40px -8px rgba(28, 25, 23, 0.10), inset 0 1px 0 0 rgba(255, 255, 255, 0.85);
+  --glass-shadow-hover: 0 22px 48px -10px rgba(28, 25, 23, 0.15), inset 0 1px 0 0 rgba(255, 255, 255, 0.95);
+
+  /* ---------------- Warm Atmospheric Neutral & Surface Colors ---------------- */
+  --bg-app: #dfd4c6;
+  --bg-surface: var(--glass-bg);
+  --bg-surface-subtle: rgba(255, 255, 255, 0.44);
+  --bg-surface-hover: var(--glass-bg-hover);
+
+  /* ---------------- High-Contrast Text Colors (WCAG AA on Glass) ---------------- */
+  --text-main: #1c1917;              /* Stone 900 - Crisp dark ink on glass */
+  --text-secondary: #44403c;         /* Stone 700 - Body & labels */
+  --text-muted: #78716c;             /* Stone 500 - Subtitles & placeholders */
+  --text-inverse: #ffffff;
 
   /* ---------------- Semantic Status Colors ---------------- */
   /* Available (Trống) */
-  --status-available: #16a34a;
-  --status-available-bg: #dcfce7;
-  --status-available-border: #bbf7d0;
+  --status-available: #15803d;
+  --status-available-bg: rgba(22, 163, 74, 0.14);
+  --status-available-border: rgba(22, 163, 74, 0.28);
 
   /* Occupied (Đang có khách) */
-  --status-occupied: #2563eb;
-  --status-occupied-bg: #dbeafe;
-  --status-occupied-border: #bfdbfe;
+  --status-occupied: #1d4ed8;
+  --status-occupied-bg: rgba(37, 99, 235, 0.14);
+  --status-occupied-border: rgba(37, 99, 235, 0.28);
 
   /* Cleaning (Đang dọn phòng) */
-  --status-cleaning: #d97706;
-  --status-cleaning-bg: #fef3c7;
-  --status-cleaning-border: #fde68a;
+  --status-cleaning: #b45309;
+  --status-cleaning-bg: rgba(217, 119, 6, 0.15);
+  --status-cleaning-border: rgba(217, 119, 6, 0.30);
 
   /* Maintenance (Đang bảo trì) */
-  --status-maintenance: #e11d48;
-  --status-maintenance-bg: #ffe4e6;
-  --status-maintenance-border: #fecdd3;
+  --status-maintenance: #be123c;
+  --status-maintenance-bg: rgba(225, 29, 72, 0.14);
+  --status-maintenance-border: rgba(225, 29, 72, 0.28);
 
   /* Booking Statuses */
-  --status-confirmed: #059669;
-  --status-confirmed-bg: #d1fae5;
-  --status-pending: #d97706;
-  --status-pending-bg: #fef3c7;
-  --status-cancelled: #64748b;
-  --status-cancelled-bg: #f1f5f9;
+  --status-confirmed: #0f766e;
+  --status-confirmed-bg: rgba(15, 118, 110, 0.14);
+  --status-pending: #b45309;
+  --status-pending-bg: rgba(217, 119, 6, 0.15);
+  --status-cancelled: #57534e;
+  --status-cancelled-bg: rgba(120, 113, 108, 0.16);
 
-  /* ---------------- Borders & Dividers ---------------- */
-  --border-color: #e2e8f0;           /* Slate 200 */
-  --border-color-subtle: #f1f5f9;    /* Slate 100 */
-  --border-radius-sm: 6px;
-  --border-radius-md: 10px;
-  --border-radius-lg: 14px;
-  --border-radius-xl: 20px;
-  --border-radius-full: 9999px;
+  /* ---------------- Borders & Radii ---------------- */
+  --border-color: rgba(255, 255, 255, 0.65);
+  --border-color-subtle: rgba(28, 25, 23, 0.08);
+  --radius-shell: 24px;
+  --radius-card: 20px;
+  --radius-pill: 9999px;
+  --border-radius-sm: 10px;
+  --border-radius-md: 12px;
+  --border-radius-lg: var(--radius-card);
+  --border-radius-xl: var(--radius-shell);
+  --border-radius-full: var(--radius-pill);
 
   /* ---------------- Shadows ---------------- */
-  --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
-  --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.08), 0 1px 2px -1px rgba(15, 23, 42, 0.06);
-  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+  --shadow-xs: 0 4px 14px -2px rgba(28, 25, 23, 0.06), inset 0 1px 0 0 rgba(255, 255, 255, 0.7);
+  --shadow-sm: 0 10px 26px -6px rgba(28, 25, 23, 0.09), inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+  --shadow-md: var(--glass-shadow);
+  --shadow-lg: 0 24px 54px -12px rgba(28, 25, 23, 0.18), inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
 
   /* ---------------- Typography ---------------- */
   --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -82,11 +96,12 @@
   --font-size-xl: 1.5rem;      /* 24px */
   --font-size-2xl: 1.875rem;   /* 30px */
 
-  /* ---------------- Layout Dimensions ---------------- */
-  --sidebar-width: 260px;
+  /* ---------------- Layout Dimensions & Motion Curves ---------------- */
+  --sidebar-width: 268px;
   --header-height: 70px;
-  --transition-fast: 0.15s ease;
-  --transition-normal: 0.25s ease;
+  --ease-glass: cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-fast: 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-normal: 0.28s cubic-bezier(0.22, 1, 0.36, 1);
   --z-sidebar: 100;
   --z-header: 90;
   --z-modal: 1000;
@@ -107,11 +122,19 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Warm Atmospheric Backdrop (Warm Taupe / Champagne / Soft Espresso) */
 body {
   font-family: var(--font-family);
   font-size: var(--font-size-base);
   color: var(--text-main);
   background-color: var(--bg-app);
+  background-image:
+    radial-gradient(ellipse 75% 55% at 14% 12%, rgba(255, 249, 240, 0.92) 0%, transparent 65%),
+    radial-gradient(ellipse 65% 50% at 88% 18%, rgba(214, 188, 156, 0.58) 0%, transparent 62%),
+    radial-gradient(ellipse 60% 55% at 78% 88%, rgba(15, 118, 110, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 45% at 18% 86%, rgba(168, 134, 102, 0.36) 0%, transparent 62%),
+    linear-gradient(135deg, #efe6da 0%, #decbb6 48%, #c9b39a 100%);
+  background-attachment: fixed;
   line-height: 1.5;
   overflow-x: hidden;
   min-height: 100vh;
@@ -145,6 +168,123 @@ img, svg {
   max-width: 100%;
 }
 
+/* ---------------- Motion Choreography (Glassy Dashboard V2) ---------------- */
+@keyframes glassReveal {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(14px) scale(0.985);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes barGrowUp {
+  0% {
+    transform: scaleY(0);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@keyframes progressGrowRight {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+/* Frosted Blur Reveal + Staggered Delay */
+.glass-reveal,
+.page-header-row,
+.kpi-card,
+.analytics-grid > .card,
+.table-card,
+.rooms-toolbar-card,
+.bookings-toolbar-card,
+.customers-toolbar-card,
+.calendar-controls-card,
+.cleaning-alert-banner,
+.voucher-toolbar,
+.report-toolbar,
+.mini-kpi-card,
+.fd-kpi-card,
+.customer-kpi-card,
+.voucher-kpi-item,
+.report-kpi-card,
+.report-card,
+.room-card {
+  animation: glassReveal 0.55s var(--ease-glass) backwards;
+}
+
+.page-header-row { animation-delay: 0ms; }
+
+/* Auto-stagger for card grids (40ms step) */
+.kpi-grid > *:nth-child(1),
+.mini-kpi-grid > *:nth-child(1),
+.fd-kpi-grid > *:nth-child(1),
+.customer-kpi-grid > *:nth-child(1),
+.voucher-mini-kpis > *:nth-child(1),
+.report-kpi-grid > *:nth-child(1),
+.room-grid > *:nth-child(1) { animation-delay: 40ms; }
+
+.kpi-grid > *:nth-child(2),
+.mini-kpi-grid > *:nth-child(2),
+.fd-kpi-grid > *:nth-child(2),
+.customer-kpi-grid > *:nth-child(2),
+.voucher-mini-kpis > *:nth-child(2),
+.report-kpi-grid > *:nth-child(2),
+.room-grid > *:nth-child(2) { animation-delay: 80ms; }
+
+.kpi-grid > *:nth-child(3),
+.mini-kpi-grid > *:nth-child(3),
+.fd-kpi-grid > *:nth-child(3),
+.customer-kpi-grid > *:nth-child(3),
+.voucher-mini-kpis > *:nth-child(3),
+.report-kpi-grid > *:nth-child(3),
+.room-grid > *:nth-child(3) { animation-delay: 120ms; }
+
+.kpi-grid > *:nth-child(4),
+.mini-kpi-grid > *:nth-child(4),
+.fd-kpi-grid > *:nth-child(4),
+.customer-kpi-grid > *:nth-child(4),
+.voucher-mini-kpis > *:nth-child(4),
+.report-kpi-grid > *:nth-child(4),
+.room-grid > *:nth-child(4) { animation-delay: 160ms; }
+
+.kpi-grid > *:nth-child(5),
+.room-grid > *:nth-child(5) { animation-delay: 200ms; }
+
+.kpi-grid > *:nth-child(6),
+.room-grid > *:nth-child(6) { animation-delay: 240ms; }
+
+.analytics-grid > *:nth-child(1),
+.report-charts-grid > *:nth-child(1) { animation-delay: 160ms; }
+
+.analytics-grid > *:nth-child(2),
+.report-charts-grid > *:nth-child(2) { animation-delay: 220ms; }
+
+.table-card { animation-delay: 200ms; }
+
+/* Smooth Page Leave Transition */
+.main-content {
+  transition: opacity 0.16s var(--ease-glass), filter 0.16s var(--ease-glass), transform 0.16s var(--ease-glass);
+}
+
+body.page-leaving .main-content {
+  opacity: 0;
+  filter: blur(6px);
+  transform: translateY(6px) scale(0.992);
+}
+
 /* ---------------- Helper Classes ---------------- */
 .visually-hidden {
   position: absolute;
@@ -164,3 +304,54 @@ img, svg {
 .font-bold { font-weight: 700; }
 .text-muted { color: var(--text-muted); }
 .text-secondary { color: var(--text-secondary); }
+.text-danger { color: var(--status-maintenance); }
+
+/* ---------------- Accessibility: Reduced Motion ---------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------------- Clean Print Styles (Reports & Invoices) ---------------- */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .sidebar,
+  .sidebar-overlay,
+  .header,
+  .report-toolbar button,
+  .period-filter-group,
+  .page-header-actions,
+  .toast-container {
+    display: none !important;
+  }
+
+  .main-wrapper {
+    margin-left: 0 !important;
+    padding: 0 !important;
+  }
+
+  .main-content {
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .card,
+  .table-card,
+  .report-kpi-card,
+  .report-card,
+  .kpi-card {
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    border: 1px solid #d4d4d8 !important;
+    break-inside: avoid;
+  }
+}

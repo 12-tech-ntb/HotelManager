@@ -132,7 +132,7 @@ async function renderRoomDonutChart() {
           cy="${size / 2}" 
           r="${radius}" 
           fill="transparent" 
-          stroke="#f1f5f9" 
+          stroke="rgba(28, 25, 23, 0.08)" 
           stroke-width="${strokeWidth}"
         />
         ${circlesHTML}
@@ -157,7 +157,7 @@ async function renderRoomDonutChart() {
 }
 
 /**
- * Render Pure SVG Weekly Revenue Bar Chart (No external charting library needed)
+ * Render Pure SVG Weekly Revenue Pill-Shaped Bar Chart (Glassy Dashboard V2)
  */
 async function renderRevenueBarChart() {
   const container = document.getElementById('revenueBarChartContainer');
@@ -166,23 +166,26 @@ async function renderRevenueBarChart() {
   const weeklyData = await reportService.getWeeklyRevenue();
   if (!weeklyData || weeklyData.length === 0) return;
 
-  const maxAmount = Math.max(...weeklyData.map(d => d.amount));
+  const maxAmount = Math.max(...weeklyData.map(d => d.amount), 1);
   const svgWidth = 650;
-  const svgHeight = 220;
-  const paddingBottom = 35;
-  const paddingTop = 25;
-  const paddingLeft = 10;
-  const paddingRight = 10;
+  const svgHeight = 228;
+  const paddingBottom = 36;
+  const paddingTop = 28;
+  const paddingLeft = 14;
+  const paddingRight = 14;
   const chartHeight = svgHeight - paddingBottom - paddingTop;
   const availableWidth = svgWidth - paddingLeft - paddingRight;
 
-  const barWidth = 42;
-  const spacing = (availableWidth - (weeklyData.length * barWidth)) / (weeklyData.length - 1);
+  const barWidth = 38;
+  const pillRadius = barWidth / 2;
+  const spacing = weeklyData.length > 1
+    ? (availableWidth - (weeklyData.length * barWidth)) / (weeklyData.length - 1)
+    : 0;
 
   let barsHTML = '';
   let gridHTML = '';
 
-  // 3 horizontal guide lines
+  // 3 horizontal subtle glass guide lines
   for (let i = 1; i <= 3; i++) {
     const y = paddingTop + (chartHeight * (i / 3));
     gridHTML += `
@@ -190,37 +193,61 @@ async function renderRevenueBarChart() {
     `;
   }
 
+  const peakAmount = Math.max(...weeklyData.map(d => d.amount));
+
   weeklyData.forEach((item, index) => {
     const x = paddingLeft + index * (barWidth + spacing);
-    const barHeight = Math.max(8, (item.amount / maxAmount) * chartHeight);
+    const barHeight = item.amount > 0 ? Math.max(22, (item.amount / maxAmount) * chartHeight) : 14;
     const y = paddingTop + chartHeight - barHeight;
-    const formattedVal = (item.amount / 1000000).toFixed(1) + ' tr';
+    const formattedVal = item.amount >= 1000000
+      ? (item.amount / 1000000).toFixed(1) + ' tr'
+      : item.amount > 0
+        ? Math.round(item.amount / 1000) + 'k'
+        : '0';
+
+    const isPeak = peakAmount > 0 && item.amount === peakAmount;
+    const fillUrl = isPeak ? 'url(#glassBarPeakGrad)' : 'url(#glassBarGrad)';
 
     barsHTML += `
       <g class="bar-group">
         <title>${item.day} (${item.date}): ${formatCurrency(item.amount)}</title>
-        <!-- Bar Rect -->
+        <!-- Frosted Pill Background Track -->
+        <rect
+          x="${x}"
+          y="${paddingTop}"
+          width="${barWidth}"
+          height="${chartHeight}"
+          rx="${pillRadius}"
+          ry="${pillRadius}"
+          class="chart-bar-track"
+        />
+        <!-- Animated Pill Bar -->
         <rect 
           x="${x}" 
           y="${y}" 
           width="${barWidth}" 
           height="${barHeight}" 
-          class="chart-bar"
+          rx="${pillRadius}"
+          ry="${pillRadius}"
+          fill="${fillUrl}"
+          class="chart-bar chart-bar-pill"
+          style="animation-delay: ${index * 65}ms;"
         />
         <!-- Top Amount Label -->
         <text 
           x="${x + barWidth / 2}" 
           y="${y - 8}" 
           class="chart-label font-semibold"
-          style="font-size: 10.5px; fill: #475569;"
+          style="font-size: 10.5px; fill: ${isPeak ? '#1c1917' : '#44403c'}; font-weight: ${isPeak ? '700' : '600'};"
         >
           ${formattedVal}
         </text>
         <!-- Bottom Day Label -->
         <text 
           x="${x + barWidth / 2}" 
-          y="${svgHeight - 12}" 
+          y="${svgHeight - 10}" 
           class="chart-label font-semibold"
+          style="fill: ${isPeak ? '#1c1917' : '#78716c'}; font-weight: ${isPeak ? '800' : '600'};"
         >
           ${item.day}
         </text>
@@ -230,6 +257,16 @@ async function renderRevenueBarChart() {
 
   container.innerHTML = `
     <svg viewBox="0 0 ${svgWidth} ${svgHeight}" class="chart-svg" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="glassBarGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#0f766e" stop-opacity="0.92" />
+          <stop offset="100%" stop-color="#14b8a6" stop-opacity="0.72" />
+        </linearGradient>
+        <linearGradient id="glassBarPeakGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#1c1917" stop-opacity="0.95" />
+          <stop offset="100%" stop-color="#57534e" stop-opacity="0.82" />
+        </linearGradient>
+      </defs>
       ${gridHTML}
       ${barsHTML}
     </svg>

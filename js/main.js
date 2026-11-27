@@ -22,11 +22,17 @@ function initApp() {
   initLucideIcons();
   initSearchShortcut();
   initCurrentDate();
+  initSmoothPageTransitions();
 
   if (session && session.user) {
     initUserSessionUI(session.user);
   }
 }
+
+// Gỡ trạng thái chuyển cảnh nếu người dùng quay lại bằng nút Back (bfcache)
+window.addEventListener('pageshow', () => {
+  document.body.classList.remove('page-leaving');
+});
 
 // Chạy an toàn bất kể DOM đã load trước hay sau khi hoàn thành requireAuth
 onReady(initApp);
@@ -66,15 +72,15 @@ function initUserSessionUI(user) {
     sidebarLogout.className = 'sidebar-logout-btn';
     sidebarLogout.title = `Đăng xuất (${email})`;
     sidebarLogout.setAttribute('aria-label', 'Đăng xuất');
-    sidebarLogout.style.cssText = 'background:none; border:none; color:#94a3b8; cursor:pointer; padding:6px; border-radius:4px; display:flex; align-items:center; justify-content:center; margin-left:auto; transition: all 0.15s ease;';
+    sidebarLogout.style.cssText = 'background:none; border:none; color:#57534e; cursor:pointer; padding:6px; border-radius:9999px; display:flex; align-items:center; justify-content:center; margin-left:auto; transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);';
     sidebarLogout.innerHTML = '<i data-lucide="log-out" style="width: 16px; height: 16px;"></i>';
     
     sidebarLogout.addEventListener('mouseenter', () => {
-      sidebarLogout.style.color = '#ef4444';
-      sidebarLogout.style.backgroundColor = 'rgba(255,255,255,0.08)';
+      sidebarLogout.style.color = '#be123c';
+      sidebarLogout.style.backgroundColor = 'rgba(225, 29, 72, 0.12)';
     });
     sidebarLogout.addEventListener('mouseleave', () => {
-      sidebarLogout.style.color = '#94a3b8';
+      sidebarLogout.style.color = '#57534e';
       sidebarLogout.style.backgroundColor = 'transparent';
     });
     sidebarLogout.addEventListener('click', handleLogoutClick);
@@ -188,4 +194,50 @@ function initCurrentDate() {
   const dateStr = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
   
   dateBadge.textContent = `${dayName}, ${dateStr}`;
+}
+
+/**
+ * Smooth Page Leave Transition (Glassy Dashboard V2)
+ * Applies subtle blur fade-out (~150ms) before navigating between internal pages.
+ */
+function initSmoothPageTransitions() {
+  document.addEventListener('click', (e) => {
+    // Bỏ qua nếu mở tab mới hoặc click chuột giữa/phải
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
+      return;
+    }
+
+    const link = e.target.closest('a[href]');
+    if (!link) return;
+
+    const href = link.getAttribute('href');
+    if (
+      !href ||
+      href.startsWith('#') ||
+      href.startsWith('javascript:') ||
+      link.hasAttribute('download') ||
+      link.getAttribute('target') === '_blank'
+    ) {
+      return;
+    }
+
+    // Kiểm tra liên kết nội bộ cùng origin
+    let targetUrl;
+    try {
+      targetUrl = new URL(href, window.location.href);
+    } catch {
+      return;
+    }
+    if (targetUrl.origin !== window.location.origin) return;
+    if (targetUrl.href === window.location.href) {
+      e.preventDefault();
+      return;
+    }
+
+    e.preventDefault();
+    document.body.classList.add('page-leaving');
+    setTimeout(() => {
+      window.location.href = targetUrl.href;
+    }, 150);
+  });
 }

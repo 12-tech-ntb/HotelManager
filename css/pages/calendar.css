@@ -5,12 +5,14 @@
 
 /* ---------------- Calendar Controls & Toolbar ---------------- */
 .calendar-controls-card {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-lg);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-radius: var(--radius-card);
   padding: 1.25rem 1.5rem;
   margin-bottom: 1.25rem;
-  box-shadow: var(--shadow-xs);
+  box-shadow: var(--glass-shadow);
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -136,10 +138,12 @@
 
 /* ---------------- Gantt Timeline Matrix ---------------- */
 .timeline-card {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-xs);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--glass-shadow);
   overflow: hidden;
   margin-bottom: 2rem;
 }
@@ -166,16 +170,18 @@
   position: sticky;
   left: 0;
   z-index: 15;
-  background-color: #ffffff;
-  border-right: 2px solid var(--border-color);
-  box-shadow: 3px 0 6px -2px rgba(15, 23, 42, 0.05);
+  background-color: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-right: 1px solid rgba(28, 25, 23, 0.1);
+  box-shadow: 4px 0 12px -4px rgba(28, 25, 23, 0.08);
 }
 
 /* Header Row */
 .timeline-header-cell {
-  background-color: var(--bg-surface-subtle);
+  background-color: rgba(255, 255, 255, 0.45);
   padding: 0.75rem 0.5rem;
-  border-bottom: 2px solid var(--border-color);
+  border-bottom: 1px solid rgba(28, 25, 23, 0.1);
   text-align: center;
   vertical-align: middle;
   min-width: 105px;
@@ -185,7 +191,7 @@
   position: sticky;
   left: 0;
   z-index: 25;
-  background-color: #f1f5f9;
+  background-color: rgba(255, 255, 255, 0.95);
   text-align: left;
   padding-left: 1.25rem;
 }

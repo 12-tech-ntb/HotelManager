@@ -12,21 +12,24 @@
 }
 
 .fd-kpi-card {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-lg);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-radius: var(--radius-card);
   padding: 1.15rem 1.25rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: var(--shadow-xs);
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: var(--glass-shadow);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal), background-color var(--transition-normal);
 }
 
 .fd-kpi-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
-  border-color: #cbd5e1;
+  transform: translateY(-4px);
+  background: var(--glass-bg-hover);
+  box-shadow: var(--glass-shadow-hover);
+  border-color: rgba(255, 255, 255, 0.9);
 }
 
 .fd-kpi-info {
@@ -53,11 +56,14 @@
 
 /* ---------------- Housekeeping / Cleaning Alert Banner ---------------- */
 .cleaning-alert-banner {
-  background-color: #fffbeb;
-  border: 1px solid #fde68a;
-  border-radius: var(--border-radius-lg);
+  background: rgba(254, 243, 199, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(253, 230, 138, 0.9);
+  border-radius: var(--radius-card);
   padding: 1rem 1.25rem;
   margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-xs);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -123,10 +129,12 @@
 
 /* ---------------- Tabs & Filter Toolbar ---------------- */
 .fd-toolbar-card {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-xs);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--glass-shadow);
   margin-bottom: 1.5rem;
   overflow: hidden;
 }
@@ -134,8 +142,8 @@
 .fd-tabs-nav {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--border-color);
-  background-color: var(--bg-surface-subtle);
+  border-bottom: 1px solid rgba(28, 25, 23, 0.08);
+  background-color: rgba(255, 255, 255, 0.35);
   overflow-x: auto;
 }
 
@@ -157,13 +165,13 @@
 
 .fd-tab-btn:hover {
   color: var(--text-main);
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.55);
 }
 
 .fd-tab-btn.active {
-  color: var(--color-accent);
-  background-color: var(--bg-surface);
-  border-bottom-color: var(--color-accent);
+  color: var(--color-primary);
+  background-color: rgba(255, 255, 255, 0.72);
+  border-bottom-color: var(--color-primary);
 }
 
 .fd-tab-badge {
