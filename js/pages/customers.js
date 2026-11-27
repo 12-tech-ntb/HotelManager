@@ -4,7 +4,7 @@
  */
 
 import { customerService } from '../services/customerService.js';
-import { formatCurrency, escapeHTML, onReady } from '../core/utils.js';
+import { formatCurrency, escapeHTML, onReady, withButtonLoading } from '../core/utils.js';
 import { toast } from '../core/toast.js';
 import { initLucideIcons } from '../main.js';
 
@@ -447,17 +447,20 @@ async function handleCustomerFormSubmit(e) {
 
   const data = { fullName, phone, email, idCard, notes };
 
+  const submitBtn = e.submitter || e.target?.querySelector('button[type="submit"]');
   try {
-    if (state.editingCustomerId) {
-      await customerService.updateCustomer(state.editingCustomerId, data);
-      toast.show(`Cập nhật hồ sơ "${fullName}" thành công!`, 'success');
-    } else {
-      await customerService.createCustomer(data);
-      toast.show(`Đã thêm khách hàng "${fullName}" thành công!`, 'success');
-    }
+    await withButtonLoading(submitBtn, async () => {
+      if (state.editingCustomerId) {
+        await customerService.updateCustomer(state.editingCustomerId, data);
+        toast.show(`Cập nhật hồ sơ "${fullName}" thành công!`, 'success');
+      } else {
+        await customerService.createCustomer(data);
+        toast.show(`Đã thêm khách hàng "${fullName}" thành công!`, 'success');
+      }
 
-    closeCustomerModal();
-    await loadPage();
+      closeCustomerModal();
+      await loadPage();
+    }, 'Đang lưu...');
   } catch (err) {
     toast.show(err.message, 'error');
   }

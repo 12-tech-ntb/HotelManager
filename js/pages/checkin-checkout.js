@@ -4,7 +4,8 @@
  */
 
 import { checkinService } from '../services/checkinService.js';
-import { formatCurrency, formatDate, calculateNights, getBookingStatusBadge, getPaymentStatusBadge, getInitials, escapeHTML, onReady } from '../core/utils.js';
+import { formatCurrency, formatDate, calculateNights, getBookingStatusBadge, getPaymentStatusBadge, getInitials, escapeHTML, onReady, withButtonLoading } from '../core/utils.js';
+import { subscribeHotelRealtime } from '../core/realtime.js';
 import { toast } from '../core/toast.js';
 import { initLucideIcons } from '../main.js';
 
@@ -19,6 +20,10 @@ onReady(async () => {
   try {
     initElements();
     await refreshFrontDesk();
+    subscribeHotelRealtime({
+      tables: ['rooms', 'bookings'],
+      onAnyChange: () => refreshFrontDesk()
+    });
   } catch (err) {
     console.error('Error initializing front desk page:', err);
   }
@@ -442,11 +447,14 @@ async function handleCheckInSubmit(e) {
   const idCard = document.getElementById('inputCheckInIdCard')?.value.trim();
   const notes = document.getElementById('inputCheckInNotes')?.value.trim();
 
+  const submitBtn = e.submitter || e.target?.querySelector('button[type="submit"]');
   try {
-    const updated = await checkinService.processCheckIn(state.activeBooking.id, { idCard, notes });
-    toast.show(`Check-in thành công! Khách đã nhận Phòng ${updated.roomNumber}.`, 'success');
-    closeCheckInModal();
-    await refreshFrontDesk();
+    await withButtonLoading(submitBtn, async () => {
+      const updated = await checkinService.processCheckIn(state.activeBooking.id, { idCard, notes });
+      toast.show(`Check-in thành công! Khách đã nhận Phòng ${updated.roomNumber}.`, 'success');
+      closeCheckInModal();
+      await refreshFrontDesk();
+    }, 'Đang Check-in...');
   } catch (err) {
     toast.show(err.message, 'error');
   }
@@ -538,16 +546,19 @@ async function handleCheckOutSubmit(e) {
   const paymentMethod = document.getElementById('selectCheckOutPaymentMethod')?.value || 'Tiền mặt';
   const notes = document.getElementById('inputCheckOutNotes')?.value.trim();
 
+  const submitBtn = e.submitter || e.target?.querySelector('button[type="submit"]');
   try {
-    const updated = await checkinService.processCheckOut(state.activeBooking.id, {
-      surcharge,
-      paymentMethod,
-      notes
-    });
+    await withButtonLoading(submitBtn, async () => {
+      const updated = await checkinService.processCheckOut(state.activeBooking.id, {
+        surcharge,
+        paymentMethod,
+        notes
+      });
 
-    toast.show(`Trả phòng thành công! Phòng ${updated.roomNumber} đã chuyển sang trạng thái Đang dọn dẹp.`, 'success');
-    closeCheckOutModal();
-    await refreshFrontDesk();
+      toast.show(`Trả phòng thành công! Phòng ${updated.roomNumber} đã chuyển sang trạng thái Đang dọn dẹp.`, 'success');
+      closeCheckOutModal();
+      await refreshFrontDesk();
+    }, 'Đang Check-out...');
   } catch (err) {
     toast.show(err.message, 'error');
   }

@@ -1,121 +1,147 @@
 # Hotel Management System (Aurora Luxury Hotel)
 
-Website quản lý hoạt động nội bộ của khách sạn Aurora Luxury Hotel, phục vụ người quản lý và nhân viên quầy lễ tân để theo dõi phòng, đặt phòng, khách hàng, voucher, check-in/check-out và doanh thu.
+Hệ thống quản lý vận hành khách sạn nội bộ cho **Aurora Luxury Hotel**, xây dựng bằng **HTML5, CSS3, JavaScript ES6+ thuần (Native ES Modules)** và vận hành dữ liệu thời gian thực trên **Supabase (PostgreSQL + Auth + Realtime)**, triển khai tĩnh trên **Vercel**.
 
 ---
 
-## 1. Công nghệ sử dụng
-- **Ngôn ngữ & Nền tảng:** HTML5, CSS3, JavaScript ES6+ thuần (Native ES6 Modules).
-- **Bộ icon:** Lucide Icons (CDN chính thức).
-- **Phông chữ:** Google Fonts (`Plus Jakarta Sans`).
-- **Kiến trúc:** Service / Repository Pattern tách rời UI và Data Layer, sẵn sàng tích hợp với **Supabase & PostgreSQL** ở giai đoạn sau mà không cần viết lại giao diện.
-- **Không dùng:** React, Vue, Angular, Node.js backend hay thư viện bên ngoài nặng.
+## 1. Kiến trúc Hệ thống & Công nghệ
+
+- **Frontend thuần:** HTML5 ngữ nghĩa, CSS3 với Design Tokens (`css/style.css`), JavaScript ES6+ Modules không dùng Framework (không React/Vue/Angular) và không cần bước Build (bundler).
+- **Backend-as-a-Service:** **Supabase** (`@supabase/supabase-js@2.48.1` qua ESM CDN):
+  - **Authentication:** Bảo vệ toàn bộ 8 trang nghiệp vụ bằng Auth Guard (`requireAuth()`), tự động chuyển hướng về `pages/login.html` khi chưa đăng nhập.
+  - **PostgreSQL + RLS:** Lưu trữ bền vững toàn bộ dữ liệu Phòng, Đặt phòng, Khách hàng, Voucher; áp dụng Row Level Security (chỉ role `authenticated` mới có quyền truy cập) và Exclusion Constraint (`btree_gist`) chống trùng lịch đặt phòng ở tầng database.
+  - **Supabase Realtime:** Kênh lắng nghe `postgres_changes` (`js/core/realtime.js`) cho bảng `rooms` và `bookings` tự động đồng bộ giao diện (Dashboard, Phòng, Đặt phòng, Lịch phòng, Check-in/Out) giữa nhiều máy trạm mà không cần F5.
+- **UI/UX:** Phong cách Modern Hospitality Dashboard, font `Plus Jakarta Sans`, bộ icon `Lucide Icons`, biểu đồ SVG thuần, thiết kế Responsive cho Desktop / Tablet / Mobile.
 
 ---
 
-## 2. Hướng dẫn Chạy Dự án (Local Development)
-
-Do dự án sử dụng **Native JavaScript ES6 Modules** (`import` / `export`), trình duyệt yêu cầu các file phải được phục vụ qua giao thức **HTTP/HTTPS** (không mở trực tiếp bằng đường dẫn file cục bộ `file:///...` để tránh lỗi CORS).
-
-### Cách 1: Sử dụng Python HTTP Server (Khuyên dùng)
-Nếu máy bạn đã cài Python 3, mở Terminal tại thư mục gốc của dự án (`HotelManager`):
-```bash
-python -m http.server 3000
-```
-Sau đó truy cập trình duyệt tại:
-```
-http://localhost:3000
-```
-
-### Cách 2: Sử dụng VS Code Live Server
-1. Cài đặt tiện ích mở rộng **Live Server** trên Visual Studio Code.
-2. Click chuột phải vào file `index.html`.
-3. Chọn **Open with Live Server** (hoặc ấn `Alt + L, Alt + O`).
-
----
-
-## 3. Cấu trúc Thư mục Dự án
+## 2. Cấu trúc Thư mục Dự án
 
 ```plaintext
 HotelManager/
-├── index.html                   # Trang Dashboard tổng quan
-├── README.md                    # Tài liệu hướng dẫn & mô tả kiến trúc
+├── index.html                        # Trang Dashboard tổng quan (6 KPI, Donut & Bar Charts, Recent Bookings)
+├── README.md                         # Tài liệu kiến trúc, vận hành & triển khai
 │
 ├── assets/
-│   ├── icons/                   # Favicon & icons hệ thống
-│   │   └── favicon/
-│   └── images/                  # Thư mục chứa hình ảnh
+│   ├── icons/                        # Logo thương hiệu & bộ Favicon đa kích thước
+│   └── images/                       # Tài nguyên hình ảnh
 │
 ├── css/
-│   ├── style.css                # CSS Design Tokens, Reset & Typography
-│   ├── layout.css               # Bố cục App: Sidebar, Header, Mobile Drawer, Responsive
-│   └── components.css           # UI Components: Buttons, Badges, KPI Cards, Tables, Charts
+│   ├── style.css                     # Design Tokens (CSS Variables), Reset & Typography
+│   ├── layout.css                    # Khung App: Sidebar, Header, Mobile Drawer
+│   ├── components.css                # Components dùng chung: Buttons, Badges, Tables, Modals, Toasts
+│   └── pages/                        # Stylesheet riêng từng phân hệ
+│       ├── bookings.css
+│       ├── calendar.css
+│       ├── checkin-checkout.css
+│       ├── customers.css
+│       ├── login.css
+│       ├── reports.css
+│       ├── rooms.css
+│       └── vouchers.css
 │
 ├── js/
-│   ├── main.js                  # Entry point: Xử lý Mobile menu, Search shortcut, Lucide icons
+│   ├── main.js                       # Entry point: Auth Guard, Sidebar User Profile, Header Date, Mobile Nav
+│   ├── core/                         # Hạ tầng lõi dùng chung
+│   │   ├── auth.js                   # Đăng nhập, đăng xuất, Auth Guard & dịch lỗi tiếng Việt
+│   │   ├── config.js                 # Cấu hình SUPABASE_URL & SUPABASE_PUBLISHABLE_KEY
+│   │   ├── realtime.js               # Quản lý kênh Supabase Realtime (rooms, bookings) & cleanup
+│   │   ├── state.js                  # In-Memory State Store đồng bộ với Supabase
+│   │   ├── supabaseClient.js         # Singleton Supabase Client
+│   │   ├── toast.js                  # Hệ thống thông báo Toast
+│   │   └── utils.js                  # Format tiền tệ/ngày tháng, onReady, withButtonLoading, escapeHTML
 │   │
-│   ├── core/                    # Các tiện ích cốt lõi dùng chung
-│   │   ├── utils.js             # Hàm tiện ích format tiền tệ (VND), ngày tháng, escape HTML
-│   │   ├── state.js             # In-memory Reactive State Store
-│   │   └── toast.js             # Hệ thống thông báo Toast notification
+│   ├── services/                     # Tầng truy cập dữ liệu Supabase (snake_case <-> camelCase Mapper)
+│   │   ├── bookingService.js         # Đặt phòng, kiểm tra phòng trống, xác thực & tăng lượt Voucher
+│   │   ├── checkinService.js         # Check-in / Check-out, quyết toán & đồng bộ trạng thái phòng
+│   │   ├── customerService.js        # CRUD khách hàng & tra cứu lịch sử lưu trú
+│   │   ├── reportService.js          # Thống kê KPI, doanh thu theo kỳ, ADR, công suất phòng
+│   │   ├── roomService.js            # CRUD phòng, tạo phòng hàng loạt theo tầng, đổi trạng thái nhanh
+│   │   └── voucherService.js         # CRUD mã khuyến mãi, bật/tắt trạng thái & đếm lượt sử dụng
 │   │
-│   ├── data/
-│   │   └── mock-data.js         # Dữ liệu mẫu chuẩn cấu trúc thực thể khách sạn
-│   │
-│   ├── services/                # Tầng nghiệp vụ xử lý dữ liệu (Sẵn sàng gắn Supabase Client)
-│   │   ├── roomService.js       # Thống kê và quản lý phòng
-│   │   ├── bookingService.js    # Quản lý đặt phòng và khách lưu trú
-│   │   └── reportService.js     # Tổng hợp KPI, doanh thu và dữ liệu biểu đồ
-│   │
-│   └── pages/                   # Logic riêng của từng trang
-│       └── dashboard.js         # Xử lý render KPI, biểu đồ SVG thuần và bảng đặt phòng
+│   └── pages/                        # Controller cho từng trang HTML
+│       ├── bookings.js
+│       ├── calendar.js
+│       ├── checkin-checkout.js
+│       ├── customers.js
+│       ├── dashboard.js
+│       ├── login.js
+│       ├── reports.js
+│       ├── rooms.js
+│       └── vouchers.js
 │
-└── pages/                       # Danh mục các trang con chức năng
-    ├── rooms.html               # Quản lý phòng
-    ├── bookings.html            # Quản lý đặt phòng
-    ├── calendar.html            # Lịch phòng trực quan (Timeline view)
-    ├── checkin-checkout.html    # Bàn Lễ tân Check-in & Check-out
-    ├── customers.html           # Quản lý khách hàng
-    ├── vouchers.html            # Quản lý mã Voucher & Khuyến mãi
-    └── reports.html             # Báo cáo thống kê doanh thu
+├── pages/                            # Các trang chức năng
+│   ├── bookings.html                 # Quản lý đặt phòng
+│   ├── calendar.html                 # Lịch phòng trực quan (Gantt Timeline 7/14 ngày)
+│   ├── checkin-checkout.html         # Bàn lễ tân Check-in / Check-out
+│   ├── customers.html                # Quản lý khách hàng & hạng thân thiết
+│   ├── login.html                    # Đăng nhập nhân viên
+│   ├── reports.html                  # Báo cáo doanh thu & đối soát (xuất CSV)
+│   ├── rooms.html                    # Quản lý phòng & thiết lập tầng hàng loạt
+│   └── vouchers.html                 # Quản lý mã Voucher & Khuyến mãi
+│
+└── supabase/                         # SQL Scripts khởi tạo & bảo trì Database
+    ├── schema.sql                    # Bảng, Indexes, Triggers, Exclusion Constraint & RLS Policies
+    ├── seed.sql                      # Dữ liệu khởi tạo ban đầu
+    ├── migration_voucher_used_count.sql # Migration bổ sung cột used_count cho bảng vouchers
+    ├── verify.sql                    # Kiểm tra tính toàn vẹn database
+    └── reset.sql                     # Làm sạch dữ liệu khi cần reset
 ```
 
 ---
 
-## 4. Tình trạng Triển khai
+## 3. Sơ đồ Bảng Supabase (`public` schema)
 
-| STT | Phân hệ / Tính năng | Trạng thái hiện tại |
-| :---: | :--- | :--- |
-| **1** | **Khung giao diện nền tảng & Design System** | ✅ Hoàn thành (Biến CSS, Layout, Responsive Desktop / Tablet / Mobile) |
-| **2** | **Trang Dashboard Tổng quan (`index.html`)** | ✅ Hoàn thành (6 KPI Cards, Biểu đồ SVG thuần, Bảng đặt phòng gần đây) |
-| **3** | **Điều hướng Sidebar 8 mục & Mobile Drawer** | ✅ Hoàn thành (Đầy đủ liên kết, không lỗi 404) |
-| **4** | **Kiến trúc dữ liệu & Service Layer** | ✅ Hoàn thành (`js/data/mock-data.js`, `js/services/`, `js/core/`) |
-| **5** | **Quản lý phòng (`rooms.html`)** | ✅ Hoàn thành (Lưới thẻ, Bảng dữ liệu, Lọc & Tìm kiếm, Modal Thêm/Sửa, Xóa & Đổi trạng thái nhanh) |
-| **6** | **Thương hiệu & Favicon** | ✅ Hoàn thành (Logo Sidebar có ảnh + fallback onerror, đầy đủ thẻ Favicon cho tab trình duyệt) |
-| **7** | **Quản lý đặt phòng (`bookings.html`)** | ✅ Hoàn thành (Mini KPI, Lọc & Tìm kiếm, Modal Tạo đặt phòng tính tiền tự động + Voucher, Xem chi tiết, Xác nhận & Hủy đơn) |
-| **8** | **Bàn Lễ tân Check-in / Out (`checkin-checkout.html`)** | ✅ Hoàn thành (4 Front Desk KPIs, 3 Tabs nghiệp vụ, 1-touch Check-in, Check-out quyết toán thanh toán & Đồng bộ buồng phòng) |
-| **9** | **Lịch phòng trực quan (`calendar.html`)** | ✅ Hoàn thành (Gantt Matrix Timeline, Sticky cột phòng, Thanh booking trực quan, Xem 7/14 ngày, Modal xem nhanh & Đặt phòng nhanh 1 chạm từ ô trống) |
-| **10** | **Quản lý khách hàng & Voucher** | ⏳ Khung điều hướng hoàn tất, giao diện chi tiết ở bước tiếp theo |
-| **11** | **Báo cáo chi tiết (`reports.html`)** | ⏳ Khung điều hướng hoàn tất, giao diện chi tiết ở Giai đoạn 4 |
-| **12** | **Tích hợp Supabase & PostgreSQL** | ⏳ Đang triển khai: schema + seed đã chuẩn bị, chờ kết nối |
+| Bảng | Mô tả & Trường chính | Ràng buộc & Tự động hóa |
+| :--- | :--- | :--- |
+| **`rooms`** | `id`, `room_number` (UNIQUE), `type`, `floor`, `price`, `capacity`, `status` (`available`/`occupied`/`cleaning`/`maintenance`), `amenities[]`, `image` | Trigger `set_updated_at()`, RLS cho `authenticated` |
+| **`customers`** | `id`, `full_name`, `phone`, `email`, `id_card`, `visits`, `total_spent`, `notes` | Unique index chuẩn hóa số điện thoại (`regexp_replace`), Trigger `set_updated_at()` |
+| **`vouchers`** | `id`, `code` (UNIQUE), `description`, `type` (`percentage`/`fixed`), `value`, `min_order`, `active`, `used_count` | `CHECK (type <> 'percentage' OR value <= 100)`, `used_count >= 0` |
+| **`bookings`** | `id` (`BK-YYYYMM-NNN`), `customer_id`, `room_id`, `check_in_date`, `check_out_date`, `nights`, `voucher_code` (snapshot), `discount_amount`, `total_amount`, `surcharge`, `final_total`, `status`, `payment_status` | Exclusion Constraint `btree_gist` chống trùng lịch phòng `[check_in_date, check_out_date)`, Trigger `handle_booking_checkout()` tự cộng `visits` & `total_spent` cho khách |
+
+> **Kích hoạt Realtime trên Supabase Dashboard:** Vào **Database -> Replication -> Source (`supabase_realtime`)** và bật Realtime cho 2 bảng **`rooms`** và **`bookings`** để các máy trạm nhận cập nhật tức thì.
 
 ---
 
-## 5. Thiết lập Supabase
+## 4. Hướng dẫn Vận hành cho Quản lý Khách sạn
 
-Thực hiện các bước sau trên Supabase Dashboard để thiết lập cơ sở dữ liệu và cấu hình hệ thống:
+1. **Đăng nhập hệ thống:** Truy cập trang web, đăng nhập bằng tài khoản nhân viên được cấp (tạo trong **Supabase Authentication -> Users**). Tài khoản hiện tại hiển thị ở góc dưới Sidebar kèm nút Đăng xuất ở cả Sidebar và Header.
+2. **Thiết lập & Quản lý Phòng (`Quản lý phòng`):**
+   - Dùng **"Thiết lập Tầng & Tạo phòng hàng loạt"** để khởi tạo nhanh sơ đồ tầng/phòng khi đưa vào vận hành.
+   - Chuyển nhanh trạng thái phòng (*Trống*, *Đang có khách*, *Đang dọn dẹp*, *Đang bảo trì*) ngay trên thẻ phòng hoặc bảng.
+3. **Đặt phòng & Lịch phòng (`Đặt phòng`, `Lịch phòng`):**
+   - Hệ thống tự động kiểm tra phòng trống theo khoảng ngày nhận - trả và ngăn đặt trùng lịch.
+   - Nhập mã **Voucher** hợp lệ để tự động tính chiết khấu; số lượt sử dụng (`used_count`) của voucher tự động tăng khi tạo đơn thành công.
+   - Trên **Lịch phòng (Gantt Timeline)**, bấm trực tiếp vào ô ngày trống của bất kỳ phòng nào để đặt phòng nhanh 1 chạm.
+4. **Quy trình Lễ tân (`Check-in / Out`):**
+   - Tab **Chờ Check-in:** Xác nhận CMND/CCCD và nhận phòng -> đơn chuyển sang `checked_in`, phòng tự động chuyển sang `occupied`.
+   - Tab **Chờ Check-out:** Nhập phụ phí phát sinh (nếu có), chọn phương thức thanh toán và quyết toán -> đơn chuyển sang `checked_out`, phòng tự động chuyển sang `cleaning` và hệ thống tự cộng dồn chi tiêu cho khách hàng.
+   - Khi buồng phòng dọn xong, bấm **"Hoàn tất dọn dẹp"** để đưa phòng về trạng thái `available`.
+5. **Khuyến mãi (`Mã Voucher`) & Đối soát (`Báo cáo doanh thu`):**
+   - Tạo, sửa, bật/tắt nhanh hoặc xóa mã Voucher; sao chép mã chỉ với 1 click.
+   - Xem báo cáo theo kỳ (**Hôm nay / 7 ngày qua / Tháng này / Quý này / Tất cả**) với các chỉ số thực tế: Tổng doanh thu, Công suất phòng (%), ADR, Lượt hoàn tất và xuất **Bảng kê CSV** để lưu trữ kế toán.
 
-1. **SQL Editor -> Chạy `schema.sql`:** Mở file `supabase/schema.sql`, sao chép toàn bộ nội dung và bấm **Run** để khởi tạo cấu trúc bảng, index, constraints, functions, triggers và RLS policies.
-2. **Chạy `seed.sql`:** Mở file `supabase/seed.sql`, sao chép toàn bộ nội dung và bấm **Run** để nạp dữ liệu mẫu ban đầu (rooms, customers, vouchers, bookings).
-3. **Chạy `verify.sql` và đối chiếu kết quả mong đợi:** Mở file `supabase/verify.sql`, bấm **Run** và đối chiếu kết quả kiểm tra với các comment kỳ vọng (số lượng dòng mỗi bảng, RLS đã kích hoạt, quyền của authenticated/anon, giá trị sequence kế tiếp).
-4. **Tắt đăng ký công khai:** Vào **Authentication** -> **Sign In / Providers** -> tắt tùy chọn **"Allow new users to sign up"** để ngăn chặn người ngoài tự đăng ký tài khoản vào hệ thống quản lý nội bộ.
-5. **Tạo tài khoản nhân viên:** Vào **Authentication** -> **Users** -> **Add user** -> chọn **Create new user**, nhập Email và Mật khẩu cho nhân viên (tick chọn **Auto Confirm User**).
-6. **Lấy Project URL và Publishable Key:** Vào **Project Settings** -> **API Keys** (hoặc bấm nút **Connect** trên thanh điều hướng), sao chép:
-   - **Project URL** (`https://<project-ref>.supabase.co`)
-   - **PUBLISHABLE key** (`sb_publishable_...` hoặc anon key)
+---
 
-> **LƯU Ý BẢO MẬT & VẬN HÀNH:**
-> - **Publishable key** được phép nằm trong mã nguồn frontend của ứng dụng.
-> - **Secret key (`sb_secret_...`) và mật khẩu Database tuyệt đối KHÔNG** đưa vào code hay đẩy lên GitHub.
-> - **Gói Free của Supabase** sẽ tự động tạm dừng (pause) project sau 7 ngày không có hoạt động.
+## 5. Quy trình Thiết lập Supabase & Deploy Vercel
 
+### A. Thiết lập Database Supabase
+1. Mở **SQL Editor** trên Supabase Dashboard và chạy lần lượt:
+   - `supabase/schema.sql` (khởi tạo toàn bộ bảng, ràng buộc, trigger và RLS).
+   - `supabase/seed.sql` (nạp dữ liệu mẫu ban đầu nếu cần).
+   - *(Nếu database đã tạo trước đó)*: chạy `supabase/migration_voucher_used_count.sql` để bổ sung cột `used_count` cho bảng `vouchers`.
+   - `supabase/verify.sql` để kiểm tra lại toàn bộ bảng, RLS và sequence.
+2. Vào **Authentication -> Sign In / Providers**, tắt **"Allow new users to sign up"** để bảo mật hệ thống nội bộ; sau đó tạo tài khoản nhân viên tại **Authentication -> Users -> Add user**.
+3. Bật **Database -> Replication** cho bảng `rooms` và `bookings`.
+4. Kiểm tra `js/core/config.js` đã điền đúng `SUPABASE_URL` và `SUPABASE_PUBLISHABLE_KEY` (`sb_publishable_...`). *(Tuyệt đối không đưa `sb_secret_...` hay mật khẩu DB vào mã nguồn).*
+
+### B. Deploy lên Vercel
+Dự án là Static Web thuần (Native ES6 Modules), không cần build step:
+1. Đẩy mã nguồn lên GitHub Repository.
+2. Đăng nhập [Vercel](https://vercel.com), chọn **Add New -> Project** và kết nối tới repository `HotelManager`.
+3. Tại mục **Build & Output Settings**:
+   - **Framework Preset:** `Other`
+   - **Build Command:** để trống
+   - **Output Directory:** `.` (mặc định gốc dự án)
+4. Bấm **Deploy**. Mọi đường dẫn tương đối (`./`, `../`) đều hoạt động đồng bộ trên cả `localhost` và tên miền `.vercel.app`.
+5. Sau khi có domain `.vercel.app`, vào **Supabase Dashboard -> Authentication -> URL Configuration**, thêm domain Vercel vào **Site URL** và **Redirect URLs** để đảm bảo luồng Auth hoạt động ổn định.

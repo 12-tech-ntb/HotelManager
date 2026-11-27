@@ -9,12 +9,15 @@
   <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon/favicon.svg">
   <link rel="shortcut icon" href="../assets/icons/favicon/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/icons/favicon/apple-touch-icon.png">
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Styles -->
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/layout.css">
   <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages/vouchers.css">
 </head>
 <body>
   <div class="app-layout">
@@ -24,10 +27,10 @@
       <div class="sidebar-brand">
         <div class="brand-wrapper">
           <div class="brand-logo-icon">
-            <img 
-              src="../assets/icons/logo.png" 
-              alt="Aurora Logo" 
-              class="brand-logo-img" 
+            <img
+              src="../assets/icons/logo.png"
+              alt="Aurora Logo"
+              class="brand-logo-img"
               onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex';"
               style="width: 100%; height: 100%; object-fit: contain; border-radius: var(--border-radius-md);"
             >
@@ -83,25 +86,193 @@
       </header>
 
       <main class="main-content">
-        <div class="card" style="padding: 3rem 2rem; text-align: center; max-width: 680px; margin: 3rem auto;">
-          <div style="width: 64px; height: 64px; border-radius: 50%; background-color: var(--color-accent-light); color: var(--color-accent); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto;">
-            <i data-lucide="ticket" style="width: 32px; height: 32px;"></i>
+        <!-- Mini KPI Strip -->
+        <section class="voucher-mini-kpis" aria-label="Thống kê voucher">
+          <div class="voucher-kpi-item">
+            <div class="voucher-kpi-icon" style="background: rgba(15, 23, 42, 0.08); color: var(--color-primary);">
+              <i data-lucide="ticket" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div class="voucher-kpi-meta">
+              <span class="voucher-kpi-label">Tổng số mã Voucher</span>
+              <span class="voucher-kpi-value" id="kpiTotalVouchers">--</span>
+            </div>
           </div>
-          <h2 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem;">Mô-đun Quản lý Voucher</h2>
-          <p class="text-secondary" style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
-            Khung điều hướng đã kết nối. Tạo mới mã giảm giá (theo % hoặc số tiền), điều kiện đơn hàng tối thiểu và trạng thái kích hoạt sẽ được triển khai tại Giai đoạn 2.
-          </p>
+          <div class="voucher-kpi-item">
+            <div class="voucher-kpi-icon" style="background: var(--status-available-bg); color: var(--status-available);">
+              <i data-lucide="check-circle-2" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div class="voucher-kpi-meta">
+              <span class="voucher-kpi-label">Đang kích hoạt</span>
+              <span class="voucher-kpi-value" id="kpiActiveVouchers">--</span>
+            </div>
+          </div>
+          <div class="voucher-kpi-item">
+            <div class="voucher-kpi-icon" style="background: var(--status-cleaning-bg); color: var(--status-cleaning);">
+              <i data-lucide="pause-circle" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div class="voucher-kpi-meta">
+              <span class="voucher-kpi-label">Đang tạm ngưng</span>
+              <span class="voucher-kpi-value" id="kpiInactiveVouchers">--</span>
+            </div>
+          </div>
+          <div class="voucher-kpi-item">
+            <div class="voucher-kpi-icon" style="background: var(--color-accent-light); color: var(--color-accent);">
+              <i data-lucide="sparkles" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div class="voucher-kpi-meta">
+              <span class="voucher-kpi-label">Tổng lượt đã áp dụng</span>
+              <span class="voucher-kpi-value" id="kpiTotalUsedVouchers">--</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Toolbar -->
+        <section class="voucher-toolbar">
+          <div class="voucher-filters">
+            <div class="voucher-search-box">
+              <i data-lucide="search"></i>
+              <input type="text" id="voucherSearchInput" class="form-control" placeholder="Tìm mã voucher, mô tả...">
+            </div>
+            <select id="voucherTypeFilter" class="form-select" style="width: auto; min-width: 170px;" aria-label="Lọc theo loại giảm giá">
+              <option value="all">Tất cả loại giảm giá</option>
+              <option value="percentage">Giảm theo phần trăm (%)</option>
+              <option value="fixed">Giảm tiền cố định (₫)</option>
+            </select>
+            <select id="voucherStatusFilter" class="form-select" style="width: auto; min-width: 160px;" aria-label="Lọc theo trạng thái">
+              <option value="all">Tất cả trạng thái</option>
+              <option value="active">Đang kích hoạt</option>
+              <option value="inactive">Đã tạm ngưng</option>
+            </select>
+          </div>
           <div>
-            <a href="../index.html" class="btn btn-primary">
-              <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i> Quay về Dashboard
-            </a>
+            <button type="button" class="btn btn-primary" id="btnAddVoucher">
+              <i data-lucide="plus" style="width: 17px; height: 17px;"></i>
+              Tạo mã Voucher mới
+            </button>
+          </div>
+        </section>
+
+        <!-- Vouchers Table -->
+        <section class="table-card">
+          <div class="table-card-header" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-color);">
+            <h2 style="font-size: 1rem; font-weight: 700; color: var(--text-main);">Danh sách mã khuyến mãi</h2>
+            <span class="text-secondary" style="font-size: 0.85rem;" id="voucherCountLabel">Đang tải...</span>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Mã Voucher</th>
+                  <th>Mô tả chương trình</th>
+                  <th>Mức giảm</th>
+                  <th>Đơn tối thiểu</th>
+                  <th>Đã sử dụng</th>
+                  <th>Kích hoạt</th>
+                  <th class="text-right">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="vouchersTbody">
+                <tr>
+                  <td colspan="7" class="table-empty-state">
+                    <span>Đang tải dữ liệu từ Supabase...</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal Tạo / Sửa Voucher -->
+  <div class="modal-backdrop" id="voucherModal" aria-hidden="true">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="voucherModalTitle">
+      <div class="modal-header">
+        <h3 class="modal-title" id="voucherModalTitle">Tạo mã Voucher mới</h3>
+        <button type="button" class="modal-close" id="closeVoucherModalBtn" aria-label="Đóng">
+          <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+        </button>
+      </div>
+      <form id="voucherForm">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="voucherCodeInput" class="form-label">Mã Voucher <span class="text-danger">*</span></label>
+              <input type="text" id="voucherCodeInput" class="form-control" placeholder="VD: SUMMER20" required style="text-transform: uppercase;">
+              <small class="text-muted">Viết liền không dấu, tự động viết hoa.</small>
+            </div>
+            <div class="form-group">
+              <label for="voucherTypeSelect" class="form-label">Loại khuyến mãi <span class="text-danger">*</span></label>
+              <select id="voucherTypeSelect" class="form-select" required>
+                <option value="percentage">Phần trăm (%)</option>
+                <option value="fixed">Số tiền cố định (VNĐ)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="voucherValueInput" class="form-label" id="voucherValueLabel">Mức giảm (%) <span class="text-danger">*</span></label>
+              <input type="number" id="voucherValueInput" class="form-control" min="1" max="100" placeholder="VD: 15" required>
+            </div>
+            <div class="form-group">
+              <label for="voucherMinOrderInput" class="form-label">Đơn hàng tối thiểu (VNĐ)</label>
+              <input type="number" id="voucherMinOrderInput" class="form-control" min="0" step="50000" value="0" placeholder="VD: 1500000">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="voucherDescInput" class="form-label">Mô tả chương trình</label>
+            <textarea id="voucherDescInput" class="form-control" rows="2" placeholder="VD: Giảm 15% cho đơn đặt phòng từ 1.500.000 ₫"></textarea>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="toggle-switch">
+              <input type="checkbox" id="voucherActiveCheckbox" checked>
+              <span class="toggle-slider"></span>
+              <span style="font-size: 0.875rem; font-weight: 600; color: var(--text-main);">Kích hoạt áp dụng ngay</span>
+            </label>
           </div>
         </div>
-      </main>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="cancelVoucherModalBtn">Hủy</button>
+          <button type="submit" class="btn btn-primary" id="saveVoucherBtn">
+            <i data-lucide="save" style="width: 16px; height: 16px;"></i>
+            <span>Lưu Voucher</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Xác nhận Xóa Voucher -->
+  <div class="modal-backdrop" id="deleteVoucherModal" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 440px;" role="dialog" aria-modal="true" aria-labelledby="deleteVoucherTitle">
+      <div class="modal-header">
+        <h3 class="modal-title" id="deleteVoucherTitle">Xác nhận xóa Voucher</h3>
+        <button type="button" class="modal-close" id="closeDeleteVoucherBtn" aria-label="Đóng">
+          <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="line-height: 1.6; color: var(--text-secondary);">
+          Bạn có chắc chắn muốn xóa mã khuyến mãi <strong id="deleteVoucherCodeLabel" style="color: var(--color-primary);">--</strong> không?
+          Các đơn đặt phòng cũ đã lưu snapshot mã này sẽ không bị ảnh hưởng.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" id="cancelDeleteVoucherBtn">Quay lại</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteVoucherBtn">
+          <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+          <span>Xóa Voucher</span>
+        </button>
+      </div>
     </div>
   </div>
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script type="module" src="../js/main.js"></script>
+  <script type="module" src="../js/pages/vouchers.js"></script>
 </body>
 </html>

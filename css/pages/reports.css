@@ -1,0 +1,230 @@
+/* ==========================================================================
+   HOTEL MANAGEMENT SYSTEM - REPORTS & ANALYTICS STYLES
+   ========================================================================== */
+
+.report-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.period-filter-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 4px;
+  gap: 4px;
+  box-shadow: var(--shadow-sm);
+}
+
+.period-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.period-btn:hover {
+  color: var(--text-main);
+  background: var(--bg-surface-subtle);
+}
+
+.period-btn.active {
+  background: var(--color-accent);
+  color: #ffffff;
+}
+
+.report-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.report-kpi-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: 1.2rem 1.25rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.report-kpi-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.report-kpi-title {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.report-kpi-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--border-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.report-kpi-value {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.report-kpi-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.report-charts-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.report-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.report-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.15rem;
+}
+
+.report-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+/* Horizontal Progress Bars for Room Type Revenue */
+.room-type-bar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.room-type-bar-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.room-type-bar-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.room-type-bar-name {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.room-type-bar-amount {
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.room-type-bar-track {
+  height: 10px;
+  background: var(--bg-surface-subtle);
+  border-radius: var(--border-radius-full);
+  overflow: hidden;
+}
+
+.room-type-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-accent), #14b8a6);
+  border-radius: var(--border-radius-full);
+  transition: width 0.4s ease;
+}
+
+.room-type-bar-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Status Breakdown */
+.status-breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.status-breakdown-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0.75rem;
+  background: var(--bg-surface-subtle);
+  border-radius: var(--border-radius-md);
+}
+
+.status-breakdown-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-breakdown-right {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 1023px) {
+  .report-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .report-charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 639px) {
+  .report-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}

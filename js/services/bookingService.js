@@ -9,6 +9,7 @@ import { supabase } from '../core/supabaseClient.js';
 import { toast } from '../core/toast.js';
 import { roomService } from './roomService.js';
 import { customerService } from './customerService.js';
+import { voucherService } from './voucherService.js';
 
 /**
  * Map DB row (snake_case) to UI Model (camelCase)
@@ -395,6 +396,11 @@ export const bookingService = {
       }
 
       const newBooking = mapBookingFromDB(createdRow);
+
+      // Tăng số lượt sử dụng voucher nếu có áp dụng
+      if (newBooking.voucherCode) {
+        await voucherService.incrementVoucherUsage(newBooking.voucherCode);
+      }
 
       // If checkInDate is today and status is checked_in, mark room occupied
       if (newBooking.checkInDate === "2026-11-21" && newBooking.status === "checked_in") {

@@ -105,6 +105,7 @@ CREATE TABLE public.vouchers (
   value BIGINT NOT NULL CHECK (value > 0),
   min_order BIGINT DEFAULT 0 CHECK (min_order >= 0),
   active BOOLEAN DEFAULT TRUE,
+  used_count INTEGER NOT NULL DEFAULT 0 CHECK (used_count >= 0),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   -- Voucher phần trăm không được vượt quá 100%

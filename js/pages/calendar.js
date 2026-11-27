@@ -5,7 +5,8 @@
 
 import { roomService } from '../services/roomService.js';
 import { bookingService } from '../services/bookingService.js';
-import { formatCurrency, formatDate, calculateNights, getBookingStatusBadge, getPaymentStatusBadge, escapeHTML, onReady } from '../core/utils.js';
+import { formatCurrency, formatDate, calculateNights, getBookingStatusBadge, getPaymentStatusBadge, escapeHTML, onReady, withButtonLoading } from '../core/utils.js';
+import { subscribeHotelRealtime } from '../core/realtime.js';
 import { toast } from '../core/toast.js';
 import { initLucideIcons } from '../main.js';
 
@@ -25,6 +26,10 @@ onReady(async () => {
   try {
     initControls();
     await loadCalendarData();
+    subscribeHotelRealtime({
+      tables: ['rooms', 'bookings'],
+      onAnyChange: () => loadCalendarData()
+    });
   } catch (err) {
     console.error('Error initializing room calendar:', err);
   }
@@ -609,12 +614,15 @@ async function handleQuickBookSubmit(e) {
     paymentStatus
   };
 
+  const submitBtn = e.submitter || e.target?.querySelector('button[type="submit"]');
   try {
-    const created = await bookingService.createBooking(bookingPayload);
-    toast.show(`Đặt phòng thành công! Mã đơn: ${created.id}`, 'success');
-    closeQuickBookModal();
-    // Refresh calendar data
-    await loadCalendarData();
+    await withButtonLoading(submitBtn, async () => {
+      const created = await bookingService.createBooking(bookingPayload);
+      toast.show(`Đặt phòng thành công! Mã đơn: ${created.id}`, 'success');
+      closeQuickBookModal();
+      // Refresh calendar data
+      await loadCalendarData();
+    }, 'Đang đặt phòng...');
   } catch (err) {
     toast.show(err.message, 'error');
   }

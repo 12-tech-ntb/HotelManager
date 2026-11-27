@@ -6,7 +6,8 @@
 import { bookingService } from '../services/bookingService.js';
 import { roomService } from '../services/roomService.js';
 import { customerService } from '../services/customerService.js';
-import { formatCurrency, formatDate, calculateNights, getBookingStatusBadge, getPaymentStatusBadge, getInitials, escapeHTML, onReady } from '../core/utils.js';
+import { formatCurrency, formatDate, calculateNights, getBookingStatusBadge, getPaymentStatusBadge, getInitials, escapeHTML, onReady, withButtonLoading } from '../core/utils.js';
+import { subscribeHotelRealtime } from '../core/realtime.js';
 import { toast } from '../core/toast.js';
 import { initLucideIcons } from '../main.js';
 
@@ -29,6 +30,13 @@ onReady(async () => {
     initElements();
     await loadBookings();
     await loadMiniKPIs();
+    subscribeHotelRealtime({
+      tables: ['rooms', 'bookings'],
+      onAnyChange: async () => {
+        await loadBookings();
+        await loadMiniKPIs();
+      }
+    });
   } catch (err) {
     console.error('Error initializing bookings page:', err);
   }
@@ -660,12 +668,15 @@ async function handleCreateBookingSubmit(e) {
     paymentStatus
   };
 
+  const submitBtn = e.submitter || e.target?.querySelector('button[type="submit"]');
   try {
-    const created = await bookingService.createBooking(bookingPayload);
-    toast.show(`Tạo thành công đơn đặt phòng ${created.id}!`, 'success');
-    closeCreateModal();
-    await loadBookings();
-    await loadMiniKPIs();
+    await withButtonLoading(submitBtn, async () => {
+      const created = await bookingService.createBooking(bookingPayload);
+      toast.show(`Tạo thành công đơn đặt phòng ${created.id}!`, 'success');
+      closeCreateModal();
+      await loadBookings();
+      await loadMiniKPIs();
+    }, 'Đang tạo đơn...');
   } catch (err) {
     toast.show(err.message, 'error');
   }

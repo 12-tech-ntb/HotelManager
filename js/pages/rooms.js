@@ -4,7 +4,8 @@
  */
 
 import { roomService } from '../services/roomService.js';
-import { formatCurrency, getRoomStatusBadge, escapeHTML, onReady } from '../core/utils.js';
+import { formatCurrency, getRoomStatusBadge, escapeHTML, onReady, withButtonLoading } from '../core/utils.js';
+import { subscribeHotelRealtime } from '../core/realtime.js';
 import { toast } from '../core/toast.js';
 import { initLucideIcons } from '../main.js';
 
@@ -25,6 +26,10 @@ onReady(async () => {
   try {
     initElements();
     await loadRooms();
+    subscribeHotelRealtime({
+      tables: ['rooms'],
+      onRoomsChange: () => loadRooms()
+    });
   } catch (err) {
     console.error('Error initializing rooms page:', err);
   }
@@ -578,17 +583,20 @@ async function handleRoomFormSubmit(e) {
     image
   };
 
+  const submitBtn = e.submitter || e.target?.querySelector('button[type="submit"]');
   try {
-    if (state.editingRoomId) {
-      await roomService.updateRoom(state.editingRoomId, roomData);
-      toast.show(`Cập nhật thông tin Phòng ${roomNumber} thành công!`, 'success');
-    } else {
-      await roomService.createRoom(roomData);
-      toast.show(`Đã thêm mới Phòng ${roomNumber} thành công!`, 'success');
-    }
+    await withButtonLoading(submitBtn, async () => {
+      if (state.editingRoomId) {
+        await roomService.updateRoom(state.editingRoomId, roomData);
+        toast.show(`Cập nhật thông tin Phòng ${roomNumber} thành công!`, 'success');
+      } else {
+        await roomService.createRoom(roomData);
+        toast.show(`Đã thêm mới Phòng ${roomNumber} thành công!`, 'success');
+      }
 
-    closeRoomModal();
-    await loadRooms();
+      closeRoomModal();
+      await loadRooms();
+    }, 'Đang lưu phòng...');
   } catch (err) {
     toast.show(err.message, 'error');
   }

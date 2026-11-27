@@ -9,12 +9,15 @@
   <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon/favicon.svg">
   <link rel="shortcut icon" href="../assets/icons/favicon/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/icons/favicon/apple-touch-icon.png">
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Styles -->
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/layout.css">
   <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages/reports.css">
 </head>
 <body>
   <div class="app-layout">
@@ -24,10 +27,10 @@
       <div class="sidebar-brand">
         <div class="brand-wrapper">
           <div class="brand-logo-icon">
-            <img 
-              src="../assets/icons/logo.png" 
-              alt="Aurora Logo" 
-              class="brand-logo-img" 
+            <img
+              src="../assets/icons/logo.png"
+              alt="Aurora Logo"
+              class="brand-logo-img"
               onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex';"
               style="width: 100%; height: 100%; object-fit: contain; border-radius: var(--border-radius-md);"
             >
@@ -83,25 +86,129 @@
       </header>
 
       <main class="main-content">
-        <div class="card" style="padding: 3rem 2rem; text-align: center; max-width: 680px; margin: 3rem auto;">
-          <div style="width: 64px; height: 64px; border-radius: 50%; background-color: var(--color-accent-light); color: var(--color-accent); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto;">
-            <i data-lucide="bar-chart-3" style="width: 32px; height: 32px;"></i>
+        <!-- Period Filter & Actions -->
+        <section class="report-toolbar">
+          <div class="period-filter-group" id="reportPeriodGroup" role="group" aria-label="Chọn kỳ báo cáo">
+            <button type="button" class="period-btn" data-period="today">Hôm nay</button>
+            <button type="button" class="period-btn" data-period="7days">7 ngày qua</button>
+            <button type="button" class="period-btn active" data-period="month">Tháng này</button>
+            <button type="button" class="period-btn" data-period="quarter">Quý này</button>
+            <button type="button" class="period-btn" data-period="all">Tất cả</button>
           </div>
-          <h2 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem;">Mô-đun Báo cáo & Thống kê</h2>
-          <p class="text-secondary" style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
-            Khung điều hướng đã kết nối. Báo cáo phân tích doanh thu theo kỳ, tỷ lệ công suất phòng và bảng kê đối soát chi tiết sẽ được hoàn thiện tại Giai đoạn 4.
-          </p>
-          <div>
-            <a href="../index.html" class="btn btn-primary">
-              <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i> Quay về Dashboard
-            </a>
+
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span class="text-secondary" style="font-size: 0.85rem;" id="reportRangeLabel">Đang tải...</span>
+            <button type="button" class="btn btn-outline" id="btnExportReportCsv">
+              <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+              Xuất bảng kê CSV
+            </button>
           </div>
-        </div>
+        </section>
+
+        <!-- 4 KPI Cards -->
+        <section class="report-kpi-grid" aria-label="Chỉ số hiệu suất chính">
+          <div class="report-kpi-card">
+            <div class="report-kpi-top">
+              <span class="report-kpi-title">Tổng doanh thu</span>
+              <div class="report-kpi-icon" style="background: var(--color-accent-light); color: var(--color-accent);">
+                <i data-lucide="wallet" style="width: 18px; height: 18px;"></i>
+              </div>
+            </div>
+            <div class="report-kpi-value" id="repTotalRevenue">--</div>
+            <div class="report-kpi-sub" id="repValidBookingsSub">Từ -- đơn đặt hợp lệ</div>
+          </div>
+
+          <div class="report-kpi-card">
+            <div class="report-kpi-top">
+              <span class="report-kpi-title">Công suất phòng TB</span>
+              <div class="report-kpi-icon" style="background: var(--status-occupied-bg); color: var(--status-occupied);">
+                <i data-lucide="percent" style="width: 18px; height: 18px;"></i>
+              </div>
+            </div>
+            <div class="report-kpi-value" id="repAvgOccupancy">--</div>
+            <div class="report-kpi-sub" id="repNightsSoldSub">-- đêm đã bán</div>
+          </div>
+
+          <div class="report-kpi-card">
+            <div class="report-kpi-top">
+              <span class="report-kpi-title">Giá TB / đêm (ADR)</span>
+              <div class="report-kpi-icon" style="background: var(--status-cleaning-bg); color: var(--status-cleaning);">
+                <i data-lucide="trending-up" style="width: 18px; height: 18px;"></i>
+              </div>
+            </div>
+            <div class="report-kpi-value" id="repAdr">--</div>
+            <div class="report-kpi-sub">Average Daily Rate thực tế</div>
+          </div>
+
+          <div class="report-kpi-card">
+            <div class="report-kpi-top">
+              <span class="report-kpi-title">Lượt đặt hoàn tất</span>
+              <div class="report-kpi-icon" style="background: var(--status-available-bg); color: var(--status-available);">
+                <i data-lucide="check-check" style="width: 18px; height: 18px;"></i>
+              </div>
+            </div>
+            <div class="report-kpi-value" id="repCompletedBookings">--</div>
+            <div class="report-kpi-sub" id="repCustomersSub">Hệ thống có -- khách hàng</div>
+          </div>
+        </section>
+
+        <!-- Charts Row -->
+        <section class="report-charts-grid">
+          <div class="report-card">
+            <div class="report-card-header">
+              <h2 class="report-card-title">Doanh thu theo loại phòng</h2>
+              <span class="text-muted" style="font-size: 0.8rem;">Đơn vị: VNĐ</span>
+            </div>
+            <div id="roomTypeRevenueContainer" class="room-type-bar-list">
+              <p class="text-muted">Đang tổng hợp dữ liệu...</p>
+            </div>
+          </div>
+
+          <div class="report-card">
+            <div class="report-card-header">
+              <h2 class="report-card-title">Tỉ lệ trạng thái đơn</h2>
+              <span class="text-muted" style="font-size: 0.8rem;" id="repTotalOrdersBadge">-- đơn</span>
+            </div>
+            <div id="statusBreakdownContainer" class="status-breakdown-list">
+              <p class="text-muted">Đang tổng hợp dữ liệu...</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Detailed Ledger Table -->
+        <section class="table-card">
+          <div class="table-card-header" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-color);">
+            <h2 style="font-size: 1rem; font-weight: 700; color: var(--text-main);">Bảng kê chi tiết đối soát doanh thu</h2>
+            <span class="text-secondary" style="font-size: 0.85rem;" id="reportLedgerCount">-- bản ghi</span>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Mã đơn</th>
+                  <th>Khách hàng</th>
+                  <th>Phòng</th>
+                  <th>Nhận - Trả</th>
+                  <th>Giảm giá / Phụ phí</th>
+                  <th>Thực thu</th>
+                  <th>Thanh toán</th>
+                  <th>Trạng thái</th>
+                </tr>
+              </thead>
+              <tbody id="reportLedgerTbody">
+                <tr>
+                  <td colspan="8" class="table-empty-state">Đang tải dữ liệu từ Supabase...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
       </main>
     </div>
   </div>
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script type="module" src="../js/main.js"></script>
+  <script type="module" src="../js/pages/reports.js"></script>
 </body>
 </html>

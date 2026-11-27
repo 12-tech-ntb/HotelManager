@@ -7,11 +7,16 @@
 import { reportService } from '../services/reportService.js';
 import { bookingService } from '../services/bookingService.js';
 import { formatCurrency, formatDate, getBookingStatusBadge, getInitials, escapeHTML, onReady } from '../core/utils.js';
+import { subscribeHotelRealtime } from '../core/realtime.js';
 import { initLucideIcons } from '../main.js';
 
 onReady(async () => {
   try {
     await renderDashboard();
+    subscribeHotelRealtime({
+      tables: ['rooms', 'bookings'],
+      onAnyChange: () => renderDashboard()
+    });
   } catch (error) {
     console.error('Error rendering dashboard:', error);
   }

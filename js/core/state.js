@@ -1,26 +1,31 @@
 /**
  * HOTEL MANAGEMENT SYSTEM - STATE MANAGEMENT
  * Central In-Memory State Store with pub/sub event bus
- * Designed to mirror future Supabase Realtime synchronization
+ * Synchronized live with Supabase & Supabase Realtime
  */
-
-import { INITIAL_ROOMS, INITIAL_BOOKINGS, INITIAL_CUSTOMERS, INITIAL_VOUCHERS, REVENUE_DATA, HOTEL_CONFIG } from '../data/mock-data.js';
 
 class StateStore {
   constructor() {
     this.state = {
-      hotel: { ...HOTEL_CONFIG },
-      rooms: [...INITIAL_ROOMS],
-      bookings: [...INITIAL_BOOKINGS],
-      customers: [...INITIAL_CUSTOMERS],
-      vouchers: [...INITIAL_VOUCHERS],
-      revenue: { ...REVENUE_DATA }
+      hotel: {
+        name: 'Aurora Hotel',
+        currency: 'VND'
+      },
+      rooms: [],
+      bookings: [],
+      customers: [],
+      vouchers: [],
+      revenue: {
+        currentMonth: 0,
+        growthPercentage: 0,
+        weeklyDays: []
+      }
     };
     this.listeners = new Map();
   }
 
   /**
-   * Get deep copy of current state slice
+   * Get current state slice
    * @param {string} key 
    */
   get(key) {

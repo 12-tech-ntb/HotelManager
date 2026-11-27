@@ -144,3 +144,24 @@ export function onReady(fn) {
   }
 }
 
+/**
+ * Prevent double submission by disabling a button and showing a loading label
+ * while an async Supabase operation is running.
+ * @param {HTMLElement|null} btn
+ * @param {Function} asyncFn
+ * @param {string} loadingText
+ */
+export async function withButtonLoading(btn, asyncFn, loadingText = 'Đang xử lý...') {
+  if (!btn) return await asyncFn();
+  if (btn.disabled) return;
+  const originalHTML = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<span>${escapeHTML(loadingText)}</span>`;
+  try {
+    return await asyncFn();
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = originalHTML;
+  }
+}
+
